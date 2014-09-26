@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <functional>
 #include <time.h>
 #include <math.h>
 #include "InfoData.h"

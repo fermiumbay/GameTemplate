@@ -12,7 +12,7 @@ MainScene::~MainScene(){
 void MainScene::Update(){
 	BaseScene::Update();
 
-	if (KeyInput::GetKeyCancel(PushedNow)){
+	if (KeyInput::GetKey(Cancel, PushedNow)){
 		EndGame();
 	}
 }

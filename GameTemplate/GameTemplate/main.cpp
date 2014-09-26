@@ -13,6 +13,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	if(SetDrawScreen(DX_SCREEN_BACK) != 0){return 0;}	//描画先を裏画面に設定
 
 	CommonData::Initialize();	// データの初期化
+	KeyInput::Initialize();	// キー入力の初期化
 	Game game;	// ゲームオブジェクト
 	
 	//繰り返し処理（エラー発生すると終了）
