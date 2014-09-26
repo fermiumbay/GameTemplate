@@ -12,6 +12,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	if(DxLib_Init() != 0){return 0;}	//DXライブラリ初期化処理
 	if(SetDrawScreen(DX_SCREEN_BACK) != 0){return 0;}	//描画先を裏画面に設定
 
+	Random::DefaultRand();	// 乱数の初期化
 	CommonData::Initialize();	// データの初期化
 	KeyInput::Initialize();	// キー入力の初期化
 	Game game;	// ゲームオブジェクト
