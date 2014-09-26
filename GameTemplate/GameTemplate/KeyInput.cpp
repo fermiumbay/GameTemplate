@@ -106,3 +106,7 @@ bool KeyInput::GetKey(KeyType type, KeyState state){
 void KeyInput::SetKeyCond(KeyType type, function<bool()> cond){
 	key[type].cond = cond;
 }
+
+void KeyInput::CopyKeyCond(KeyType copiedType, KeyType copyingType){
+	key[copiedType] = key[copyingType];
+}

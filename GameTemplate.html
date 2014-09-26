@@ -12,6 +12,19 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <ul>
 <li><a href = "#first">使い方</a></li>
 <li><a href = "#abstract">概要</a></li>
+<li><a href = "#start">色々といじってみよう</a></li>
+<li><a href = "#pic">画像を表示してみよう</a></li>
+<li><a href = "#key">キー入力対応させてみよう</a></li>
+<li><a href = "#sound">音楽を再生してみよう</a></li>
+<li><a href = "#scene">シーンを追加してみよう</a></li>
+<li><a href = "#div">画像の分割読み込み</a></li>
+<li><a href = "#handle">画像のハンドル指定読み込み</a></li>
+<li><a href = "#screen">スクリーンモードを変更しよう</a></li>
+<li><a href = "#save">セーブ・ロード機能を作ろう</a></li>
+<li><a href = "#keyconfig">キー割り当ての変更</a></li>
+<li><a href = "#icon">アイコンを設定しよう</a></li>
+<li><a href = "#complete">ゲームの完成</a></li>
+<li><a href = "#sample">サンプルゲーム</a></li>
 </ul>
 <hr>
 
@@ -144,13 +157,828 @@ DefaultRand関数で乱数の初期化が行えますが、これはゲーム開
 Rand関数にて乱数を発生させることができます。<br>
 SetDefaultRandで任意のシードにて乱数の初期化が行えます。リプレイファイルの作成などに用います。<br>
 
+<br><hr>
 
+<div id = "start"></div>
+<h2>色々といじってみよう</h2>
+ゲームの初期設定を決めている部分はInfoData.hです。<br>
+開くと、ゲームのタイトルやウィンドウのサイズなどが並べられていることが分かります。<br>
+ゲームのタイトルは初めにタイトルバーに表記される文字であり、<br>
+途中でタイトルバーの文字を変えることがなければ、ここで決めたゲームタイトルがタイトルバーに表記され続けます。<br>
+ウィンドウサイズは、ウィンドウモードの場合は好きなサイズのウィンドウに設定可能です。<br>
+Vector2(640, 480)とありますが、これは２次元ベクトル型の値です。<br>
+横640、縦480の大きさ、ということでパラメータが２つあるので、<br>
+一緒に取り扱えば便利だろうという目的からVector2型を採用しています。<br>
+ウィンドウモードフラグは初めtrueになっていますが、これをfalseにするとフルスクリーンになります。<br>
+また、初期シーン名称はゲーム開始時のシーンの名前であり、後に変更することになりそうな所です。<br>
+<br>
+このテンプレートではシーンの遷移でゲームの状態を変えるように作ることを想定しており、<br>
+例えばタイトル画面からゲームのメイン画面に遷移し、メニューキーを押せばメニュー画面に遷移、<br>
+ゲームが終わればエンディング画面に遷移する、など、様々な画面の遷移として大規模なゲームを表現できます。<br>
+初めはMainSceneだけですが、シーンは自由に追加していくことが可能です。<br>
+<br>
+MainScene.hはメイン画面のヘッダファイル、MainScene.cppはメイン画面のソースファイルです。<br>
+クラスで使用されている変数や関数の宣言は全部ヘッダファイルにしておき、<br>
+ソースファイルを見なくてもヘッダファイルだけでそのクラスの仕様が分かるように作成するのが分かりやすくて良いと思います。<br>
+初め、MainScene.hのメンバーにはtextだけがありますが、不要であれば削除して別のものを追加していってください。<br>
+MainScene.cppを覗くと実装部分が見られます。<br>
+textに「キャンセルキーで終了します」という文字列を代入し、それをDrawにて描画しています。<br>
+シーンには最低限、シーンの初期設定を行うコンストラクタ、シーン終了時の処理を行うデストラクタ、<br>
+毎度呼び出されるUpdate、Drawの4つの関数があります。Updateは状態更新、Drawは描画です。<br>
+この中を編集していくことで、ゲームを作成していくことが出来るというわけです。<br>
+<br><hr>
 
-
+<div id = "pic"></div>
+<h2>画像を表示してみよう</h2>
+今は文字だけしかなくて殺風景なので、画像の表示をしてみましょう。<br>
+何か画像を用意してください。bmpだけじゃなく、透過pngなどにも対応しています。<br>
+↓用意が面倒な場合は、こちらを保存してください。<br>
+<img src = "html_dat\pinkri.png"><br>
+保存場所は、vcxprojファイルが置かれている場所です。たくさんcppとかhとか置いてある所です。<br>
+そこに画像を放り込んでください。<br>
+そこがホームディレクトリになるだけですので、相対パスを用いれば任意のフォルダも参照可能です。<br>
+上の画像は<b>「pinkri.png」</b>ですので、適宜画像名を置き換えてください。<br>
+<br>
+まず、画像を登録する必要がありますので、MainScene::MainScene（コンストラクタ）の中に次の一行を加えてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"] = new Graphic("pinkri.png");<br>
+</b></td></tr></tbody></table><br>
+picは標準で使用可能な画像の連想配列です。picの中身は好きな文字列を指定可能です。<br>
+これにて「pinkri.png」の画像が読み込まれ、pic["ぴんくり"]でその画像を参照できるようになります。<br>
+<br>
+実際に描画してみます。描画はMainScene::Drawで行いますので、<br>
+DrawFormatString関数の前に次の一行を加えてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"]->Draw();<br>
+</b></td></tr></tbody></table><br>
+picはGraphicをポインタで持ってるので、ドットではなくアロー演算子で参照することに注意してください。<br>
+Draw関数を呼び出すことにより、画像が描画されます。<br>
+２行加えただけですが、これで画像が表示されるはずですので、F5で実行してご確認ください。<br>
+画像が指定したパスに存在しなくてもエラーは出ず、画像が出ないだけなので<br>
+画像が出なければパスが間違っている可能性があります。<br>
+成功しますと、左上を基点として画像が描画されていることが確認できます。<br>
+<br>
+ど真ん中に表示したいので、初期位置を変更します。<br>
+画像の登録の行を次のように変更してみてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"] = new Graphic("pinkri.png", Vector2(320, 240), true);<br>
+</b></td></tr></tbody></table><br>
+第二引数は画像の初期位置です。第三引数は中心座標を有効にするという意味です。<br>
+これがfalseだと（デフォルトではfalseです）左上座標が採用されますが、<br>
+それだと不便な場合はここをtrueにしてください。ちゃんとど真ん中に表示されますね。<br>
+<br>
+ただ、(320, 240)という座標は画面サイズが(640, 480)だから真ん中になるのであって<br>
+常に真ん中を指すわけじゃないから不便だよ、というご意見もあるでしょうから<br>
+common::GetWindowCenter() でウィンドウの中心座標をVector2型で返してくれるようにしています。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"] = new Graphic("pinkri.png", common::GetWindowCenter(), true);<br>
+</b></td></tr></tbody></table><br>
+確かに、この方が分かりやすいかもしれませんね。<br>
+試しにこの画像の登録の直後に<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"]->fade = 0;<br>
+	pic["ぴんくり"]->zoom = 0;<br>
+</b></td></tr></tbody></table><br>
+を加え、MainScene::Updateのどこかに<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"]->angle += 0.1;<br>
+	pic["ぴんくり"]->zoom++;<br>
+	pic["ぴんくり"]->fade++;<br>
+</b></td></tr></tbody></table><br>
+を入れてみてください。<br>
+Updateは状態の更新を行うように設計している関数です。<br>
+画像が透明な状態から徐々に、回転しながら大きくなりつつ表示されていく様子が見られると思います。<br>
+要領はこれにて良いかと思います。<br>
+コンストラクタにてシーン開始時の初期設定を行い、Updateで更新、Drawで描画します。<br>
+その呼び出し間隔はリフレッシュレートに依存し、60Hzであれば1秒間に60回行われます。<br>
+UpdateしてDraw、というのを1秒間に60回繰り返すということです。<br>
+UpdateとDrawを分ける必要ないんじゃないかと思われるかもしれませんが、<br>
+分けたほうが分かりやすいだろうという目的で分けているだけなので、<br>
+いらない場合はどちらか一方にのみ書き連ねていっても構いません。<br>
+<br>
+ちなみに、MainScene::~MainSceneはデストラクタです。シーン終了時に呼び出されます。<br>
+メモリ確保したものの後始末に利用されると良いですが、<br>
+標準で提供しているpicというのは自動で消去されるようにしていますので、後始末は不要です。<br>
+シーン中にどうしても手動で削除したい場合は、DeletePic()関数で削除ができます。<br>
 
 <br><hr>
 
-2014年9月26日 フェルミウム湾<br>
+<div id = "key"></div>
+<h2>キー入力対応させてみよう</h2>
+キー入力は簡単に実現できます。<br>
+プロジェクト作成時にUpdate内に<br>
+<br><table border = "2"><tbody><tr><td><b>
+	if (KeyInput::GetKey(Cancel, PushedNow)){<br>
+	&nbsp	EndGame();<br>
+	}<br>
+</b></td></tr></tbody></table><br>
+というのがありますが、これはキャンセルキーを押すとゲームを終了するという処理です。<br>
+見てそのまんまだと思うのですが、いかがでしょうか。<br>
+<b>KeyInput::GetKey(キーの種類, 取得する状態)</b><br>
+とすると、そのキーがその状態にあるかどうかを調べてtrueかfalseか返してくれます。<br>
+初めから提供しているキーはKeyInput.hにあるように、以下の通りです。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	Down,	// ↓<br>
+	Left,	// ←<br>
+	Right,	// →<br>
+	Up,	// ↑<br>
+	OK,	// 決定キー<br>
+	Cancel,	// キャンセルキー<br>
+	Shift,	// シフトキー<br>
+	Ctrl,	// コントロールキー<br>
+</b></td></tr></tbody></table><br>
+KeyTypeの列挙型として保持しています。ジョイスティックパッドにも実は対応しています。<br>
+KeyInput::GetKey関数の第一引数にどれかキーの種類を入れて、<br>
+第二引数には取得する状態を入れます。<br>
+取得する状態はKeyStateの列挙型として以下のように保持しています。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	PushedNow,	// 押した瞬間<br>
+	HasBePushed,	// 押している状態<br>
+	ReleaseNow,	// 離した瞬間<br>
+	NeverPushed,	// 離している状態<br>
+</b></td></tr></tbody></table><br>
+キャンセルを押したら終了、という機能はキャンセルキーを押した瞬間を得られればいいので<br>
+先ほどのようにPushedNowを第二引数とすればよいですが、<br>
+キャラクターの移動など、押しっぱなしでも反応させたい場合はHasBePushedが有効です。<br>
+<br>
+では実際に、画像を動かしてみましょう。<br>
+まず、コンストラクタでは画像の取り込みのみ行うようにします。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"] = new Graphic("pinkri.png", common::GetWindowCenter(), true);
+</b></td></tr></tbody></table><br>
+Drawでは以下の一行。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ぴんくり"]->Draw();
+</b></td></tr></tbody></table><br>
+これで画像がど真ん中に表示される、ということでしたが、<br>
+今度はUpdateに、キー入力に応じて画像が移動する処理を追加しましょう。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	if (KeyInput::GetKey(Left, HasBePushed)){<br>
+	&nbsp	pic["ぴんくり"]->pos.x -= 3;<br>
+	}<br>
+	if (KeyInput::GetKey(Right, HasBePushed)){<br>
+	&nbsp	pic["ぴんくり"]->pos.x += 3;<br>
+	}<br>
+	if (KeyInput::GetKey(Up, HasBePushed)){<br>
+	&nbsp	pic["ぴんくり"]->pos.y -= 3;<br>
+	}<br>
+	if (KeyInput::GetKey(Down, HasBePushed)){<br>
+	&nbsp	pic["ぴんくり"]->pos.y += 3;<br>
+	}<br>
+</b></td></tr></tbody></table><br>
+何をしているかはお分かりでしょう。<br>
+キーを押すと、座標を足し引きしているのです。<br>
+3を足し引きするので、リフレッシュレートが60Hzなら、1／60秒で3ドット移動します。<br>
+
+<br><hr>
+
+<div id = "sound"></div>
+<h2>音楽を再生してみよう</h2>
+BGMも画像と似たように扱うことができます。<br>
+以下はBGM.mp3というファイルを読み込んで再生するサンプルです。<br>
+コンストラクタに下のように書いてみましょう。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	sound["BGM"] = new BGM("BGM.mp3");<br>
+	sound["BGM"]->Play();<br>
+</b></td></tr></tbody></table><br>
+picがsoundに、GraphicがBGMになったぐらいです。<br>
+読み込んだ直後にPlay()（再生）を実行しています。これで読み込んだBGMが再生されます。<br>
+<b>Play()はUpdateやDrawに直に置くのはやめてください。</b>
+画像はパラパラ漫画のように連続して描画することで動きを表現するものですが、<br>
+音楽は再生を一度行えば鳴り続けるもので、<br>
+Play()を連続で実行してしまうと連続で再生開始としてしまってえらいことになります。<br>
+<br>
+効果音の場合は以下のようになります。SE.wavを読み込んで再生する例です。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	sound["効果音"] = new SE("SE.wav");<br>
+	sound["効果音"]->Play();<br>
+</b></td></tr></tbody></table><br>
+BGMがSEに変わっただけです。<br>
+BGMとSEの違いは再生位置が終端までいってループするか否か、だけです。<br>
+どちらもSoundクラスの派生クラスであり、もともとBGMも効果音もSoundでやっていたのですが<br>
+Play()の取り扱いがややこしくなるという理由でこのように分けたという経緯があります。<br>
+ですから、基本どちらも扱い方は変わりません。<br>
+効果音は再生したいタイミングでPlay()を実行してくださればOKです。<br>
+<br>
+BGMはループ再生するように設定されますが、ループしたときに途中からループさせるには第二引数に値を入れます。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	sound["BGM"] = new BGM("BGM.mp3", 5000);<br>
+</b></td></tr></tbody></table><br>
+↑BGM.mp3の再生位置が終端までいったら、再生位置5秒の位置からループするという設定です。<br>
+第二引数にはループする位置をミリ秒単位で指定します。5000ミリ秒＝5秒ということです。<br>
+<br>
+再生を停止させるにはStop()を用います。<br>
+シーンが切り替わるとpicとsoundはすべて消去されるのでBGMなども自動で停止してしまいますが、<br>
+共通データ（CommonData::UnSaveData）にBGMを保持しておいてそれを再生するようにすれば<br>
+シーンをまたいでもBGMを再生し続けられるというテクニックもあります。<br>
+
+<br><hr>
+
+<div id = "scene"></div>
+<h2>シーンを追加してみよう</h2>
+シーンとは画面のようなものです。タイトル画面でも追加してみましょう。<br>
+<b>「TitleScene」</b>という名前で新たなクラスを作成します。<br>
+ソリューションエクスプローラーのどこかてきとうな所で右クリックすると「追加 > クラス」というのが選択できるので<br>
+それでC++クラスを選択したらウィザードが開きますから、<br>
+クラス名に「TitleScene」を、基底クラスに「BaseScene」を入力してください。<br>
+シーンの基底クラスはすべて「BaseScene」です。<br>
+すると、「TitleScene.h」と「TitleScene.cpp」が作成されますから、<br>
+分かりやすいようにそれぞれ「シーン」フォルダに入れておいてください。<br>
+<br>
+後はMainSceneを真似て同じような形にすればOKです。<br>
+TitleScene.hのTitleSceneクラスのpublic部分に次の２行を追加してください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	void Update() override;<br>
+	void Draw() override;<br>
+</b></td></tr></tbody></table><br>
+これにより、BaseSceneのUpdateとDrawをオーバーライドします。<br>
+overrideはオーバーライドするということの強調ですが、なくても構いません。<br>
+次に、TitleScene.cppのどこかに次の行を追加してください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	void TitleScene::Update(){<br>
+	&nbsp	BaseScene::Update();<br>
+	}<br>
+	<br>
+	void TitleScene::Draw(){<br>
+	&nbsp	BaseScene::Draw();<br>
+	}<br>
+</b></td></tr></tbody></table><br>
+これで、Update関数とDraw関数が定義できました。<br>
+BaseScene::Updateは基底クラスのUpdateを、<br>
+BaseScene::Drawは基底クラスのDrawをそれぞれ実行するものです。一応常に入れておいてください。<br>
+これでTitleSceneの骨格ができました。MainSceneと同じような形になっていることが確認できます。<br>
+<br>
+そして、TitleSceneをシーンとして登録するためにScene.hを開きます。<br>
+一番上にMainSceneのインクルードがあるので、その次の行にこれを入れてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	#include "TitleScene.h"
+</b></td></tr></tbody></table><br>
+そして、GetSceneObject関数内でMainSceneの記法に従って次の行を追加してください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	if (name == "Title")	ret = new TitleScene();
+</b></td></tr></tbody></table><br>
+これにて、「Title」という名前でTitleSceneのインスタンスを生成できるようになりました。<br>
+実際にシーンを切り替えるときはChangeScene("Title")とすればタイトル画面に遷移します。<br>
+<br>
+それではタイトル画面を表示しましょう。<br>
+何でもいいですが、例えば↓この画像をタイトル画面とします。<br>
+<img src = "html_dat\title.jpg"><br>
+<b>「title.jpg」</b>という名前の、(640, 480)のサイズの画像です。<br>
+ついでにこんなのも作りました。<br>
+<img src = "html_dat\enter.png"><br>
+この画像は<b>「enter.png」</b>です。「Enter押してね」って書いてます。<br>
+これの透明度を上げたり下げたりして、それっぽく見せることにします。<br>
+「title.jpg」と「enter.png」を読み込んで、Drawにて描画、<br>
+「Enter押してね」の方はUpdateにて透明度を上げたり下げたりします。<br>
+決定キーを押せば、Main画面に遷移する、ということをしましょう。<br>
+<br>
+↓こんな感じです。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	#include "TitleScene.h"<br>
+	<br>
+	TitleScene::TitleScene(){<br>
+	&nbsp	pic["タイトル"] = new Graphic("title.jpg");<br>
+	&nbsp	pic["押してね"] = new Graphic("enter.png", Vector2(common::GetWindowCenter().x, 400), true);<br>
+	}<br>
+	<br>
+	TitleScene::~TitleScene(){<br>
+	}<br>
+	<br>
+	void TitleScene::Update(){<br>
+	&nbsp	BaseScene::Update();<br>
+	&nbsp	pic["押してね"]->fade = 128 - 128.0 * cos(0.1 * GetSceneTime());<br>
+	&nbsp	if (KeyInput::GetKey(OK, PushedNow)){<br>
+	&nbsp	&nbsp	ChangeScene("Main");<br>
+	&nbsp	}<br>
+	}<br>
+	<br>
+	void TitleScene::Draw(){<br>
+	&nbsp	BaseScene::Draw();<br>
+	&nbsp	pic["タイトル"]->Draw();<br>
+	&nbsp	pic["押してね"]->Draw();<br>
+	}<br>
+</b></td></tr></tbody></table><br>
+最後に、初期シーンを「Main」から「Title」に変えたいので、<br>
+InfoData.hを開きましてDefaultScene()の中身を「Main」から「Title」に変えます。<br>
+これにより、初期シーンがタイトル画面になり、決定キーを押せばメイン画面に遷移します。<br>
+実際にビルドして実行してみてください。ゲームっぽくなってきました。<br>
+
+<br><hr>
+
+<div id = "div"></div>
+<h2>画像の分割読み込み</h2>
+画像はnew Graphicとすれば読み込みが可能ですが、このような画像の場合は単体ずつ読み込むのは非効率です。<br>
+<img src = "html_dat\baysuke.png">&copy;Gx2s<br>
+画像は<b>「baysuke.png」</b>です。こちらの画像の場合は分割読み込みが有効です。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ベイ助"] = new Graphic("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
+</b></td></tr></tbody></table><br>
+分割読み込み時には、オーバーロードしたGraphicのコンストラクタを用います。<br>
+第二引数に分割時の一つ分の画像サイズを、第三引数に分割する数（横と縦）をそれぞれ入れれば、<br>
+これは分割読み込みと認識されて、分割読み込みされた画像の情報が格納されます。<br>
+この場合は「baysuke.png」を分割したときの一つ分の大きさは(32, 48)、これを横４つ、縦４つにそれぞれ分割したいので<br>
+以上のような構文で入力をします。それ以降の引数は単体読み込みと同じです。<br>
+これをMainSceneのコンストラクタに入れて登録しておきましょう。<br>
+次に、描画する際には分割されて画像が１６枚になっているので、どれを描画するかを指定する必要があります。<br>
+<b>Draw(描画する画像番号)</b>としてやれば、その番号の画像が描画されます。<br>
+番号は左上を0番として、右にいくにつれ1、2、…、右端までいったら次の段へ、…という具合で付きます。<br>
+この場合は１６枚に分割しているので、一番右下は15番ということになりますね。<br>
+15番を描画したいときは、<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ベイ助"]->Draw(15);<br>
+</b></td></tr></tbody></table><br>
+となります。<br>
+動いてるっぽく見せたいので、試しにDraw内に次のように書いてみてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	int id = (GetSceneTime() / 15) % 16;<br>
+	pic["ベイ助"]->Draw(id);<br>
+</b></td></tr></tbody></table><br>
+GetSceneTimeで、シーンが始まってからの時間（フレーム単位）を取得できます。<br>
+それを15で割って16で割った余りを描画する番号idとして決め、描画させてみます。<br>
+こうすると、0番、1番、…、15番、と順に表示され、0番に戻る、というのがループされます。<br>
+ただそれだけの例ですが、動いてる画像が表示されるのでよりゲームらしくなってきてないでしょうか。<br>
+<br>
+キャラクターを４方向に歩かせるサンプルです。<br>
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	int step;	// 足踏みの時間<br>
+&nbsp	int id;	// 描画する画像の番号<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene(){<br>
+&nbsp	pic["ベイ助"] = new Graphic("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
+&nbsp	step = 0;<br>
+&nbsp	id = 0;<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	if (KeyInput::GetKey(Left, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.x -= 3;<br>
+&nbsp	&nbsp	step++;<br>
+&nbsp	&nbsp	id = 4;<br>
+&nbsp	}<br>
+&nbsp	else if (KeyInput::GetKey(Right, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.x += 3;<br>
+&nbsp	&nbsp	step++;<br>
+&nbsp	&nbsp	id = 8;<br>
+&nbsp	}<br>
+&nbsp	else if (KeyInput::GetKey(Up, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.y -= 3;<br>
+&nbsp	&nbsp	step++;<br>
+&nbsp	&nbsp	id = 12;<br>
+&nbsp	}<br>
+&nbsp	else if (KeyInput::GetKey(Down, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.y += 3;<br>
+&nbsp	&nbsp	step++;<br>
+&nbsp	&nbsp	id = 0;<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	step = 0;<br>
+&nbsp	&nbsp	id = id / 4 * 4;	// 4で割ると小数点以下切捨てされることを利用して番号を戻している<br>
+&nbsp	}<br>
+&nbsp	id += ((step + 7) / 8) % 4;	// 足踏み時間に応じて番号を加算<br>
+<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	pic["ベイ助"]->Draw(id);<br>
+}<br>
+</b></td></tr></tbody></table><br>
+アニメーションなどを作成する場合は、このように一つの画像にまとめて分割した方が便利でしょう。<br>
+
+<br><hr>
+
+<div id = "handle"></div>
+<h2>画像のハンドル指定読み込み</h2>
+単体読み込み、分割読み込みはいずれも一つのオブジェクトが必ず画像を持っているような形でしたが、<br>
+シューティングゲームなど、同じ画像を大量に扱う際にはこれはメモリがもったいなさすぎます。<br>
+同じ画像を複数のGraphicオブジェクトが兼用できるようにしたいものです。<br>
+<br>
+画像は読み込み時にハンドルという番号が与えられ、内部ではそれを用いて画像を描画しています。<br>
+ですから、このハンドルを兼用できれば複数のオブジェクトが同一の画像を扱うことができるようになります。<br>
+<br>
+<img src = "html_dat\bullet.png"><br>
+<br>
+↑<b>「bullet.png」</b>です。例ではこれを使用することにします。<br>
+画像のハンドルを取得するには、以下のように書きます。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	int* handle = Graphic::CreateHandle("bullet.png");<br>
+</b></td></tr></tbody></table><br>
+Graphic::CreateHandleにより、画像のハンドルを取得できます。<br>
+これは分割読み込みに対応できるようint型のポインタとして出力されます。<br>
+ハンドルを用いてGraphicオブジェクトを生成するには、以下のように書きます。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["弾"] = new Graphic(handle);
+</b></td></tr></tbody></table><br>
+パスの部分をハンドルに置き換えればいいだけです。<br>
+後はハンドルを使いまわしてGraphicオブジェクトを大量生成することが可能です。<br>
+<br>
+注意が一つあります。<br>
+ハンドルで取得した画像というのは<b>Graphicオブジェクトを削除しても消えません。</b><br>
+実際に削除するためにはこれを入れてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	Graphic::DeleteHandle(handle);
+</b></td></tr></tbody></table><br>
+handleにはハンドルの変数を入れます。これにより、画像を削除してメモリ開放できます。<br>
+これを入れない限りは、<b>シーンを変更しても消えないので、どこかで必ず削除するようにしてください。</b><br>
+シーンのデストラクタに入れておくのが良いと思います。<br>
+これに限らず、picで保持しないGraphic型変数は勝手には消えませんから、十分注意してください。<br>
+<br>
+弾画像を大量に発生させてみましょう。<br>
+以下は1000個の弾を中心から一斉に分散させるサンプルです。<br>
+きれいと思うか、気持ち悪いと思うかは、人を選びそうですが＾＾；<br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	Graphic* bullet[1000];	// 弾<br>
+&nbsp	Vector2d bullet_pos[1000];	// 弾の座標（実数）<br>
+&nbsp	double bullet_speed[1000];	// 弾の速度<br>
+&nbsp	int* handle;	// 弾画像のハンドル<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene(){<br>
+&nbsp	handle = Graphic::CreateHandle("bullet.png");	// 弾画像のハンドル取得<br>
+&nbsp	for (int i = 0; i < 1000; i++){<br>
+&nbsp	&nbsp	bullet[i] = new Graphic(handle, common::GetWindowCenter(), true);	// ハンドルを割り当て<br>
+&nbsp	&nbsp	bullet[i]->angle = 180.0 * Random::Rand(360) / 3.141592;	// 投射角度を360°からランダムに指定<br>
+&nbsp	&nbsp	bullet_pos[i].x = static_cast<double>(bullet[i]->pos.x);	// x座標の実数値を保持<br>
+&nbsp	&nbsp	bullet_pos[i].y = static_cast<double>(bullet[i]->pos.y);	// y座標の実数値を保持<br>
+&nbsp	&nbsp	bullet_speed[i] = 0.02 * Random::Rand(100);	// 弾のスピードをランダムに指定<br>
+&nbsp	&nbsp	bullet[i]->fade = 0;	// 弾は初め透明とする<br>
+&nbsp	}<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+&nbsp	Graphic::DeleteHandle(handle);	// シーン終了時、必ずメモリ開放すること<br>
+&nbsp	for (int i = 0; i < 1000; i++){<br>
+&nbsp	&nbsp	delete bullet[i];	// 弾のGraphicオブジェクトもきちんと削除してメモリ開放すること<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	for (int i = 0; i < 1000; i++){<br>
+&nbsp	&nbsp	// 弾の位置を角度とスピードから、実数値で計算<br>
+&nbsp	&nbsp	bullet_pos[i].x += bullet_speed[i] * cos(bullet[i]->angle);<br>
+&nbsp	&nbsp	bullet_pos[i].y -= bullet_speed[i] * sin(bullet[i]->angle);<br>
+<br>
+&nbsp	&nbsp	// 弾画像の座標に計算した結果を渡す<br>
+&nbsp	&nbsp	bullet[i]->pos.x = static_cast<int>(bullet_pos[i].x);<br>
+&nbsp	&nbsp	bullet[i]->pos.y = static_cast<int>(bullet_pos[i].y);<br>
+<br>
+&nbsp	&nbsp	// 不透明度を上げていく<br>
+&nbsp	&nbsp	bullet[i]->fade++;<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	for (int i = 0; i < 1000; i++){<br>
+&nbsp	&nbsp	bullet[i]->Draw();	// すべて描画<br>
+&nbsp	}<br>
+}<br>
+</b></td></tr></tbody></table><br>
+弾の座標をMainSceneも保持していますが、これは仕方なくです……<br>
+本当は実数値で座標を持ちたかったのですが、Graphicでは座標を整数値で管理しているので<br>
+実数値で計算したものをGraphicの座標に渡してやることをしています。<br>
+Graphicを実数値に対応させればいいのですが……やるかやらないか分かりません。<br>
+<br>
+分割読み込み画像のハンドル取得は以下のようにします。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	int* handle = Graphic::CreateHandle("baysuke.png", Vector2(32, 48), Vector2(4, 4));
+</b></td></tr></tbody></table><br>
+第二引数に一つ分の画像サイズ、第三引数に分割数を入れれば、分割読み込み画像のハンドルを取得できます。<br>
+これを用いてGraphicのインスタンス化をするときは、一つ分の大きさや分割数は必要ありません。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["ベイ助"] = new Graphic(handle);
+</b></td></tr></tbody></table><br>
+単体読み込みのハンドル指定とまったく同じように扱うことができます。<br>
+単体のときと同様、削除時はGraphic::DeleteHandle(handle)を忘れないようにご注意下さい。<br>
+
+<br><hr>
+
+<div id = "screen"></div>
+<h2>スクリーンモードを変更しよう</h2>
+InfoDataをいじれば初期設定をフルスクリーンにすることができますが、<br>
+ゲームの実行中にスクリーンモードを変更するときは注意が必要です。<br>
+<b>ChangeWindowMode(true)</b>でウィンドウモードに、<br>
+<b>ChangeWindowMode(false)</b>でフルスクリーンに変更できますが、<br>
+その際、<b>すべてのグラフィックデータが消去されてしまいます。</b><br>
+ですので、実際に使用する際は直後に画像を再読み込みする処理を入れるなどの工夫をしてください。<br>
+
+<br><hr>
+
+<div id = "save"></div>
+<h2>セーブ・ロード機能を作ろう</h2>
+ゲームのセーブデータは、それぞれのゲームによって異なります。<br>
+ここでは最も単純に、一つの変数をテキストに保存するというのを実現してみましょう。<br>
+Enterキーを押すと増える変数で、その変数値はゲームを終了してもテキストに保持されるとします。<br>
+<br>
+まず、CommonData.hを開き、空っぽのSaveData構造体の中にこれを追加します。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	int enterNum;	// Enterを押した回数
+</b></td></tr></tbody></table><br>
+この共通データは、CommonData::saveData.enterNumとしてどこででも参照が可能です。<br>
+では今度はCommonData.cppを開きましょう。<br>
+ゲームが始まったときにCommonData::Initialize関数が実行されます。<br>
+これは、共通データの初期値を決めるものです。セーブデータがない状態の値と考えて良いです。<br>
+CommonData::Initializeの中に以下を追加しましょう。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	saveData.enterNum = 0;
+</b></td></tr></tbody></table><br>
+セーブデータに用いられているenterNumは、初めは0とします。<br>
+<br>
+それでは、セーブとロードの関数を作成しましょう。今は空っぽのままになっています。<br>
+テキストに変数を読み書きするだけなので、C++の標準的な書き方でOKです。<br>
+例えば以下のようになるでしょう。<br>
+<br><table border = "2"><tbody><tr><td><b>
+bool CommonData::Save(string path){<br>
+&nbsp	ofstream ofs(path);<br>
+&nbsp	bool ret = !ofs.fail();<br>
+&nbsp	if (ret){<br>
+&nbsp	&nbsp	ofs << saveData.enterNum;<br>
+&nbsp	}<br>
+&nbsp	return ret;<br>
+}<br>
+<br>
+bool CommonData::Load(string path){<br>
+&nbsp	ifstream ifs(path);<br>
+&nbsp	bool ret = !ifs.fail();<br>
+&nbsp	if (ret){<br>
+&nbsp	&nbsp	stringstream ss;<br>
+&nbsp	&nbsp	string buf;<br>
+&nbsp	&nbsp	getline(ifs, buf);<br>
+&nbsp	&nbsp	ss << buf;<br>
+&nbsp	&nbsp	ss >> saveData.enterNum;<br>
+&nbsp	}<br>
+&nbsp	return ret;<br>
+}<br>
+</b></td></tr></tbody></table><br>
+これで、enterNumを読み書きする機構が完成しました。<br>
+実際にゲームに組み込んでみましょう。<br>
+<br>
+MainSceneで実験をしてみたいと思います。<br>
+比較用に、セーブしないただのenterNumをMainSceneに持たせてみましょう。<br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	int enterNum;	// 今回Enterを押した回数<br>
+&nbsp	int enterTime;	// 次にEnterを押せるようになるまでの時間<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene(){<br>
+&nbsp	SetFontSize(32);<br>
+<br>
+&nbsp	enterNum = 0;<br>
+&nbsp	enterTime = 0;<br>
+&nbsp	pic["ぴんくり"] = new Graphic("pinkri.png", common::GetWindowCenter(), true);<br>
+&nbsp	CommonData::Load("セーブデータ.txt");	// ロード<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+&nbsp	CommonData::Save("セーブデータ.txt");	// セーブ<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	if (KeyInput::GetKey(OK, PushedNow) && enterTime == 0){<br>
+&nbsp	&nbsp	enterNum++;	// 今回のEnter回数（終了時に消える）<br>
+&nbsp	&nbsp	CommonData::saveData.enterNum++;	// Enter回数の総数（セーブされる）<br>
+&nbsp	&nbsp	enterTime = 30;<br>
+&nbsp	}<br>
+<br>
+&nbsp	if (KeyInput::GetKey(Cancel, PushedNow)){<br>
+&nbsp	&nbsp	EndGame();<br>
+&nbsp	}<br>
+<br>
+&nbsp	if (enterTime > 0){<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.y = 100.0 / (15 * 15) * (enterTime - 15) * (enterTime - 15) + common::GetWindowCenter().y - 100.0;<br>
+&nbsp	&nbsp	enterTime--;<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	pic["ぴんくり"]->Draw();<br>
+<br>
+&nbsp	DrawFormatString(10, 10, GetColor(255, 255, 255), "今回Enterを押した回数　　：%d", enterNum);<br>
+&nbsp	DrawFormatString(10, 40, GetColor(255, 255, 255), "今までにEnterを押した総数：%d", CommonData::saveData.enterNum);<br>
+}<br>
+</b></td></tr></tbody></table><br>
+Enterを押すと画像がジャンプするようにしました。<br>
+コンストラクタにてLoadを行い、「セーブデータ.txt」を読み込みます。<br>
+もし読み込みに失敗したとき（初回起動でファイルが存在しない場合など）は何事も無くスルーされます。<br>
+テキストを無事読み込めたら、数値を取り込んでゲームに反映させます。<br>
+また、デストラクタでSaveを行うようにしました。<br>
+つまり、ゲームを終了させたときにEnterを押した総数が保存されるようになります。<br>
+<br>
+セーブデータの作り方は様々ですので、ゲームの様態に合わせて作成してみてください。<br>
+ハッシュなどを用いてセーブデータの改竄を防ぐなどといったテクニックもあります。<br>
+
+<br><hr>
+
+<div id = "keyconfig"></div>
+<h2>キー割り当ての変更</h2>
+ゲーム中にキー割り当てを変更することもできます。<br>
+キー入力の判定条件はラムダ式で保持されており、<br>
+判定条件を変えるときは対応するキーの判定条件に新たなラムダ式をセットしてやればOKです。<br>
+<br>
+以下は、Enterを押すと上下左右のキーの判定条件が反転するサンプルです。<br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	bool reverseFlg;	// 反転フラグ<br>
+&nbsp	void SetKeys();	// キーの判定条件のセット<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene(){<br>
+&nbsp	SetFontSize(32);<br>
+&nbsp	pic["ぴんくり"] = new Graphic("pinkri.png", common::GetWindowCenter(), true);<br>
+&nbsp	reverseFlg = false;<br>
+&nbsp	SetKeys();<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	if (KeyInput::GetKey(Left, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.x -= 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Right, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.x += 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Up, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.y -= 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Down, HasBePushed)){<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.y += 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(OK, PushedNow)){<br>
+&nbsp	&nbsp	reverseFlg ^= 1;	// 反転<br>
+&nbsp	&nbsp	SetKeys();<br>
+&nbsp	}<br>
+&nbsp}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	pic["ぴんくり"]->Draw();<br>
+<br>
+&nbsp	if (!reverseFlg){<br>
+&nbsp	&nbsp	DrawFormatString(10, 10, GetColor(255, 255, 255), "通常");<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	DrawFormatString(10, 10, GetColor(255, 255, 255), "反転");<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::SetKeys(){<br>
+&nbsp	if (!reverseFlg){<br>
+&nbsp	&nbsp	// 通常<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Left, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_LEFT) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Right, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_RIGHT) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Up, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_UP) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Down, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_DOWN) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	// 反転<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Left, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_RIGHT) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Right, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_LEFT) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Up, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_DOWN) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	&nbsp	KeyInput::SetKeyCond(Down, []{<br>
+&nbsp	&nbsp	&nbsp	return CheckHitKey(KEY_INPUT_UP) != 0;<br>
+&nbsp	&nbsp	});<br>
+&nbsp	}<br>
+}<br>
+</b></td></tr></tbody></table><br>
+
+キー配置をプレイヤーが自由に設定できるようなオプションの作成などに利用できるでしょう。<br>
+
+<br><hr>
+
+<div id = "icon"></div>
+<h2>アイコンを設定しよう</h2>
+ゲームのアイコンを設定してみましょう。<br>
+<br><table border = "2"><tbody><tr><th>icon.ico</th></tr><tr><td>
+<img src = "html_dat\icon.ico" width = "64"><br>
+</td></tr></tbody></table><br>
+何でもいいですが、とりあえずアイコン画像を用意します。ここでは<b>「icon.ico」</b>とします。<br>
+このファイルは今までのようにvcxprojがあったディレクトリではなく、その一階層前の、slnファイルのある場所に置いてください。<br>
+そして、同じディレクトリに<b>「Resource.rc」</b>という空のファイルを作成してください。<br>
+これにてリソースファイルの定義を行います。Resource.rcをテキストエディタで開き、次のように書いてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	101 ICON "icon.ico"<br>
+</b></td></tr></tbody></table><br>
+この場合は「icon.ico」なのでこう書いていますが、別のファイル名の場合は適宜変えてください。<br>
+テンプレートではアイコン101番をウィンドウアイコンとして指定するようにしていますので、<br>
+それにアイコンにしたい画像ファイルを関連付けることによってアイコンを設定できます。<br>
+<br>
+最後に、Visual Studioに戻ってソリューションエクスプローラーの「リソースファイル」に<br>
+先ほどの「Resource.rc」のみ入れてください。これでビルドをすると、アイコンが置き換わるはずです。<br>
+
+<br><hr>
+
+<div id = "complete"></div>
+<h2>ゲームの完成</h2>
+晴れてゲームが完成しましたら、リリースビルドをして完成品にしましょう。<br>
+ソリューション構成の「Debug」を「Release」に変更してビルドを行えば、リリースビルド完了です。<br>
+素材の相対パスはできあがった実行ファイル（.exe）のあるディレクトリになるので、<br>
+そこを相対パスとして素材を入れてください。<br>
+<br>
+素材はDXアーカイブ機能を用いることにより一つの「dxaファイル」にまとめることが可能です。<br>
+便利な機能ですので、ぜひ別途ご参照ください。<br>
+ただし、セーブデータなどはもちろんそれにはまとめられないのでご注意ください。<br>
+
+<br><hr>
+
+<div id = "sample"></div>
+<h2>サンプルゲーム</h2>
+今までご紹介しました機能を利用すれば、おおかたゲーム作れると思います。<br>
+サンプルとしてなにつくった？<br>
+
+<br><hr>
+
+2014年9月27日 フェルミウム湾<br>
 <br>
 
 </body>

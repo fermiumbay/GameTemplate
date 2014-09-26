@@ -42,4 +42,5 @@ public:
 	static bool Initialize();	// キー入力の初期化（成功したらtrue）
 	static bool GetKey(KeyType type, KeyState state);	// キー状態取得
 	static void SetKeyCond(KeyType type, function<bool()> cond);	// キーの判定条件を設定
+	static void CopyKeyCond(KeyType copiedType, KeyType copyingType);	// キーの判定条件を別のキーにコピー
 };
