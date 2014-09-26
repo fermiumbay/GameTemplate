@@ -50,3 +50,13 @@ string BaseScene::GetChangeSceneName(){
 bool BaseScene::GetEndGameFlg(){
 	return endGameFlg;
 }
+
+void BaseScene::DeletePic(string name){
+	delete pic[name];
+	pic.erase(name);
+}
+
+void BaseScene::DeleteSound(string name){
+	delete sound[name];
+	sound.erase(name);
+}

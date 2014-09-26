@@ -14,6 +14,8 @@ protected:
 	void ChangeScene(string name);	// シーンを変更する
 	map<string, Graphic*>	pic;	// 画像
 	map<string, Sound*>	sound;	// 音楽
+	void DeletePic(string name);	// 画像の削除
+	void DeleteSound(string name);	// 音楽の削除
 public:
 	BaseScene();
 	virtual ~BaseScene() = 0;

@@ -4,7 +4,7 @@ Graphic::Graphic(){
 }
 
 Graphic::Graphic(const TCHAR *path, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2 zoom, double angle){
-	this->handle = new int(LoadGraph(path));
+	this->handle = CreateHandle(path);
 	this->pos = pos;
 	this->fade = fade;
 	this->zoom = zoom;
@@ -12,24 +12,21 @@ Graphic::Graphic(const TCHAR *path, Vector2 pos, bool centerPosFlg, bool trans, 
 	this->centerPosFlg = centerPosFlg;
 	this->trans = trans;
 	GetGraphSize(*(this->handle), &width, &height);
-	this->divType = false;
 	SetDefaultColor();
 	turnFlg = false;
 	this->handleNotDeleteFlg = false;
 }
 
 Graphic::Graphic(const TCHAR *path, Vector2 oneSize, Vector2 divNum, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2 zoom, double angle){
-	this->handle = new int[divNum.x * divNum.y];
 	this->width = oneSize.x;
 	this->height = oneSize.y;
-	LoadDivGraph(path, divNum.x * divNum.y, divNum.x, divNum.y, this->width, this->height, this->handle);
+	this->handle = CreateHandle(path, oneSize, divNum);
 	this->pos = pos;
 	this->fade = fade;
 	this->zoom = zoom;
 	this->angle = angle;
 	this->centerPosFlg = centerPosFlg;
 	this->trans = trans;
-	this->divType = true;
 	SetDefaultColor();
 	turnFlg = false;
 	this->handleNotDeleteFlg = false;
@@ -44,32 +41,14 @@ Graphic::Graphic(int *handle, Vector2 pos, bool centerPosFlg, bool trans, int fa
 	this->centerPosFlg = centerPosFlg;
 	this->trans = trans;
 	GetGraphSize(*(this->handle), &width, &height);
-	this->divType = false;
-	SetDefaultColor();
-	turnFlg = false;
-	this->handleNotDeleteFlg = true;
-}
-
-Graphic::Graphic(int *handle, Vector2 oneSize, Vector2 divNum, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2 zoom, double angle){
-	this->handle = handle;
-	this->width = oneSize.x;
-	this->height = oneSize.y;
-	this->pos = pos;
-	this->fade = fade;
-	this->zoom = zoom;
-	this->angle = angle;
-	this->centerPosFlg = centerPosFlg;
-	this->trans = trans;
-	this->divType = true;
 	SetDefaultColor();
 	turnFlg = false;
 	this->handleNotDeleteFlg = true;
 }
 
 Graphic::~Graphic(){
-	DeleteGraph(*handle);
 	if(!handleNotDeleteFlg){
-		delete handle;
+		DeleteHandle(handle);
 	}
 }
 
@@ -126,3 +105,17 @@ void Graphic::SetZoom(int zoom){
 	this->zoom = Vector2(zoom, zoom);
 }
 
+int* Graphic::CreateHandle(const TCHAR *path){
+	return new int(LoadGraph(path));
+}
+
+int* Graphic::CreateHandle(const TCHAR *path, Vector2 oneSize, Vector2 divNum){
+	int* ret = new int[divNum.x * divNum.y];
+	LoadDivGraph(path, divNum.x * divNum.y, divNum.x, divNum.y, oneSize.x, oneSize.y, ret);
+	return ret;
+}
+
+void Graphic::DeleteHandle(int* handle){
+	DeleteGraph(*handle);
+	delete handle;
+}
