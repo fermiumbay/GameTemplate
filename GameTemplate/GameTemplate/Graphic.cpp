@@ -97,6 +97,7 @@ void Graphic::Draw(int number, Vector2 addPos){
 		DrawRotaGraph3(x, y, width / 2, height / 2, 0.01 * static_cast<double>(zoom.x), 0.01 * static_cast<double>(zoom.y), -angle, handle[number], trans, turnFlg);
 	}
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	SetDrawBright(255, 255, 255);
 }
 
 int Graphic::GetWidth(){
