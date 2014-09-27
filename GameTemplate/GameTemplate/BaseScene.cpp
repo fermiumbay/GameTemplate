@@ -7,6 +7,7 @@ BaseScene::BaseScene(){
 	changeSceneName = "";
 	pic.clear();
 	sound.clear();
+	SetDefaultFade();
 }
 
 BaseScene::~BaseScene(){
@@ -33,6 +34,7 @@ void BaseScene::Update(){
 }
 
 void BaseScene::Draw(){
+	SetDrawBright(fade_r, fade_g, fade_b);
 }
 
 int BaseScene::GetSceneTime(){
@@ -59,4 +61,14 @@ void BaseScene::DeletePic(string name){
 void BaseScene::DeleteSound(string name){
 	delete sound[name];
 	sound.erase(name);
+}
+
+void BaseScene::SetFade(int r, int g, int b){
+	fade_r = r;
+	fade_g = g;
+	fade_b = b;
+}
+
+void BaseScene::SetDefaultFade(){
+	SetFade(255, 255, 255);
 }

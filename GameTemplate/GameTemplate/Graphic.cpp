@@ -53,7 +53,9 @@ Graphic::~Graphic(){
 }
 
 void Graphic::Draw(int number, Vector2 addPos){
-	SetDrawBright(color_red, color_blue, color_green);
+	int r, g, b;
+	GetDrawBright(&r, &g, &b);
+	SetDrawBright((color_red * r) / 255, (color_green * g) / 255, (color_blue * b) / 255);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade);
 	if(zoom == Vector2(100, 100) && angle == 0.0 && turnFlg == false){
 		if(centerPosFlg){
@@ -76,7 +78,7 @@ void Graphic::Draw(int number, Vector2 addPos){
 		DrawRotaGraph3(x, y, width / 2, height / 2, 0.01 * static_cast<double>(zoom.x), 0.01 * static_cast<double>(zoom.y), -angle, handle[number], trans, turnFlg);
 	}
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	SetDrawBright(255, 255, 255);
+	SetDrawBright(r, g, b);
 }
 
 int Graphic::GetWidth(){

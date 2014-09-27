@@ -16,6 +16,9 @@ protected:
 	map<string, Sound*>	sound;	// 音楽
 	void DeletePic(string name);	// 画像の削除
 	void DeleteSound(string name);	// 音楽の削除
+	int fade_r, fade_g, fade_b;	// 画面色調
+	void SetFade(int r, int g, int b);	// 色調変更
+	void SetDefaultFade();	// 色調を元に戻す
 public:
 	BaseScene();
 	virtual ~BaseScene() = 0;
