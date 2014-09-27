@@ -3,6 +3,8 @@
 
 // メイン処理
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);	// メモリリーク検出
+
 	//初期処理（エラー発生すると終了）
 	if(SetWindowIconID(101) != 0){return 0;}	// アイコン画像の埋め込み
 	if(SetOutApplicationLogValidFlag(false) != 0){return 0;}	// ログ出力を禁止する
@@ -24,6 +26,8 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 		if(ClearDrawScreen() != 0){break;}	//画面を消去
 		game.Play();	// ゲーム処理の実行
 	}while(!game.Exit());	// ゲームの終了
+
+	CommonData::Finalization();	// 共通データの終了処理
     DxLib_End();    // DXライブラリ終了処理
     return 0;
 }

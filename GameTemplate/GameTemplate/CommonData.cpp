@@ -9,6 +9,10 @@ bool CommonData::Initialize(){
 	return true;
 }
 
+bool CommonData::Finalization(){
+	return true;
+}
+
 bool CommonData::Save(string path){
 	return false;
 }
