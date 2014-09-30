@@ -1,9 +1,8 @@
 #pragma once
-#include "common.h"
-#include "CommonData.h"
+#include "GameBehavior.h"
 
 // 基底クラス
-class BaseScene{
+class BaseScene : public GameBehavior{
 	int sceneTime;	// シーン開始からの経過時間
 	bool endGameFlg;	// ゲーム終了フラグ
 	bool changeSceneFlg;	// シーン変更フラグ
@@ -12,16 +11,12 @@ protected:
 	int GetSceneTime();	// シーン開始からの経過時間取得
 	void EndGame();	// ゲームを終了する
 	void ChangeScene(string name);	// シーンを変更する
-	map<string, Graphic*>	pic;	// 画像
-	map<string, Sound*>	sound;	// 音楽
-	void DeletePic(string name);	// 画像の削除
-	void DeleteSound(string name);	// 音楽の削除
 	int fade_r, fade_g, fade_b;	// 画面色調
 	void SetFade(int r, int g, int b);	// 色調変更
 	void SetDefaultFade();	// 色調を元に戻す
 public:
 	BaseScene();
-	virtual ~BaseScene() = 0;
+	virtual ~BaseScene();
 	virtual void Update();	// 更新
 	virtual void Draw();	// 描画
 	bool GetEndGameFlg();	// ゲーム終了フラグ取得

@@ -3,6 +3,11 @@
 
 // ゲーム画面クラス
 class MainScene : public BaseScene{
+	enum State{
+		a,
+		b,
+		c,
+	};
 	string text;	// 表示するテキスト
 public:
 	MainScene();	// コンストラクタ

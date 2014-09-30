@@ -5,18 +5,10 @@ BaseScene::BaseScene(){
 	endGameFlg = false;
 	changeSceneFlg = false;
 	changeSceneName = "";
-	pic.clear();
-	sound.clear();
 	SetDefaultFade();
 }
 
 BaseScene::~BaseScene(){
-	for(map<string, Graphic*>::iterator it = pic.begin(); it != pic.end(); it++){
-		delete (*it).second;
-	}
-	for(map<string, Sound*>::iterator it = sound.begin(); it != sound.end(); it++){
-		delete (*it).second;
-	}
 }
 
 void BaseScene::EndGame(){
@@ -29,11 +21,13 @@ void BaseScene::ChangeScene(string name){
 }
 
 void BaseScene::Update(){
+	GameBehavior::Update();
 	sceneTime++;
 	CommonData::unSaveData.gameTime++;
 }
 
 void BaseScene::Draw(){
+	GameBehavior::Draw();
 	SetDrawBright(fade_r, fade_g, fade_b);
 }
 
@@ -51,16 +45,6 @@ string BaseScene::GetChangeSceneName(){
 
 bool BaseScene::GetEndGameFlg(){
 	return endGameFlg;
-}
-
-void BaseScene::DeletePic(string name){
-	delete pic[name];
-	pic.erase(name);
-}
-
-void BaseScene::DeleteSound(string name){
-	delete sound[name];
-	sound.erase(name);
 }
 
 void BaseScene::SetFade(int r, int g, int b){
