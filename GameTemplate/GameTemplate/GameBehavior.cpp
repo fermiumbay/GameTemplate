@@ -4,6 +4,7 @@ GameBehavior::GameBehavior(){
 	pic.clear();
 	sound.clear();
 	state = State::none;
+	stateTime = 0;
 }
 
 GameBehavior::~GameBehavior(){

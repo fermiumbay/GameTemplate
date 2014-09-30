@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "Pin.h"
 
 // ゲーム画面クラス
 class MainScene : public BaseScene{
@@ -9,6 +10,7 @@ class MainScene : public BaseScene{
 		c,
 	};
 	string text;	// 表示するテキスト
+	Pin* pin;
 public:
 	MainScene();	// コンストラクタ
 	~MainScene();	// デストラクタ

@@ -1,9 +1,5 @@
 #pragma once
-#include "Graphic.h"
-#include "Sound.h"
-#include <string>
-#include <map>
-using namespace std;
+#include "CommonData.h"
 
 // ゲームにおける様々な振る舞いを行うオブジェクトの基底
 class GameBehavior{
@@ -15,13 +11,14 @@ protected:
 	map<string, Sound*>	sound;	// 音楽
 	void DeletePic(string name);	// 画像の削除
 	void DeleteSound(string name);	// 音楽の削除
-	inline State GetState();	// 状態の取得
-	inline int GetStateTime();	// 現在の状態になってからの経過時間取得
+	State GetState();	// 状態の取得
+	int GetStateTime();	// 現在の状態になってからの経過時間取得
 
 	// 状態の変更
 	template<class NewState>
 	void ChangeState(NewState state){
 		this->state = static_cast<GameBehavior::State>(state);
+		stateTime = 0;
 	}
 
 public:

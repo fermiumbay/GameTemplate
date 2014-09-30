@@ -5,18 +5,8 @@ MainScene::MainScene(){
 	ChangeFont("メイリオ");	// 負荷が重いらしいので、頻繁に呼び出さないよう注意
 	text = "キャンセルキーで終了します";
 
-	//ChangeState(State::c);
-	//switch (GetState()){
-	//case State::a:
-	//	text = "a";
-	//	break;
-	//case State::b:
-	//	text = "b";
-	//	break;
-	//case State::c:
-	//	text = "c";
-	//	break;
-	//}
+	pin = new Pin();
+	ChangeState(State::b);
 }
 
 MainScene::~MainScene(){
@@ -25,16 +15,34 @@ MainScene::~MainScene(){
 void MainScene::Update(){
 	BaseScene::Update();
 
-	if (KeyInput::GetKey(Cancel, PushedNow)){
-		EndGame();
+	//if (KeyInput::GetKey(Cancel, PushedNow)){
+	//	EndGame();
+	//}
+
+	pin->Update();
+	if (pin->GetEndFlg()){
+		ChangeScene("Main");
+	}
+	stringstream ss;
+	string i;
+	ss << GetStateTime();
+	ss >> i;
+	switch (GetState()){
+	case State::a:
+		text = "a" + i;
+		break;
+	case State::b:
+		text = "b" + i;
+		break;
+	case State::c:
+		text = "c" + i;
+		break;
 	}
 }
 
 void MainScene::Draw(){
 	BaseScene::Draw();
 
-	//DrawFormatString(10, 10+GetStateTime(), GetColor(255, 255, 255), text.c_str());
-	//if (GetStateTime() > 100){
-	//	ChangeState(State::b);
-	//}
+	pin->Draw();
+	DrawFormatString(10, 10, GetColor(255, 255, 255), text.c_str());
 }
