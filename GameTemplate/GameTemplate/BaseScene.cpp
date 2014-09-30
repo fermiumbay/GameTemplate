@@ -21,13 +21,13 @@ void BaseScene::ChangeScene(string name){
 }
 
 void BaseScene::Update(){
-	GameBehavior::Update();
+	Behavior::Update();
 	sceneTime++;
 	CommonData::unSaveData.gameTime++;
 }
 
 void BaseScene::Draw(){
-	GameBehavior::Draw();
+	Behavior::Draw();
 	SetDrawBright(fade_r, fade_g, fade_b);
 }
 

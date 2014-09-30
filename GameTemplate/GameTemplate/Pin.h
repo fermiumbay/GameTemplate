@@ -1,7 +1,7 @@
 #pragma once
-#include "GameBehavior.h"
+#include "Behavior.h"
 
-class Pin : public GameBehavior{
+class Pin : public Behavior{
 	enum State{
 		move,
 		rotate,

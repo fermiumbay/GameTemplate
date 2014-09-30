@@ -10,7 +10,7 @@ Pin::~Pin(){
 }
 
 void Pin::Update(){
-	GameBehavior::Update();
+	Behavior::Update();
 	switch (GetState()){
 	case State::move:
 		pic["В“Вс"]->pos = Vector2(static_cast<int>(320.0 + 100.0*cos(0.03*GetStateTime())), static_cast<int>(240.0 + 100.0*sin(0.03*GetStateTime())));
@@ -40,7 +40,7 @@ void Pin::Update(){
 }
 
 void Pin::Draw(){
-	GameBehavior::Draw();
+	Behavior::Draw();
 	pic["В“Вс"]->Draw();
 	string text, t;
 	stringstream ss;

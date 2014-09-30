@@ -87,7 +87,7 @@
     <ClCompile Include="CommonData.cpp" />
     <ClCompile Include="ContentBase.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameBehavior.cpp" />
+    <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="KeyInput.cpp" />
@@ -101,7 +101,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="ContentBase.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameBehavior.h" />
+    <ClInclude Include="Behavior.h" />
     <ClInclude Include="InfoData.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="Graphic.h" />

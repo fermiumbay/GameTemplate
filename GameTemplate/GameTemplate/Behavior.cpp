@@ -1,13 +1,13 @@
-#include "GameBehavior.h"
+#include "Behavior.h"
 
-GameBehavior::GameBehavior(){
+Behavior::Behavior(){
 	pic.clear();
 	sound.clear();
 	state = State::none;
 	stateTime = 0;
 }
 
-GameBehavior::~GameBehavior(){
+Behavior::~Behavior(){
 	for (map<string, Graphic*>::iterator it = pic.begin(); it != pic.end(); it++){
 		delete (*it).second;
 	}
@@ -16,27 +16,27 @@ GameBehavior::~GameBehavior(){
 	}
 }
 
-void GameBehavior::Update(){
+void Behavior::Update(){
 	stateTime++;
 }
 
-void GameBehavior::Draw(){
+void Behavior::Draw(){
 }
 
-void GameBehavior::DeletePic(string name){
+void Behavior::DeletePic(string name){
 	delete pic[name];
 	pic.erase(name);
 }
 
-void GameBehavior::DeleteSound(string name){
+void Behavior::DeleteSound(string name){
 	delete sound[name];
 	sound.erase(name);
 }
 
-GameBehavior::State GameBehavior::GetState(){
+Behavior::State Behavior::GetState(){
 	return state;
 }
 
-int GameBehavior::GetStateTime(){
+int Behavior::GetStateTime(){
 	return stateTime;
 }

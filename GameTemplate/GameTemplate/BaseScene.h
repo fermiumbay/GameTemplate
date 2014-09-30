@@ -1,8 +1,8 @@
 #pragma once
-#include "GameBehavior.h"
+#include "Behavior.h"
 
 // 基底クラス
-class BaseScene : public GameBehavior{
+class BaseScene : public Behavior{
 	int sceneTime;	// シーン開始からの経過時間
 	bool endGameFlg;	// ゲーム終了フラグ
 	bool changeSceneFlg;	// シーン変更フラグ
