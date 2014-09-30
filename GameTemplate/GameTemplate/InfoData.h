@@ -4,7 +4,7 @@
 using namespace std;
 
 // 固定情報データ（ゲーム中に変化しない情報）
-struct InfoData{
+namespace InfoData{
 	// ゲームタイトル
 	inline static const string GameTitle(){
 		return "新規プロジェクト";

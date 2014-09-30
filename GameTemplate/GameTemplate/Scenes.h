@@ -2,7 +2,7 @@
 #include "MainScene.h"
 
 // シーン定義
-struct Scenes{
+namespace Scenes{
 	// シーンオブジェクトの受け取り関数
 	inline static BaseScene *GetSceneObject(string name){
 		BaseScene *ret = NULL;

@@ -21,7 +21,7 @@
 #include "Random.h"
 using namespace std;
 
-struct common{
+namespace common{
 	// ウィンドウの中心座標を取得
 	inline static const Vector2 GetWindowCenter(){
 		return InfoData::WindowSize() / 2;
@@ -34,15 +34,16 @@ struct common{
 		return radian * 180.0 / M_PI;
 	}
 
-	// 文字列→数値変換
-	template <class stringType, class valueType>
-	static void convert(stringType str, valueType *value){
+	// TypeA→TypeBのstringstream変換
+	template <class TypeA, class TypeB>
+	static TypeB convert(TypeA obj){
 		stringstream ss;
-		ss << str;
-		ss >> *value;
-		ss.clear();
+		TypeB ret;
+		ss << obj;
+		ss >> ret;
+		return ret;
 	}
-	
+
 	// 2次元配列の領域確保
 	template <class type>
 	static void new2(type*** var, int size_x, int size_y){
@@ -104,4 +105,4 @@ struct common{
 			static_cast<double>(goalPos.x - startPos.x)
 			);
 	}
-};
+}

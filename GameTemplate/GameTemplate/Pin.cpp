@@ -1,4 +1,5 @@
 #include "Pin.h"
+using namespace common;
 
 Pin::Pin(){
 	ChangeState(State::move);
@@ -43,18 +44,15 @@ void Pin::Draw(){
 	Behavior::Draw();
 	pic["В“Вс"]->Draw();
 	string text, t;
-	stringstream ss;
-	ss << GetStateTime();
-	ss >> t;
 	switch (GetState()){
 	case State::move:
-		text = "State:move " + t;
+		text = "State:move " + convert<int, string>(GetStateTime());
 		break;
 	case State::rotate:
-		text = "State:rotate " + t;
+		text = "State:rotate " + convert<int, string>(GetStateTime());
 		break;
 	case State::end:
-		text = "State:end " + t;
+		text = "State:end " + convert<int, string>(GetStateTime());
 		break;
 	}
 	DrawFormatString(50, 200, GetColor(255, 255, 255), text.c_str());
