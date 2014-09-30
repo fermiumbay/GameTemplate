@@ -1,5 +1,6 @@
 #pragma once
 #include "GameBehavior.h"
+#include "CommonData.h"
 
 // Šî’êƒNƒ‰ƒX
 class BaseScene : public GameBehavior{

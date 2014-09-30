@@ -1,6 +1,7 @@
 #pragma once
-#include "common.h"
 #include "ContentBase.h"
+#include "Vector2.h"
+#include <math.h>
 
 // グラフィック素材クラス
 class Graphic : public ContentBase{

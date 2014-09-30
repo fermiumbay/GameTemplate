@@ -5,18 +5,18 @@ MainScene::MainScene(){
 	ChangeFont("メイリオ");	// 負荷が重いらしいので、頻繁に呼び出さないよう注意
 	text = "キャンセルキーで終了します";
 
-	ChangeState(State::c);
-	switch (GetState()){
-	case State::a:
-		text = "a";
-		break;
-	case State::b:
-		text = "b";
-		break;
-	case State::c:
-		text = "c";
-		break;
-	}
+	//ChangeState(State::c);
+	//switch (GetState()){
+	//case State::a:
+	//	text = "a";
+	//	break;
+	//case State::b:
+	//	text = "b";
+	//	break;
+	//case State::c:
+	//	text = "c";
+	//	break;
+	//}
 }
 
 MainScene::~MainScene(){

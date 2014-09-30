@@ -1,6 +1,8 @@
 #pragma once
 #include "DxLib.h"
-#include "common.h"
+#include <map>
+#include <functional>
+using namespace std;
 
 // ƒL[“ü—Í‚Ìó‘Ô
 enum KeyState{

@@ -1,5 +1,4 @@
 #pragma once
-#include "common.h"
 #include "ContentBase.h"
 
 // サウンド素材クラス
