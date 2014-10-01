@@ -17,7 +17,7 @@ void Pin::Update(){
 	switch (GetState()){
 	case State::move:
 
-		pic["В“Вс"]->pos = Vector2d(320.0 + 100.0*cos(0.03*GetStateTime()), 240.0 + 100.0*sin(0.03*GetStateTime())).ToInt();
+		pic["В“Вс"]->pos = Vector2d(320.0 + 100.0*cos(0.03*GetStateTime()), 240.0 + 100.0*sin(0.03*GetStateTime()));
 		if (KeyInput::GetKey(OK, PushedNow)){
 			ChangeState(State::rotate);
 		}

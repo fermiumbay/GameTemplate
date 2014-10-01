@@ -23,7 +23,7 @@ using namespace std;
 
 namespace common{
 	// ウィンドウの中心座標を取得
-	inline static const Vector2 GetWindowCenter(){
+	inline static Vector2 GetWindowCenter(){
 		return InfoData::WindowSize() / 2;
 	}
 	inline static const double DegToRad(double degree){

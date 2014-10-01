@@ -10,6 +10,7 @@ MainScene::MainScene(){
 }
 
 MainScene::~MainScene(){
+	delete pin;
 }
 
 void MainScene::Update(){
