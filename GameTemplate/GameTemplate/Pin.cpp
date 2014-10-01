@@ -12,9 +12,12 @@ Pin::~Pin(){
 
 void Pin::Update(){
 	Behavior::Update();
+	Vector2d vd;
+	Vector2 v;
 	switch (GetState()){
 	case State::move:
-		pic["В“Вс"]->pos = Vector2(static_cast<int>(320.0 + 100.0*cos(0.03*GetStateTime())), static_cast<int>(240.0 + 100.0*sin(0.03*GetStateTime())));
+
+		pic["В“Вс"]->pos = Vector2d(320.0 + 100.0*cos(0.03*GetStateTime()), 240.0 + 100.0*sin(0.03*GetStateTime())).ToInt();
 		if (KeyInput::GetKey(OK, PushedNow)){
 			ChangeState(State::rotate);
 		}

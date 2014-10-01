@@ -1,13 +1,21 @@
 #pragma once
 
+class Vector2;
+class Vector2d;
+
 // 2次元ベクトル
 class Vector2{
 public:
 	int x, y;
 	Vector2(int xi = 0, int yi = 0) : x(xi), y(yi) {}
 
-	Vector2 operator+() const { return *this; }
-	Vector2 operator-() const { return Vector2(-x, -y); }
+	Vector2 operator+() const {
+		return *this; 
+	}
+	
+	Vector2 operator-() const {
+		return Vector2(-x, -y); 
+	}
 
 	Vector2& operator+=(const Vector2& v){
 		x += v.x;
@@ -114,6 +122,8 @@ public:
 		this->y -= 1;
 		return v;
 	}
+
+	Vector2d ToDouble();	// 実数ベクトル（Vector2d）に変換
 };
 
 // 2次元ベクトル（実数）
@@ -214,4 +224,6 @@ public:
 		this->y -= 1.0;
 		return v;
 	}
+
+	Vector2 ToInt();	// 整数ベクトル（Vector2）に変換
 };
