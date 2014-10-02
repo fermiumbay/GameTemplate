@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ContentBase.cpp">
-      <Filter>ソース ファイル\共通</Filter>
-    </ClCompile>
     <ClCompile Include="Graphic.cpp">
       <Filter>ソース ファイル\共通</Filter>
     </ClCompile>
@@ -66,12 +63,12 @@
     <ClCompile Include="Vector2.cpp">
       <Filter>ソース ファイル\共通</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>ソース ファイル\共通</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
-      <Filter>ヘッダー ファイル\共通</Filter>
-    </ClInclude>
-    <ClInclude Include="ContentBase.h">
       <Filter>ヘッダー ファイル\共通</Filter>
     </ClInclude>
     <ClInclude Include="Graphic.h">
@@ -114,6 +111,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Behavior.h">
+      <Filter>ヘッダー ファイル\共通</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
       <Filter>ヘッダー ファイル\共通</Filter>
     </ClInclude>
   </ItemGroup>

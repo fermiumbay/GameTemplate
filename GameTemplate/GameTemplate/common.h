@@ -14,9 +14,9 @@
 #include <math.h>
 #include "InfoData.h"
 #include "Vector2.h"
-#include "ContentBase.h"
 #include "Graphic.h"
 #include "Sound.h"
+#include "Font.h"
 #include "KeyInput.h"
 #include "Random.h"
 using namespace std;

@@ -1,12 +1,15 @@
 #pragma once
-#include "ContentBase.h"
+#include "DxLib.h"
+#include <string>
+using namespace std;
 
 // サウンド素材クラス
-class Sound : public ContentBase{
-	int loopPos;
-	bool loopFlg;
+class Sound{
+	int handle;	// ハンドル
+	int loopPos;	// ループ位置
+	bool loopFlg;	// ループフラグ
 public:
-	Sound(const TCHAR *path = "", bool loopFlg = false, int loopPos = 0);
+	Sound(string path = "", bool loopFlg = false, int loopPos = 0);
 	~Sound();
 	void SetLoopFlg(bool loopFlg);	// ループの可否を設定
 	void SetLoopPos(int loopPos);	// ループ位置を設定［ms］
@@ -22,11 +25,11 @@ public:
 
 // BGMクラス
 struct BGM : public Sound{
-	BGM(const TCHAR *path = "", int loopPos = 0);
+	BGM(string path = "", int loopPos = 0);
 };
 
 // 効果音クラス
 struct SE : public Sound{
-	SE(const TCHAR *path = "");
+	SE(string path = "");
 	void Play(int playPos) override;	// 再生（単位[ms]）（引数省略で通常再生）
 };

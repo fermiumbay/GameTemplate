@@ -7,10 +7,18 @@ class Behavior{
 	State state;	// 現在の状態
 	int stateTime;	// 現在の状態になってからの経過時間
 protected:
-	map<string, Graphic*>	pic;	// 画像
-	map<string, Sound*>	sound;	// 音楽
+	map<string, Graphic*> pic;	// 画像
+	map<string, vector<Graphic*>> picd;	// 分割画像
+	map<string, GraphicHandle> pich;	// 画像ハンドル
+	map<string, GraphicHandle*> picdh;	// 分割画像ハンドル
+	map<string, Sound*> sound;	// 音楽
+	map<string, Font*> font;	// フォント
 	void DeletePic(string name);	// 画像の削除
+	void DeletePicd(string name);	// 分割画像の削除
+	void DeletePich(string name);	// 画像ハンドルの削除
+	void DeletePicdh(string name);	// 分割画像ハンドルの削除
 	void DeleteSound(string name);	// 音楽の削除
+	void DeleteFont(string name);	// フォントの削除
 	State GetState();	// 状態の取得
 	int GetStateTime();	// 現在の状態になってからの経過時間取得
 
