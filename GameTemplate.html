@@ -21,6 +21,7 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <li><a href = "#scene">シーンを追加してみよう</a></li>
 <li><a href = "#div">画像の分割読み込み</a></li>
 <li><a href = "#handle">画像のハンドル指定読み込み</a></li>
+<li><a href = "#divGraphic">画像インスタンスを分割する</a></li>
 <li><a href = "#motion">複雑な動きをさせてみよう</a></li>
 <li><a href = "#state">クラスに状態を設定する</a></li>
 <li><a href = "#screen">スクリーンモードを変更しよう</a></li>
@@ -69,47 +70,67 @@ Graphicの仕様をかなり変えました。それに伴ってSoundも同じ�
 <br>
 本題です。ver1.02までは、<br>
 <br><table border = "2"><tbody><tr><td><b>
-	pic["画像"] = new Graphic("画像パス")<br>
+	pic["単体画像"] = new Graphic("画像パス")<br>
 </b></td></tr></tbody></table><br>
 というように画像を登録していましたが、newできないようにして、代わりに<br>
 <br><table border = "2"><tbody><tr><td><b>
-	pic["画像"] = Graphic::Create("画像パス")<br>
+	pic["単体画像"] = Graphic::Create("画像パス")<br>
 </b></td></tr></tbody></table><br>
 として静的関数から得られるようにしました。<br>
-単体の画像なら何の変化もないですけれど、分割画像を扱うときはこうなります。<br>
+今まで分割画像と呼んでいたものも同じようにすればOKです。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["分割画像"] = Graphic::Create("画像パス", Vector2(48, 32), Vector2(4, 4))<br>
+	pic["分割画像"] = Graphic::CreateDiv("画像パス", Vector2(48, 32), Vector2(4, 4))<br>
 </b></td></tr></tbody></table><br>
-となります。分割画像は<b>picDiv</b>に入れられるものとします。<br>
+これで、一つ分(48, 32)の大きさの画像が(4, 4)で分割されて使用できます。<br>
+<br>
+新たにインスタンスの分割ができるようになりました。<br>
+これは、画像を分割してそれぞれにGraphicオブジェクトを割り当てるというものです。<br>
+こうすることによって、分割した画像各々の座標などをいじることができるようになります。<br>
+分割インスタンスを生成するには、以下のように書けばOKです。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["単体画像分割インスタンス"] = Graphic::CreateDiv("画像パス", Vector2(48, 32), Vector2(5, 8))<br>
+</b></td></tr></tbody></table><br>
+Createの所をCreateDivにして、第三引数で分割する数を入れます。<br>
+戻り値はvertor<Graphic*>になるのでpicでは扱えず、picDivを使ってください。<br>
 こうすると、分割した画像のそれぞれの参照は配列のように扱うことができ、<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["分割画像"][0]->pos = Vector2d(200, 50);<br>
-	picDiv["分割画像"][1]->pos = Vector2d(200, 150);<br>
-	picDiv["分割画像"][2]->pos = Vector2d(200, 250);<br>
+	picDiv["単体画像分割インスタンス"][0]->pos = Vector2d(200, 50);<br>
+	picDiv["単体画像分割インスタンス"][1]->pos = Vector2d(200, 150);<br>
+	picDiv["単体画像分割インスタンス"][2]->pos = Vector2d(200, 250);<br>
 </b></td></tr></tbody></table><br>
 のような扱いが可能となります。<br>
-newじゃなくてCreateでやるようにしたのも、newの配列では初期化できないなどの問題があったためです。<br>
-Create関数の引数を合わせればいいだけですから、作るときは全部Createで良くなります。<br>
+また、分割したインスタンスそれぞれを更に分割画像にすることも可能です。<br>
+RPGツクール2000のキャラチップみたいなイメージです。<br>
+あれは一つの画像にキャラクターが横４人、縦２人で８人分、<br>
+一人につき足踏み３パターン、向き４パターンで１２パターンの画像が敷き詰められていますが、<br>
+それを読み込む場合は次のように書けばOKです。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["分割画像分割インスタンス"] = Graphic::CreateDiv("画像パス", Vector2(24, 32), Vector2(4, 2), Vector2(3, 4))<br>
+</b></td></tr></tbody></table><br>
+第二引数が一つ分の大きさ、第三引数がインスタンスの分割数、第四引数がその中での画像の分割数です。<br>
+3つのベクトルの各成分の積がちゃんと画像サイズと等しくなるようにしてください。<br>
 <br>
 画像のハンドルも標準で持つようにしました。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picHandle["単体ハンドル"] = Graphic::CreateHandle("画像パス");<br>
+	picHandle["ハンドル"] = Graphic::CreateHandle("画像パス");<br>
 </b></td></tr></tbody></table><br>
-これでハンドルが作成されます。分割画像用のハンドルは、<br>
-<br><table border = "2"><tbody><tr><td><b>
-	picDivHandle["分割ハンドル"] = Graphic::CreateHandle("画像パス");<br>
-</b></td></tr></tbody></table><br>
-になります。どちらもCreateHandle関数で作成できます。<br>
-書き間違いをしても型が違うので、エラーになって分かると思います。<br>
-それぞれを用いて画像を作成する際には、<br>
+これでハンドルが作成されます。分割画像の場合は引数が変わるだけです。<br>
+分割インスタンスの場合は、CreateHandleではなくCreateDivHandleになりますが、ハンドルの型は同じです。<br>
+画像を作成する際には、<br>
 <br><table border = "2"><tbody><tr><td><b>
 	pic["単体画像"] = Graphic::Create(picHandle["単体ハンドル"]);<br>
-</b></td></tr></tbody></table><br>
+</b></td></tr></tbody></table>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["分割画像"] = Graphic::Create(picDivHandle["分割ハンドル"]);<br>
+	pic["分割画像"] = Graphic::Create(picHandle["分割ハンドル"]);<br>
+</b></td></tr></tbody></table>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["単体画像分割インスタンス"] = Graphic::CreateDiv(picHandle["単体ハンドル"]);<br>
+</b></td></tr></tbody></table>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["分割画像分割インスタンス"] = Graphic::CreateDiv(picHandle["分割ハンドル"]);<br>
 </b></td></tr></tbody></table><br>
 とすればOKです。<br>
-画像、ハンドルの削除はそれぞれ<b>DeletePic</b>、<b>DeletePicDiv</b>、<b>DeletePicHandle</b>、<b>DeletePicDivHandle</b>で行えます。<br>
+画像、ハンドルの削除はそれぞれ<b>DeletePic</b>、<b>DeletePicDiv</b>、<b>DeletePicHandle</b>で行えます。<br>
 <br>
 サウンドは、次のように設定します。<br>
 <br><table border = "2"><tbody><tr><td><b>
@@ -486,7 +507,7 @@ font["テキスト"]->pos.ToInt()とすると、posをVector2d型（実数）か
 次に、textに表示するテキストを入れます。<br>
 common::convert&lt;int, string&gt;(value)とすると、valueを整数から文字列に変換できます。<br>
 convertは、int型をstring型に変換する文字列変換関数です。逆に&lt;string, int&gt;とすれば文字列を数値に変換できます。<br>
-そして、Draw関数でこのtextを表示するように設定します。
+そして、Draw関数でこのtextを表示するように設定します。<br>
 <br><table border = "2"><tbody><tr><td><b>
 	font["テキスト"]->Print(text);<br>
 </b></td></tr></tbody></table><br>
@@ -678,8 +699,8 @@ BaseScene::Drawは基底クラスのDrawをそれぞれ実行するものです�
 	#include "TitleScene.h"<br>
 	<br>
 	TitleScene::TitleScene(){<br>
-	&nbsp	pic["タイトル"] = new Graphic("title.jpg");<br>
-	&nbsp	pic["押してね"] = new Graphic("enter.png", Vector2(common::GetWindowCenter().x, 400), true);<br>
+	&nbsp	pic["タイトル"] = Graphic::Create("title.jpg");<br>
+	&nbsp	pic["押してね"] = Graphic::Create("enter.png", Vector2d(common::GetWindowCenter().x, 400), true);<br>
 	}<br>
 	<br>
 	TitleScene::~TitleScene(){<br>
@@ -712,7 +733,7 @@ InfoData.hを開きましてDefaultScene()の中身を「Main」から「Title�
 <img src = "html_dat\baysuke.png">&copy;Gx2s<br>
 画像は<b>「baysuke.png」</b>です。こちらの画像の場合は分割読み込みが有効です。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["ベイ助"] = Graphic::Create("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
+	pic["ベイ助"] = Graphic::Create("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
 </b></td></tr></tbody></table><br>
 picDivも標準装備している、分割画像を格納する変数です。vector<Graphic*>で格納しています。<br>
 要するに、Graphicポインタの配列です。<br>
@@ -933,6 +954,21 @@ Graphicを実数値に対応させればいいのですが……やるかやら�
 単体読み込みのハンドル指定とまったく同じように扱うことができます。<br>
 単体のときと同様、削除時はGraphic::DeleteHandle(handle)を忘れないようにご注意下さい。<br>
 
+<br><hr>
+
+<div id = "divGraphic"></div>
+<h2>画像インスタンスを分割する</h2>
+あ<br>
+<br><hr>
+
+<div id = "motion"></div>
+<h2>複雑な動きをさせてみよう</h2>
+てきすと<br>
+<br><hr>
+
+<div id = "state"></div>
+<h2>クラスに状態を設定する</h2>
+てきすと<br>
 <br><hr>
 
 <div id = "screen"></div>

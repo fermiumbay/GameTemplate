@@ -11,7 +11,7 @@ namespace InfoData{
 	}
 
 	// ウィンドウサイズ
-	inline static const Vector2 WindowSize(){
+	inline static Vector2 WindowSize(){
 		return Vector2(640, 480);
 	}
 
