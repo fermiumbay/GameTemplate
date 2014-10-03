@@ -48,6 +48,7 @@ Graphic* Graphic::Create(string path, Vector2d pos, bool centerPosFlg, bool tran
 	ret->gh = CreateHandle(path);
 	ret->SetValues(pos, fade, zoom, angle, centerPosFlg, trans);
 	GetGraphSize(ret->gh.handle[0], &ret->width, &ret->height);
+	ret->createByHandleFlg = false;
 	return ret;
 }
 
@@ -56,6 +57,7 @@ Graphic* Graphic::Create(string path, Vector2 oneSize, Vector2 patternNum, Vecto
 	ret->gh = CreateHandle(path, oneSize, patternNum);
 	ret->SetValues(pos, fade, zoom, angle, centerPosFlg, trans);
 	GetGraphSize(ret->gh.handle[0], &ret->width, &ret->height);
+	ret->createByHandleFlg = false;
 	return ret;
 }
 
@@ -64,63 +66,48 @@ Graphic* Graphic::Create(GraphicHandle gh, Vector2d pos, bool centerPosFlg, bool
 	ret->gh = gh;
 	ret->SetValues(pos, fade, zoom, angle, centerPosFlg, trans);
 	GetGraphSize(ret->gh.handle[0], &ret->width, &ret->height);
+	ret->createByHandleFlg = true;
 	return ret;
 }
 
-Graphic* Graphic::Create(string path, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return Create(path, pos.ToDouble(), centerPosFlg, trans, fade, zoom, angle);
-}
-
-Graphic* Graphic::Create(string path, Vector2 oneSize, Vector2 patternNum, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return Create(path, oneSize, patternNum, pos.ToDouble(), centerPosFlg, trans, fade, zoom, angle);
-}
-
-Graphic* Graphic::Create(GraphicHandle gh, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return Create(gh, pos.ToDouble(), centerPosFlg, trans, fade, zoom, angle);
-}
-
 vector<Graphic*> Graphic::CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2d pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return CreateDiv(CreateDivHandle(path, oneSize, divNum, Vector2(1, 1)), pos, centerPosFlg, trans, fade, zoom, angle);
+	return CreateDiv(path, oneSize, divNum, Vector2(1, 1), pos, centerPosFlg, trans, fade, zoom, angle);
 }
 
 vector<Graphic*> Graphic::CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2 patternNum, Vector2d pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return CreateDiv(CreateDivHandle(path, oneSize, divNum, patternNum), pos, centerPosFlg, trans, fade, zoom, angle);
+	GraphicHandle gh = CreateDivHandle(path, oneSize, divNum, patternNum);
+	vector<Graphic*> ret = CreateDiv(gh, pos, centerPosFlg, trans, fade, zoom, angle);
+	for (vector<Graphic*>::iterator it = ret.begin(); it != ret.end(); it++){
+		(*it)->createByHandleFlg = false;
+	}
+	DeleteHandle(gh.handle);
+	return ret;
 }
 
 vector<Graphic*> Graphic::CreateDiv(GraphicHandle gh, Vector2d pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
 	vector<Graphic*> ret;
 	int ix = gh.divNum.x * gh.patternNum.x, iy = gh.divNum.y * gh.patternNum.y;
-	Graphic* tmp;
+	for (int i = 0; i < gh.divNum.x * gh.divNum.y; i++){
+		Graphic* tmp = new Graphic();
+		tmp->gh.handle = new int[gh.patternNum.x * gh.patternNum.y];
+		tmp->SetValues(pos, fade, zoom, angle, centerPosFlg, trans);
+		GetGraphSize(gh.handle[0], &tmp->width, &tmp->height);
+		tmp->createByHandleFlg = true;
+		ret.push_back(tmp);
+	}
 	for (int i = 0; i < ix * iy; i++){
-		int d = (i / gh.patternNum.x) % gh.divNum.x + gh.divNum.x * (i / (ix * gh.divNum.x));
+		int d = (i / gh.patternNum.x) % gh.divNum.x + gh.divNum.x * (i / (ix * gh.patternNum.y));
 		int p = ((i % gh.patternNum.x) + gh.patternNum.x * (i / ix)) % (gh.patternNum.x * gh.patternNum.y);
-		if (p == 0){
-			tmp = new Graphic();
-			tmp->SetValues(pos, fade, zoom, angle, centerPosFlg, trans);
-			GetGraphSize(tmp->gh.handle[0], &tmp->width, &tmp->height);
-			ret.push_back(tmp);
-		}
-		ret[d]->gh.handle[p] = i;
+		ret[d]->gh.handle[p] = gh.handle[i];
 	}
 	return ret;
 }
 
-
-vector<Graphic*> Graphic::CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return CreateDiv(path, oneSize, divNum, pos.ToDouble(), centerPosFlg, trans, fade, zoom, angle);
-}
-
-vector<Graphic*> Graphic::CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2 patternNum, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return CreateDiv(path, oneSize, divNum, patternNum, pos.ToDouble(), centerPosFlg, trans, fade, zoom, angle);
-}
-
-vector<Graphic*> Graphic::CreateDiv(GraphicHandle gh, Vector2 pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
-	return CreateDiv(gh, pos.ToDouble(), centerPosFlg, trans, fade, zoom, angle);
-}
-
 void Graphic::Delete(Graphic* graph){
-	DeleteGraph(graph->gh.handle[0]);
-	DeleteHandle(graph->gh);
+	if (!graph->createByHandleFlg){
+		DeleteGraph(graph->gh.handle[0]);
+		DeleteHandle(graph->gh);
+	}
 	delete graph;
 }
 
@@ -129,8 +116,11 @@ void Graphic::Delete(GraphicHandle gh){
 }
 
 void Graphic::DeleteDiv(vector<Graphic*> graph){
-	DeleteGraph(graph[0]->gh.handle[0]);
+	if (!graph[0]->createByHandleFlg){
+		DeleteGraph(graph[0]->gh.handle[0]);
+	}
 	for (vector<Graphic*>::iterator it = graph.begin(); it != graph.end(); it++){
+		DeleteHandle((*it)->gh.handle);
 		delete *it;
 	}
 }

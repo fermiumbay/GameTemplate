@@ -17,6 +17,9 @@ Behavior::~Behavior(){
 	for (map<string, vector<Graphic*>>::iterator it = picDiv.begin(); it != picDiv.end(); it++){
 		Graphic::DeleteDiv((*it).second);
 	}
+	for (map<string, GraphicHandle>::iterator it = picHandle.begin(); it != picHandle.end(); it++){
+		Graphic::DeleteHandle((*it).second);
+	}
 	for (map<string, Sound*>::iterator it = sound.begin(); it != sound.end(); it++){
 		Sound::Delete((*it).second);
 	}
