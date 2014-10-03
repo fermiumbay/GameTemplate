@@ -14,9 +14,9 @@ protected:
 	map<string, Sound*> sound;	// 音楽
 	map<string, Font*> font;	// フォント
 	void DeletePic(string name);	// 画像の削除
-	void DeletePicd(string name);	// 分割画像の削除
-	void DeletePich(string name);	// 画像ハンドルの削除
-	void DeletePicdh(string name);	// 分割画像ハンドルの削除
+	void DeletePicDiv(string name);	// 分割画像の削除
+	void DeletePicHandle(string name);	// 画像ハンドルの削除
+	void DeletePicDivHandle(string name);	// 分割画像ハンドルの削除
 	void DeleteSound(string name);	// 音楽の削除
 	void DeleteFont(string name);	// フォントの削除
 	State GetState();	// 状態の取得

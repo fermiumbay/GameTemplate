@@ -41,16 +41,16 @@ void Behavior::DeletePic(string name){
 	pic.erase(name);
 }
 
-void Behavior::DeletePicd(string name){
+void Behavior::DeletePicDiv(string name){
 	Graphic::Delete(picDiv[name]);
 	picDiv.erase(name);
 }
 
-void Behavior::DeletePich(string name){
+void Behavior::DeletePicHandle(string name){
 	picHandle.erase(name);
 }
 
-void Behavior::DeletePicdh(string name){
+void Behavior::DeletePicDivHandle(string name){
 	delete[] picDivHandle[name];
 	picDivHandle.erase(name);
 }
