@@ -8,9 +8,9 @@ class Behavior{
 	int stateTime;	// 現在の状態になってからの経過時間
 protected:
 	map<string, Graphic*> pic;	// 画像
-	map<string, vector<Graphic*>> picd;	// 分割画像
-	map<string, GraphicHandle> pich;	// 画像ハンドル
-	map<string, GraphicHandle*> picdh;	// 分割画像ハンドル
+	map<string, vector<Graphic*>> picDiv;	// 分割画像
+	map<string, GraphicHandle> picHandle;	// 画像ハンドル
+	map<string, GraphicHandle*> picDivHandle;	// 分割画像ハンドル
 	map<string, Sound*> sound;	// 音楽
 	map<string, Font*> font;	// フォント
 	void DeletePic(string name);	// 画像の削除

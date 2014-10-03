@@ -2,9 +2,9 @@
 
 Behavior::Behavior(){
 	pic.clear();
-	picd.clear();
-	pich.clear();
-	picdh.clear();
+	picDiv.clear();
+	picHandle.clear();
+	picDivHandle.clear();
 	sound.clear();
 	font.clear();
 	state = State::none;
@@ -15,10 +15,10 @@ Behavior::~Behavior(){
 	for (map<string, Graphic*>::iterator it = pic.begin(); it != pic.end(); it++){
 		Graphic::Delete((*it).second);
 	}
-	for (map<string, vector<Graphic*>>::iterator it = picd.begin(); it != picd.end(); it++){
+	for (map<string, vector<Graphic*>>::iterator it = picDiv.begin(); it != picDiv.end(); it++){
 		Graphic::Delete((*it).second);
 	}
-	for (map<string, GraphicHandle*>::iterator it = picdh.begin(); it != picdh.end(); it++){
+	for (map<string, GraphicHandle*>::iterator it = picDivHandle.begin(); it != picDivHandle.end(); it++){
 		delete[] (*it).second;
 	}
 	for (map<string, Sound*>::iterator it = sound.begin(); it != sound.end(); it++){
@@ -42,17 +42,17 @@ void Behavior::DeletePic(string name){
 }
 
 void Behavior::DeletePicd(string name){
-	Graphic::Delete(picd[name]);
-	picd.erase(name);
+	Graphic::Delete(picDiv[name]);
+	picDiv.erase(name);
 }
 
 void Behavior::DeletePich(string name){
-	pich.erase(name);
+	picHandle.erase(name);
 }
 
 void Behavior::DeletePicdh(string name){
-	delete[] picdh[name];
-	picdh.erase(name);
+	delete[] picDivHandle[name];
+	picDivHandle.erase(name);
 }
 
 void Behavior::DeleteSound(string name){

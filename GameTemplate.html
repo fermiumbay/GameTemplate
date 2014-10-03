@@ -5,11 +5,12 @@
 <body>
 <h1>GameTemplate説明書</h1>
 DXライブラリを用いたゲーム作成のためのテンプレートです。<br>
-ダウンロードはこちらからできます ⇒ <a href = "GameTemplate.zip">ver1.02 ダウンロード</a>
+ダウンロードはこちらからできます ⇒ <a href = "GameTemplate.zip">ver1.03 ダウンロード</a>
 
 <hr>
 <h3>もくじ</h3>
 <ul>
+<li><a href = "#ver02">ver1.02との変更点</a></li>
 <li><a href = "#first">使い方</a></li>
 <li><a href = "#abstract">概要</a></li>
 <li><a href = "#start">色々といじってみよう</a></li>
@@ -27,6 +28,84 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <li><a href = "#sample">サンプルゲーム</a></li>
 </ul>
 <hr>
+
+<div id = "ver02"></div>
+<h2>ver1.02との変更点</h2>
+このテンプレートを初めて扱う場合は、この節は飛ばしてください。<br>
+ver1.02から主に以下の点が変更されています。<br>
+身内向けをいいことに、かなり仕様変更しました。ごめんなさい。<br>
+<ul>
+<li>Behaviorクラスの追加</li>
+<li>Graphicクラス、Soundクラスの仕様変更</li>
+<li>Fontクラスの追加</li>
+<li>Motionクラスの追加</li>
+<li>convert関数の仕様変更</li>
+<li>Vector2とVector2dとを相互変換できるように</li>
+</ul>
+
+<br><h3>【Behaviorクラスの追加】</h3>
+基本的な振る舞いを行うものはすべてこれを継承して作るようにしました。<br>
+Update、Drawを持ち、その状態を表すState、画像や音楽を持つものです。<br>
+サンプルゲーム作っていたときにシーンはpicが使えるのに<br>
+シーン以外のベイ助とぴんくりではGraphicポインタをわざわざ宣言しなければならず<br>
+不便に感じたので、このようなものを作ることにしました。
+シーン以外のクラスもこれを継承すれば、これらが標準で使えるようになります。<br>
+シーンもこれを継承して作られているようにしました。<br>
+ver1.02までは、<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["画像"] = new Graphic("画像パス")<br>
+</b></td></tr></tbody></table><br>
+というように画像を登録していましたが、newできないようにして、代わりに<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["画像"] = Graphic::Create("画像パス")<br>
+</b></td></tr></tbody></table><br>
+として静的関数から得られるようにしました。<br>
+単体の画像なら何の変化もないですけれど、分割画像を扱うときはこうなります。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picd["分割画像"] = Graphic::Create("画像パス", Vector2(48, 32), Vector2(4, 4))<br>
+</b></td></tr></tbody></table><br>
+となります。分割画像は<b>picd</b>に入れられるものとします。<br>
+間違えちゃいそうですけれど、型が違うので何をするにもエラー表記されて<br>
+書き間違いによるエラーはないと思います。<br>
+ただし、分割画像を削除するときはDeletePicd()になるのでそこだけ注意してください。<br>
+こうすると、分割した画像のそれぞれの参照は配列のように扱うことができ、
+<br><table border = "2"><tbody><tr><td><b>
+	picd["分割画像"][0]->pos = Vector2d(200, 50);<br>
+	picd["分割画像"][1]->pos = Vector2d(200, 150);<br>
+	picd["分割画像"][2]->pos = Vector2d(200, 250);<br>
+</b></td></tr></tbody></table><br>
+のような扱いが可能となります。<br>
+newじゃなくてCreateでやるようにしたのも、newの配列では初期化できないなどの問題があったためです。<br>
+Create関数の引数を合わせればいいだけですから、作るときは全部Createで良くなります。<br>
+<br>
+画像のハンドルも標準で持つようにしました。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pich["ハンドル"] = Graphic::CreateHandle("画像パス");<br>
+</b></td></tr></tbody></table><br>
+これでハンドルが作成されます。分割画像用のハンドルは、
+<br><table border = "2"><tbody><tr><td><b>
+	picdh["ハンドル"] = Graphic::CreateHandle("画像パス");<br>
+</b></td></tr></tbody></table><br>
+になります。
+
+<br><h3>【Graphicクラス、Soundクラスの仕様変更】</h3>
+分割した画像を各々いじれないこととか、ハンドルポインタの宣言とか色々面倒だったので<br>
+Graphicの仕様をかなり変えました。それに伴ってSoundも同じような書きかたに変更しました。<br>
+
+
+<br><h3>【Fontクラスの追加】</h3>
+シーンを定義している所です。<br>
+
+<br><h3>【Motionクラスの追加】</h3>
+シーンを定義している所です。<br>
+
+<br><h3>【convert関数の仕様変更】</h3>
+シーンを定義している所です。<br>
+
+<br><h3>【Vector2とVector2dとを相互変換できるように】</h3>
+シーンを定義している所です。<br>
+
+<br><hr>
 
 <div id = "first"></div>
 <h2>使い方</h2>
