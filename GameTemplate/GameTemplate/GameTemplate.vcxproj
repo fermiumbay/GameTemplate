@@ -93,7 +93,6 @@
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Motion.cpp" />
-    <ClCompile Include="Pin.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -110,7 +109,6 @@
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="CommonData.h" />
     <ClInclude Include="KeyInput.h" />
-    <ClInclude Include="Pin.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scenes.h" />
