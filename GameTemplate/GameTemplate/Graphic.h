@@ -51,16 +51,15 @@ public:
 	static Graphic* Create(GraphicHandle handle, Vector2d pos = Vector2d(), bool centerPosFlg = false, bool trans = true, int fade = 256, Vector2d zoom = Vector2d(100.0, 100.0), double angle = 0.0);	// 単体ハンドル読み込み（単体インスタンス）
 	static GraphicHandle CreateHandle(string path);	// 単体読み込みハンドル番号を生成する（単体インスタンス）
 	static GraphicHandle CreateHandle(string path, Vector2 oneSize, Vector2 patternNum);	// 分割読み込みハンドル番号を生成する（単体インスタンス）
-	static void Delete(Graphic* graph);	// 画像削除（単体インスタンス）
-	static void Delete(GraphicHandle handle);	// ハンドルの指す画像を削除（単体インスタンス）
 
 	static vector<Graphic*> CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2d pos = Vector2d(), bool centerPosFlg = false, bool trans = true, int fade = 256, Vector2d zoom = Vector2d(100.0, 100.0), double angle = 0.0);	// 単体画像読み込み（分割インスタンス）
 	static vector<Graphic*> CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2 patternNum, Vector2d pos = Vector2d(), bool centerPosFlg = false, bool trans = true, int fade = 256, Vector2d zoom = Vector2d(100.0, 100.0), double angle = 0.0);	// 分割画像読み込み（分割インスタンス）
 	static vector<Graphic*> CreateDiv(GraphicHandle handle, Vector2d pos = Vector2d(), bool centerPosFlg = false, bool trans = true, int fade = 256, Vector2d zoom = Vector2d(100.0, 100.0), double angle = 0.0);	// 単体ハンドル読み込み（分割インスタンス）
 	static GraphicHandle CreateDivHandle(string path, Vector2 oneSize, Vector2 divNum);	// 単体読み込みハンドル番号を生成する（分割インスタンス）
 	static GraphicHandle CreateDivHandle(string path, Vector2 oneSize, Vector2 divNum, Vector2 patternNum);	// 分割読み込みハンドル番号を生成する（分割インスタンス）
-	static void DeleteDiv(vector<Graphic*> graph);	// 画像削除（分割インスタンス）
-	static void DeleteDiv(GraphicHandle handle);	// ハンドルの指す画像を削除（分割インスタンス）
 
-	static void DeleteHandle(GraphicHandle handle);	// ハンドル削除
+	static void Delete(Graphic* graph);	// 画像削除（単体インスタンス）
+	static void Delete(GraphicHandle handle);	// ハンドルの指す画像を削除
+	static void DeleteDiv(vector<Graphic*> graph);	// 画像削除（分割インスタンス）
+	static void DeleteHandle(GraphicHandle handle);	// ハンドルのみ削除
 };

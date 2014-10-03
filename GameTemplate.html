@@ -431,6 +431,9 @@ UpdateとDrawを分ける必要ないんじゃないかと思われるかもし�
 メモリ確保したものの後始末に利用されると良いですが、<br>
 標準で提供しているpicというのは自動で消去されるようにしていますので、後始末は不要です。<br>
 シーン中にどうしても手動で削除したい場合は、DeletePic()関数で削除ができます。<br>
+すでに登録している画像を差し替えたいときは必ずDeletePicで削除してから新たにCreateしてください。<br>
+DeletePicしないで同名の画像にCreateをすると、終了時に初めに登録した画像が残ってしまい、<br>
+メモリリークとなってしまうので、ご注意ください。<br>
 
 <br><hr>
 
@@ -735,8 +738,6 @@ InfoData.hを開きましてDefaultScene()の中身を「Main」から「Title�
 <br><table border = "2"><tbody><tr><td><b>
 	pic["ベイ助"] = Graphic::Create("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
 </b></td></tr></tbody></table><br>
-picDivも標準装備している、分割画像を格納する変数です。vector<Graphic*>で格納しています。<br>
-要するに、Graphicポインタの配列です。<br>
 分割読み込み時には、オーバーロードしたCreate関数を用います。<br>
 第二引数に分割時の一つ分の画像サイズを、第三引数に分割する数（横と縦）をそれぞれ入れれば、<br>
 これは分割読み込みと認識されて、分割読み込みされた画像の情報が格納されます。<br>
@@ -744,18 +745,16 @@ picDivも標準装備している、分割画像を格納する変数です。ve
 以上のような構文で入力をします。それ以降の引数は単体読み込みと同じです。<br>
 これをMainSceneのコンストラクタに入れて登録しておきましょう。<br>
 次に、描画する際には分割されて画像が１６枚になっているので、どれを描画するかを指定する必要があります。<br>
-これは画像の配列になっていますから、picDiv["ベイ助"]を配列として扱えばOKです。
-番号は左上を0番として、右にいくにつれ1、2、…、右端までいったら次の段へ、…という具合で付きます。<br>
-この場合は１６枚に分割しているので、一番右下は15番ということになりますね。<br>
-15番を描画したいときは、<br>
+例えば15番を描画したいときは、<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["ベイ助"][15]->Draw();<br>
+	picDiv["ベイ助"]->Draw(15);<br>
 </b></td></tr></tbody></table><br>
-となります。<br>
+となります。Drawの引数に描画する画像の番号を入れます。<br>
+<br>
 動いてるっぽく見せたいので、試しにDraw内に次のように書いてみてください。<br>
 <br><table border = "2"><tbody><tr><td><b>
 	int id = (GetSceneTime() / 15) % 16;<br>
-	picDiv["ベイ助"][id]->Draw();<br>
+	picDiv["ベイ助"]->Draw(id);<br>
 </b></td></tr></tbody></table><br>
 GetSceneTimeで、シーンが始まってからの時間（フレーム単位）を取得できます。<br>
 それを15で割って16で割った余りを描画する番号idとして決め、描画させてみます。<br>
@@ -783,7 +782,7 @@ public:<br>
 #include "MainScene.h"<br>
 <br>
 MainScene::MainScene(){<br>
-&nbsp	picDiv["ベイ助"] = Graphic::Create("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
+&nbsp	pic["ベイ助"] = Graphic::Create("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
 &nbsp	step = 0;<br>
 &nbsp	id = 0;<br>
 }<br>
@@ -795,22 +794,22 @@ void MainScene::Update(){<br>
 &nbsp	BaseScene::Update();<br>
 <br>
 &nbsp	if (KeyInput::GetKey(Left, HasBePushed)){<br>
-&nbsp	&nbsp	picDiv["ベイ助"]->pos.x -= 3;<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.x -= 3;<br>
 &nbsp	&nbsp	step++;<br>
 &nbsp	&nbsp	id = 4;<br>
 &nbsp	}<br>
 &nbsp	else if (KeyInput::GetKey(Right, HasBePushed)){<br>
-&nbsp	&nbsp	picDiv["ベイ助"]->pos.x += 3;<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.x += 3;<br>
 &nbsp	&nbsp	step++;<br>
 &nbsp	&nbsp	id = 8;<br>
 &nbsp	}<br>
 &nbsp	else if (KeyInput::GetKey(Up, HasBePushed)){<br>
-&nbsp	&nbsp	picDiv["ベイ助"]->pos.y -= 3;<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.y -= 3;<br>
 &nbsp	&nbsp	step++;<br>
 &nbsp	&nbsp	id = 12;<br>
 &nbsp	}<br>
 &nbsp	else if (KeyInput::GetKey(Down, HasBePushed)){<br>
-&nbsp	&nbsp	picDiv["ベイ助"]->pos.y += 3;<br>
+&nbsp	&nbsp	pic["ベイ助"]->pos.y += 3;<br>
 &nbsp	&nbsp	step++;<br>
 &nbsp	&nbsp	id = 0;<br>
 &nbsp	}<br>
@@ -825,7 +824,7 @@ void MainScene::Update(){<br>
 void MainScene::Draw(){<br>
 &nbsp	BaseScene::Draw();<br>
 <br>
-&nbsp	picDiv["ベイ助"][id]->Draw();<br>
+&nbsp	picDiv["ベイ助"]->Draw(id);<br>
 }<br>
 </b></td></tr></tbody></table><br>
 アニメーションなどを作成する場合は、このように一つの画像にまとめて分割した方が便利でしょう。<br>
@@ -846,20 +845,20 @@ void MainScene::Draw(){<br>
 ↑<b>「bullet.png」</b>です。例ではこれを使用することにします。<br>
 画像のハンドルを取得するには、以下のように書きます。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	int* handle = Graphic::CreateHandle("bullet.png");<br>
+	picHandle["弾のハンドル"] = Graphic::CreateHandle("bullet.png");<br>
 </b></td></tr></tbody></table><br>
 Graphic::CreateHandleにより、画像のハンドルを取得できます。<br>
-これは分割読み込みに対応できるようint型のポインタとして出力されます。<br>
+ハンドルはGraphicHandle型で保持しており、これはハンドルの配列が格納されているものです。<br>
 ハンドルを用いてGraphicオブジェクトを生成するには、以下のように書きます。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	pic["弾"] = new Graphic(handle);
+	pic["弾"] = Graphic::Create(handle);
 </b></td></tr></tbody></table><br>
 パスの部分をハンドルに置き換えればいいだけです。<br>
 後はハンドルを使いまわしてGraphicオブジェクトを大量生成することが可能です。<br>
 <br>
-注意が一つあります。<br>
-ハンドルで取得した画像というのは<b>Graphicオブジェクトを削除しても消えません。</b><br>
-実際に削除するためにはこれを入れてください。<br>
+ハンドルで取得した画像は<b>Graphicオブジェクトを削除しても消えません。</b><br>
+実際に画像のデータ削除するためにはハンドルを削除する必要があります。<br>
+それには、これを入れてください。<br>
 <br><table border = "2"><tbody><tr><td><b>
 	Graphic::DeleteHandle(handle);
 </b></td></tr></tbody></table><br>

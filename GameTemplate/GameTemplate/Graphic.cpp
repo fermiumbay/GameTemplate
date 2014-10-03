@@ -113,6 +113,7 @@ void Graphic::Delete(Graphic* graph){
 
 void Graphic::Delete(GraphicHandle gh){
 	DeleteGraph(gh.handle[0]);
+	DeleteHandle(gh);
 }
 
 void Graphic::DeleteDiv(vector<Graphic*> graph){
@@ -123,10 +124,6 @@ void Graphic::DeleteDiv(vector<Graphic*> graph){
 		DeleteHandle((*it)->gh.handle);
 		delete *it;
 	}
-}
-
-void Graphic::DeleteDiv(GraphicHandle gh){
-	DeleteGraph(gh.handle[0]);
 }
 
 void Graphic::Draw(int id, Vector2d addPos){

@@ -46,7 +46,7 @@ void Behavior::DeletePicDiv(string name){
 }
 
 void Behavior::DeletePicHandle(string name){
-	Graphic::DeleteHandle(picHandle[name]);
+	Graphic::Delete(picHandle[name]);
 	picHandle.erase(name);
 }
 
