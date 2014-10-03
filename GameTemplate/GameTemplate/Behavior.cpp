@@ -22,7 +22,7 @@ Behavior::~Behavior(){
 		delete[] (*it).second;
 	}
 	for (map<string, Sound*>::iterator it = sound.begin(); it != sound.end(); it++){
-		delete (*it).second;
+		Sound::Delete((*it).second);
 	}
 	for (map<string, Font*>::iterator it = font.begin(); it != font.end(); it++){
 		Font::Delete((*it).second);
@@ -56,7 +56,7 @@ void Behavior::DeletePicdh(string name){
 }
 
 void Behavior::DeleteSound(string name){
-	delete sound[name];
+	Sound::Delete(sound[name]);
 	sound.erase(name);
 }
 

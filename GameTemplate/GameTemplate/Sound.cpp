@@ -1,14 +1,17 @@
 #include "Sound.h"
 
-Sound::Sound(string path, bool loopFlg, int loopPos){
-	this->handle = LoadSoundMem(path.c_str());
-	this->loopFlg = loopFlg;
-	SetLoopPos(loopPos);
-	SetSoundCurrentTime(0, this->handle);
+Sound* Sound::Create(string path, bool loopFlg, int loopPos){
+	Sound* ret = new Sound();
+	ret->handle = LoadSoundMem(path.c_str());
+	ret->loopFlg = loopFlg;
+	ret->SetLoopPos(loopPos);
+	SetSoundCurrentTime(0, ret->handle);
+	return ret;
 }
 
-Sound::~Sound(){
-	DeleteSoundMem(handle);
+void Sound::Delete(Sound* sound){
+	DeleteSoundMem(sound->handle);
+	delete sound;
 }
 
 void Sound::SetLoopFlg(bool loopFlg){
@@ -39,8 +42,11 @@ void Sound::Play(int playPos){
 	}
 }
 
-void Sound::Stop(){
+void Sound::Stop(bool stayFlg){
 	StopSoundMem(handle);
+	if (!stayFlg){
+		SetSoundCurrentTime(0, handle);
+	}
 }
 
 bool Sound::IsPlaying(){
@@ -74,17 +80,10 @@ void Sound::SetFrequency(int frequency){
 	SetFrequencySoundMem(frequency, handle);
 }
 
-BGM::BGM(string path, int loopPos)
-	: Sound(path, true, loopPos){
+Sound* Sound::CreateBGM(string path, int loopPos){
+	return Create(path, true, loopPos);
 }
 
-SE::SE(string path)
-	: Sound(path, false){
-}
-
-void SE::Play(int playPos){
-	if (playPos == -1){
-		playPos = 0;
-	}
-	Sound::Play(playPos);
+Sound* Sound::CreateSE(string path){
+	return Create(path, false);
 }

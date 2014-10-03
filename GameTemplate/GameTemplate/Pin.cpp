@@ -60,8 +60,6 @@ Pin::Pin(){
 	//text2[6] = "アンチエイリアス＆エッジ付きフォント(4x4サンプリング)";
 	//text2[7] = "アンチエイリアス＆エッジ付きフォント(8x8サンプリング))";
 
-	//フォントの座標関連おかしい　くわしくみる必要がある
-
 	// フォントを作成
 	font["文字1"] = Font::Create("メイリオ", Vector2d(50, 50), 48, 2, false, FontType::normal);
 	font["文字2"] = Font::Create("メイリオ", Vector2d(50, 50 + 48), 48, 2, true, FontType::normal);
@@ -75,6 +73,11 @@ Pin::Pin(){
 		font["文字" + convert<int, string>(i)]->SetColor(0, 64 + 24 * i - 1, 0);
 		font["文字" + convert<int, string>(i)]->SetEdgeColor(64 + 24 * i - 1, 0, 0);
 	}
+
+	sound["BGM"] = Sound::CreateBGM("C:\\Users\\フェルミウム湾\\Documents\\Visual Studio 2013\\Projects\\Helmet\\Helmet\\dat\\Sound\\tw029.mp3");
+	sound["SE"] = Sound::CreateSE("C:\\Users\\フェルミウム湾\\Documents\\Visual Studio 2013\\Projects\\Helmet\\Helmet\\dat\\Sound\\bigshot1.wav");
+	sound["BGM"]->Play();
+	sound["SE"]->Play();
 }
 
 Pin::~Pin(){
@@ -141,6 +144,12 @@ void Pin::Draw(){
 	for (int i = 1; i <= 8; i++){
 		font["文字" + convert<int, string>(i)]->Print("もじもじ"+convert<int,string>(i), Vector2d(GetStateTime(), 0));
 		font["文字" + convert<int, string>(i)]->pos++;
+	}
+	if (GetStateTime() == 120){
+		sound["BGM"]->Stop(true);
+	}
+	if (GetStateTime() == 180){
+		sound["BGM"]->Play();
 	}
 }
 
