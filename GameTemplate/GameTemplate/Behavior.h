@@ -10,13 +10,11 @@ protected:
 	map<string, Graphic*> pic;	// 画像
 	map<string, vector<Graphic*>> picDiv;	// 分割画像
 	map<string, GraphicHandle> picHandle;	// 画像ハンドル
-	map<string, GraphicHandle*> picDivHandle;	// 分割画像ハンドル
 	map<string, Sound*> sound;	// 音楽
 	map<string, Font*> font;	// フォント
 	void DeletePic(string name);	// 画像の削除
 	void DeletePicDiv(string name);	// 分割画像の削除
 	void DeletePicHandle(string name);	// 画像ハンドルの削除
-	void DeletePicDivHandle(string name);	// 分割画像ハンドルの削除
 	void DeleteSound(string name);	// 音楽の削除
 	void DeleteFont(string name);	// フォントの削除
 	State GetState();	// 状態の取得
