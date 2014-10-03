@@ -4,10 +4,12 @@
 class Pin : public Behavior{
 	enum State{
 		move,
-		rotate,
+		motions,
 		end,
 	};
 	bool endflg;
+	Motion::Wave motion;
+	Motion::Curve curve;
 public:
 	Pin();
 	~Pin();

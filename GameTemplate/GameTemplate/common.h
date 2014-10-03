@@ -19,6 +19,7 @@
 #include "Font.h"
 #include "KeyInput.h"
 #include "Random.h"
+#include "Motion.h"
 using namespace std;
 
 namespace common{
@@ -98,7 +99,7 @@ namespace common{
 		return fps;
 	}
 
-	// startPos‚©‚çgoalPos‚ÖŒü‚©‚¤‚½‚ß‚ÌŠp“x
+	// startPos‚©‚çgoalPos‚ÖŒü‚©‚¤‚½‚ß‚ÌŠp“x‚ğ‹‚ß‚é
 	static double Adir(Vector2 startPos, Vector2 goalPos){
 		return atan2(
 			static_cast<double>(startPos.y - goalPos.y),

@@ -8,7 +8,6 @@ class Sound{
 	int handle;	// ハンドル
 	int loopPos;	// ループ位置
 	bool loopFlg;	// ループフラグ
-	bool seFlg;	// SEとして作成したフラグ
 protected:
 	Sound(){}
 	~Sound(){}

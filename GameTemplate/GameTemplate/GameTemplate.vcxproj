@@ -92,6 +92,7 @@
     <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Motion.cpp" />
     <ClCompile Include="Pin.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -100,6 +101,7 @@
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Motion.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Behavior.h" />

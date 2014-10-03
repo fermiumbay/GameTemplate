@@ -1,7 +1,9 @@
 #include "Pin.h"
 using namespace common;
 
-Pin::Pin(){
+Pin::Pin()
+	: motion(100, 40, 0.02, 0.2, 0.0), curve(Vector2d(300, 400))
+{
 	ChangeState(State::move);
 	pic["‚Ò‚ñ"] = Graphic::Create("..\\..\\..\\‚Ò‚ñ‚­‚è‚¿‚á‚ñ\\‚Ò‚ñ‚­‚è‚¿‚á‚ñ\\bossface7.png", common::GetWindowCenter(), true);
 	endflg = false;
@@ -90,14 +92,35 @@ void Pin::Update(){
 
 		pic["‚Ò‚ñ"]->pos = Vector2d(320.0 + 100.0*cos(0.03*GetStateTime()), 240.0 + 100.0*sin(0.03*GetStateTime()));
 		if (KeyInput::GetKey(OK, PushedNow)){
-			ChangeState(State::rotate);
+			motion.Initialize();
+			curve.Initialize();
+			ChangeState(State::motions);
 		}
 		if (KeyInput::GetKey(Cancel, PushedNow)){
 			ChangeState(State::end);
 		}
 		break;
-	case State::rotate:
-		pic["‚Ò‚ñ"]->angle += 0.03;
+	case State::motions:
+		motion.Update();
+		if (motion.IsFinished()){
+			pic["‚Ò‚ñ"]->SetZoom(150);
+		}
+		else{
+			pic["‚Ò‚ñ"]->SetZoom(motion.GetValue());
+		}
+
+		curve.Update();
+		pic["‚Ò‚ñ"]->pos = Vector2d(GetStateTime(), curve.GetValue());
+		if (curve.IsFinished()){
+			pic["‚Ò‚ñ"]->SetColor(255, 255, 255);
+		}
+		else if (curve.PassedVertex()){
+			pic["‚Ò‚ñ"]->SetColor(0, 255, 255);
+		}
+		else{
+			pic["‚Ò‚ñ"]->SetColor(0, 0, 255);
+		}
+
 		if (KeyInput::GetKey(OK, PushedNow)){
 			ChangeState(State::move);
 		}
@@ -122,8 +145,8 @@ void Pin::Draw(){
 	case State::move:
 		text = "State:move " + convert<int, string>(GetStateTime());
 		break;
-	case State::rotate:
-		text = "State:rotate " + convert<int, string>(GetStateTime());
+	case State::motions:
+		text = "State:motions " + convert<int, string>(GetStateTime());
 		break;
 	case State::end:
 		text = "State:end " + convert<int, string>(GetStateTime());
