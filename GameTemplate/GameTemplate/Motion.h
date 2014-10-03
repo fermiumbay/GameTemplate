@@ -7,25 +7,37 @@
 namespace Motion{
 
 	// モーションクラスの基底
+	template <class ValueType>
 	class MotionBase{
 		bool finished;	// 動作終了
 		MotionBase(const MotionBase&) {}
 		MotionBase& operator=(const MotionBase&);
 	protected:
-		double value;	// 値
+		ValueType value;	// 値
 		int time;	// 経過時間
-		void Finished();	// 終了した
+		void Finished(){
+			finished = true;
+		};	// 終了した
 	public:
-		MotionBase();
+		MotionBase() : time(0), finished(false) {}
 		virtual ~MotionBase(){}
-		void Initialize();	// 初期化
-		virtual void Update();	// 更新
-		double GetValue();	// 値の取得
-		bool IsFinished();	// 終了したか
+		void Initialize(){
+			time = 0;
+			finished = false;
+		}// 初期化
+		virtual void Update(){
+			time++;
+		}	// 更新
+		ValueType GetValue(){
+			return value;
+		}	// 値の取得
+		bool IsFinished(){
+			return finished;
+		}	// 終了したか
 	};
 
 	// 二次曲線
-	class Curve : public MotionBase{
+	class Curve : public MotionBase<double>{
 		int finishTime;	// 終了する時間
 		double a, p, q;	// 定数(a(x-p)^2+q)
 	public:
@@ -35,7 +47,7 @@ namespace Motion{
 	};
 
 	// 減衰振動
-	class Wave : public MotionBase {
+	class Wave : public MotionBase<double>{
 		int finishTime;	// 終了する時間
 		bool neverfinishFlg;	// 終了しないフラグ
 		double setValue;	// 収束する値

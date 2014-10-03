@@ -1,30 +1,5 @@
 #include "Motion.h"
 
-Motion::MotionBase::MotionBase()
-	: time(0), finished(false), value(0.0) {
-}
-
-void Motion::MotionBase::Update(){
-	time++;
-}
-
-double Motion::MotionBase::GetValue(){
-	return value;
-}
-
-void Motion::MotionBase::Finished(){
-	finished = true;
-}
-
-bool Motion::MotionBase::IsFinished(){
-	return finished;
-}
-
-void Motion::MotionBase::Initialize(){
-	time = 0;
-	finished = false;
-}
-
 Motion::Curve::Curve(Vector2d vertexPos){
 	p = vertexPos.x;
 	q = vertexPos.y;
@@ -39,7 +14,7 @@ Motion::Curve::Curve(Vector2d vertexPos){
 }
 
 void Motion::Curve::Update(){
-	Motion::MotionBase::Update();
+	Motion::MotionBase<double>::Update();
 	value = a * (time - p) * (time - p) + q;
 	if (time >= finishTime){
 		Finished();
@@ -75,7 +50,7 @@ Motion::Wave::Wave(double setValue, double a, double b, double c, double d){
 }
 
 void Motion::Wave::Update(){
-	Motion::MotionBase::Update();
+	Motion::MotionBase<double>::Update();
 	if (!neverfinishFlg && time > finishTime){
 		value = setValue;
 		Finished();
