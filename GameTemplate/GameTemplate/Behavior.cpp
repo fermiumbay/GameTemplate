@@ -11,20 +11,20 @@ Behavior::Behavior(){
 }
 
 Behavior::~Behavior(){
-	for (map<string, Graphic*>::iterator it = pic.begin(); it != pic.end(); it++){
-		Graphic::Delete((*it).second);
+	for (auto data : pic){
+		Graphic::Delete(data.second);
 	}
-	for (map<string, vector<Graphic*>>::iterator it = picDiv.begin(); it != picDiv.end(); it++){
-		Graphic::DeleteDiv((*it).second);
+	for (auto data : picDiv){
+		Graphic::DeleteDiv(data.second);
 	}
-	for (map<string, GraphicHandle>::iterator it = picHandle.begin(); it != picHandle.end(); it++){
-		Graphic::DeleteHandle((*it).second);
+	for (auto data : picHandle){
+		Graphic::DeleteHandle(data.second);
 	}
-	for (map<string, Sound*>::iterator it = sound.begin(); it != sound.end(); it++){
-		Sound::Delete((*it).second);
+	for (auto data : sound){
+		Sound::Delete(data.second);
 	}
-	for (map<string, Font*>::iterator it = font.begin(); it != font.end(); it++){
-		Font::Delete((*it).second);
+	for (auto data : font){
+		Font::Delete(data.second);
 	}
 }
 

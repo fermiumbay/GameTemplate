@@ -1,6 +1,7 @@
 #pragma once
 #include "DxLib.h"
 #include "Vector2.h"
+#include "Color.h"
 #include <string>
 #include <vector>
 #include <math.h>
@@ -21,9 +22,7 @@ class Graphic{
 	int width;	// 画像横サイズ（分割時は分割された単体のサイズ）
 	int height;	// 画像縦サイズ（分割時は分割された単体のサイズ）
 	bool centerPosFlg;	// 座標を中心座標で指定
-	int color_red;	// 色調赤
-	int color_green;	// 色調緑
-	int color_blue;	// 色調青
+	Color color;	// 色調
 	bool createByHandleFlg;	// ハンドル指定によって作成されたフラグ
 
 	void SetValues(Vector2d pos, int fade, Vector2d zoom, double angle, bool centerPosFlg, bool trans);	// 値のセット（初期化に使用）
@@ -43,7 +42,7 @@ public:
 	Vector2d zoom;	// 拡大率[％]（横と縦）
 	void SetZoom(Vector2d zoom);	// 拡大率を設定（横と縦の比率を別々に）
 	void SetZoom(double zoom = 100.0);	// 拡大率を設定
-	void SetColor(int red = 0, int green = 0, int blue = 0);	// 色調設定
+	void SetColor(Color c = Color::Black());	// 色調設定
 	inline void SetDefaultColor();	// 色調を元に戻す（白）
 
 	static Graphic* Create(string path, Vector2d pos = Vector2d(), bool centerPosFlg = false, bool trans = true, int fade = 256, Vector2d zoom = Vector2d(100.0, 100.0), double angle = 0.0);	// 単体画像読み込み（単体インスタンス）

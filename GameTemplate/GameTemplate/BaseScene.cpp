@@ -28,7 +28,7 @@ void BaseScene::Update(){
 
 void BaseScene::Draw(){
 	Behavior::Draw();
-	SetDrawBright(fade_r, fade_g, fade_b);
+	SetDrawBright(screenFade.GetR(), screenFade.GetG(), screenFade.GetB());
 }
 
 int BaseScene::GetSceneTime(){
@@ -47,12 +47,10 @@ bool BaseScene::GetEndGameFlg(){
 	return endGameFlg;
 }
 
-void BaseScene::SetFade(int r, int g, int b){
-	fade_r = r;
-	fade_g = g;
-	fade_b = b;
+void BaseScene::SetFade(Color c){
+	screenFade = c;
 }
 
 void BaseScene::SetDefaultFade(){
-	SetFade(255, 255, 255);
+	SetFade(Color::White());
 }

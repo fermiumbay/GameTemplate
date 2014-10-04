@@ -72,6 +72,9 @@
     <ClCompile Include="KeyInput.cpp">
       <Filter>ソース ファイル\共通</Filter>
     </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>ソース ファイル\内部システム</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="Scenes.h">
       <Filter>ヘッダー ファイル\共通</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>ヘッダー ファイル\内部システム</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

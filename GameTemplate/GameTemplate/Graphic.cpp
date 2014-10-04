@@ -77,8 +77,8 @@ vector<Graphic*> Graphic::CreateDiv(string path, Vector2 oneSize, Vector2 divNum
 vector<Graphic*> Graphic::CreateDiv(string path, Vector2 oneSize, Vector2 divNum, Vector2 patternNum, Vector2d pos, bool centerPosFlg, bool trans, int fade, Vector2d zoom, double angle){
 	GraphicHandle gh = CreateDivHandle(path, oneSize, divNum, patternNum);
 	vector<Graphic*> ret = CreateDiv(gh, pos, centerPosFlg, trans, fade, zoom, angle);
-	for (vector<Graphic*>::iterator it = ret.begin(); it != ret.end(); it++){
-		(*it)->createByHandleFlg = false;
+	for (auto data : ret){
+		data->createByHandleFlg = false;
 	}
 	DeleteHandle(gh.handle);
 	return ret;
@@ -120,16 +120,16 @@ void Graphic::DeleteDiv(vector<Graphic*> graph){
 	if (!graph[0]->createByHandleFlg){
 		DeleteGraph(graph[0]->gh.handle[0]);
 	}
-	for (vector<Graphic*>::iterator it = graph.begin(); it != graph.end(); it++){
-		DeleteHandle((*it)->gh.handle);
-		delete *it;
+	for (auto data : graph){
+		DeleteHandle(data->gh.handle);
+		delete data;
 	}
 }
 
 void Graphic::Draw(int id, Vector2d addPos){
 	int r, g, b;
 	GetDrawBright(&r, &g, &b);
-	SetDrawBright((color_red * r) / 255, (color_green * g) / 255, (color_blue * b) / 255);
+	SetDrawBright((color.GetR() * r) / 255, (color.GetG() * g) / 255, (color.GetB() * b) / 255);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade);
 	if(zoom == Vector2d(100.0, 100.0) && angle == 0.0 && turnFlg == false){
 		if(centerPosFlg){
@@ -162,14 +162,12 @@ int Graphic::GetHeight(){
 	return height;
 }
 
-void Graphic::SetColor(int red, int green, int blue){
-	color_red = red;
-	color_green = green;
-	color_blue = blue;
+void Graphic::SetColor(Color c){
+	color = c;
 }
 
 void Graphic::SetDefaultColor(){
-	SetColor(255, 255, 255);
+	SetColor(Color::White());
 }
 
 void Graphic::SetZoom(Vector2d zoom){

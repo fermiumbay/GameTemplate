@@ -8,12 +8,13 @@ class Sound{
 	int handle;	// ハンドル
 	int loopPos;	// ループ位置
 	bool loopFlg;	// ループフラグ
+	bool seFlg;	// 効果音フラグ
 protected:
 	Sound(){}
 	~Sound(){}
 	Sound(const Sound&){}
 	Sound& operator=(const Sound&);
-	static Sound* Create(string path = "", bool loopFlg = false, int loopPos = 0);	// 音楽作成
+	static Sound* Create(string path = "", bool loopFlg = false, int loopPos = 0, bool seFlg = false);	// 音楽作成
 public:
 	void SetLoopFlg(bool loopFlg);	// ループの可否を設定
 	void SetLoopPos(int loopPos);	// ループ位置を設定［ms］

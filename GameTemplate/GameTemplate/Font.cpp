@@ -40,8 +40,8 @@ Font* Font::Create(string fontName, Vector2d pos, int size, int thick, bool edge
 	}
 	ret->handle = CreateFontToHandle(fontName.c_str(), size, thick, fontType);
 	ret->pos = pos;
-	ret->SetColor(255, 255, 255);
-	ret->SetEdgeColor(0, 0, 0);
+	ret->SetColor(Color::White());
+	ret->SetEdgeColor(Color::Black());
 	return ret;
 }
 
@@ -50,25 +50,27 @@ void Font::Delete(Font* font){
 	delete font;
 }
 
-void Font::SetColor(int r, int g, int b){
-	color_r = r;
-	color_g = g;
-	color_b = b;
+void Font::SetColor(Color c){
+	color = c;
 }
 
-void Font::SetEdgeColor(int r, int g, int b){
-	edgeColor_r = r;
-	edgeColor_g = g;
-	edgeColor_b = b;
+void Font::SetEdgeColor(Color c){
+	edgeColor = c;
 }
 
-void Font::Print(string text, Vector2d addPos){
+void Font::Print(string text, Vector2d addPos, Color color, Color edgeColor){
+	if (color.HasNotColor()){
+		color = this->color;
+	}
+	if (edgeColor.HasNotColor()){
+		edgeColor = this->edgeColor;
+	}
 	DrawStringToHandle(
 		static_cast<int>(pos.x + addPos.x),
 		static_cast<int>(pos.y + addPos.y),
 		text.c_str(),
-		GetColor(color_r, color_g, color_b),
+		GetColor(color.GetR(), color.GetG(), color.GetB()),
 		handle,
-		GetColor(edgeColor_r, edgeColor_g, edgeColor_b)
+		GetColor(edgeColor.GetR(), edgeColor.GetG(), edgeColor.GetB())
 		);
 }

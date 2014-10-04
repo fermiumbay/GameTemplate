@@ -14,6 +14,7 @@
 #include <math.h>
 #include "InfoData.h"
 #include "Vector2.h"
+#include "Color.h"
 #include "Graphic.h"
 #include "Sound.h"
 #include "Font.h"
