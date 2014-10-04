@@ -23,9 +23,9 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <li><a href = "#handle">画像のハンドル指定読み込み</a></li>
 <li><a href = "#divGraphic">画像インスタンスを分割する</a></li>
 <li><a href = "#motion">複雑な動きをさせてみよう</a></li>
-<li><a href = "#state">クラスに状態を設定する</a></li>
 <li><a href = "#screen">スクリーンモードを変更しよう</a></li>
 <li><a href = "#save">セーブ・ロード機能を作ろう</a></li>
+<li><a href = "#state">クラスに状態を設定する</a></li>
 <li><a href = "#keyconfig">キー割り当ての変更</a></li>
 <li><a href = "#icon">アイコンを設定しよう</a></li>
 <li><a href = "#complete">ゲームの完成</a></li>
@@ -851,21 +851,19 @@ Graphic::CreateHandleにより、画像のハンドルを取得できます。<b
 ハンドルはGraphicHandle型で保持しており、これはハンドルの配列が格納されているものです。<br>
 ハンドルを用いてGraphicオブジェクトを生成するには、以下のように書きます。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	pic["弾"] = Graphic::Create(handle);
+	pic["弾"] = Graphic::Create(picHandle["弾のハンドル"]);<br>
 </b></td></tr></tbody></table><br>
 パスの部分をハンドルに置き換えればいいだけです。<br>
 後はハンドルを使いまわしてGraphicオブジェクトを大量生成することが可能です。<br>
 <br>
 ハンドルで取得した画像は<b>Graphicオブジェクトを削除しても消えません。</b><br>
 実際に画像のデータ削除するためにはハンドルを削除する必要があります。<br>
-それには、これを入れてください。<br>
-<br><table border = "2"><tbody><tr><td><b>
-	Graphic::DeleteHandle(handle);
-</b></td></tr></tbody></table><br>
-handleにはハンドルの変数を入れます。これにより、画像を削除してメモリ開放できます。<br>
-これを入れない限りは、<b>シーンを変更しても消えないので、どこかで必ず削除するようにしてください。</b><br>
-シーンのデストラクタに入れておくのが良いと思います。<br>
-これに限らず、picで保持しないGraphic型変数は勝手には消えませんから、十分注意してください。<br>
+<b>DeletePicHandle(ハンドル名)</b>とすればハンドルで指定した画像を削除し、ついでにハンドルポインタも消えます。<br>
+特別に消す必要がない場合は、消さなくてもpicやsoundと同様シーン終了時に勝手に消えてくれます。<br>
+<br>
+ただし、何らかの用途でpicで保持しないGraphic型変数などを使用する場合は、<br>
+当然ながらそれらは勝手には消えませんから、十分注意してください。<br>
+勝手に消えるのは、標準で使えるpic、sound、picDiv、picHandle、fontのみです。<br>
 <br>
 弾画像を大量に発生させてみましょう。<br>
 以下は1000個の弾を中心から一斉に分散させるサンプルです。<br>
@@ -877,10 +875,8 @@ handleにはハンドルの変数を入れます。これにより、画像を�
 <br>
 // ゲーム画面クラス<br>
 class MainScene : public BaseScene{<br>
-&nbsp	Graphic* bullet[1000];	// 弾<br>
-&nbsp	Vector2d bullet_pos[1000];	// 弾の座標（実数）<br>
+&nbsp	Graphic* bullet[1000];	// 弾の画像<br>
 &nbsp	double bullet_speed[1000];	// 弾の速度<br>
-&nbsp	int* handle;	// 弾画像のハンドル<br>
 public:<br>
 &nbsp	MainScene();	// コンストラクタ<br>
 &nbsp	~MainScene();	// デストラクタ<br>
@@ -891,23 +887,21 @@ public:<br>
 
 <br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
 #include "MainScene.h"<br>
+using namespace common;<br>
 <br>
 MainScene::MainScene(){<br>
-&nbsp	handle = Graphic::CreateHandle("bullet.png");	// 弾画像のハンドル取得<br>
+&nbsp	picHandle["弾ハンドル"] = Graphic::CreateHandle("bullet.png");	// 弾画像のハンドル取得<br>
 &nbsp	for (int i = 0; i < 1000; i++){<br>
-&nbsp	&nbsp	bullet[i] = new Graphic(handle, common::GetWindowCenter(), true);	// ハンドルを割り当て<br>
+&nbsp	&nbsp	bullet[i] = Graphic::Create(picHandle["弾ハンドル"], GetWindowCenter(), true);	// ハンドルを割り当て<br>
 &nbsp	&nbsp	bullet[i]->angle = 180.0 * Random::Rand(360) / 3.141592;	// 投射角度を360°からランダムに指定<br>
-&nbsp	&nbsp	bullet_pos[i].x = static_cast<double>(bullet[i]->pos.x);	// x座標の実数値を保持<br>
-&nbsp	&nbsp	bullet_pos[i].y = static_cast<double>(bullet[i]->pos.y);	// y座標の実数値を保持<br>
-&nbsp	&nbsp	bullet_speed[i] = 0.02 * Random::Rand(100);	// 弾のスピードをランダムに指定<br>
 &nbsp	&nbsp	bullet[i]->fade = 0;	// 弾は初め透明とする<br>
+&nbsp	&nbsp	bullet_speed[i] = 0.02 * Random::Rand(100);	// 弾のスピードをランダムに指定<br>
 &nbsp	}<br>
 }<br>
 <br>
 MainScene::~MainScene(){<br>
-&nbsp	Graphic::DeleteHandle(handle);	// シーン終了時、必ずメモリ開放すること<br>
 &nbsp	for (int i = 0; i < 1000; i++){<br>
-&nbsp	&nbsp	delete bullet[i];	// 弾のGraphicオブジェクトもきちんと削除してメモリ開放すること<br>
+&nbsp	&nbsp	Graphic::Delete(bullet[i]);	// 必ずメモリ開放すること<br>
 &nbsp	}<br>
 }<br>
 <br>
@@ -916,12 +910,8 @@ void MainScene::Update(){<br>
 <br>
 &nbsp	for (int i = 0; i < 1000; i++){<br>
 &nbsp	&nbsp	// 弾の位置を角度とスピードから、実数値で計算<br>
-&nbsp	&nbsp	bullet_pos[i].x += bullet_speed[i] * cos(bullet[i]->angle);<br>
-&nbsp	&nbsp	bullet_pos[i].y -= bullet_speed[i] * sin(bullet[i]->angle);<br>
-<br>
-&nbsp	&nbsp	// 弾画像の座標に計算した結果を渡す<br>
-&nbsp	&nbsp	bullet[i]->pos.x = static_cast&lt;int&gt;(bullet_pos[i].x);<br>
-&nbsp	&nbsp	bullet[i]->pos.y = static_cast&lt;int&gt;(bullet_pos[i].y);<br>
+&nbsp	&nbsp	bullet[i]->pos.x += bullet_speed[i] * cos(bullet[i]->angle);<br>
+&nbsp	&nbsp	bullet[i]->pos.y -= bullet_speed[i] * sin(bullet[i]->angle);<br>
 <br>
 &nbsp	&nbsp	// 不透明度を上げていく<br>
 &nbsp	&nbsp	bullet[i]->fade++;<br>
@@ -936,38 +926,314 @@ void MainScene::Draw(){<br>
 &nbsp	}<br>
 }<br>
 </b></td></tr></tbody></table><br>
-弾の座標をMainSceneも保持していますが、これは仕方なくです……<br>
-本当は実数値で座標を持ちたかったのですが、Graphicでは座標を整数値で管理しているので<br>
-実数値で計算したものをGraphicの座標に渡してやることをしています。<br>
-Graphicを実数値に対応させればいいのですが……やるかやらないか分かりません。<br>
+画像を配列として扱いたいので、Graphicポインタの配列変数を作りました。<br>
+これは自分で宣言したものなので、デストラクタでメモリ開放を行うことを忘れないようにしてください。<br>
+ちなみに、commonは名前空間ですので、上記のように「using namespace common;」とすればcommonを省略できるようになります。<br>
 <br>
 分割読み込み画像のハンドル取得は以下のようにします。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	int* handle = Graphic::CreateHandle("baysuke.png", Vector2(32, 48), Vector2(4, 4));
+	picHandle["ハンドル"] = Graphic::CreateHandle("baysuke.png", Vector2(32, 48), Vector2(4, 4));<br>
 </b></td></tr></tbody></table><br>
 第二引数に一つ分の画像サイズ、第三引数に分割数を入れれば、分割読み込み画像のハンドルを取得できます。<br>
 これを用いてGraphicのインスタンス化をするときは、一つ分の大きさや分割数は必要ありません。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	pic["ベイ助"] = new Graphic(handle);
+	pic["ベイ助"] = Graphic::Create(handle);
 </b></td></tr></tbody></table><br>
 単体読み込みのハンドル指定とまったく同じように扱うことができます。<br>
-単体のときと同様、削除時はGraphic::DeleteHandle(handle)を忘れないようにご注意下さい。<br>
 
 <br><hr>
 
 <div id = "divGraphic"></div>
 <h2>画像インスタンスを分割する</h2>
-あ<br>
+一つの画像を分割表示することは出来るようになりましたが、<br>
+これは表示するときに画像の一部分のみ描画する機能でしかなく、<br>
+画像を分割して各々に座標を持たせて移動させるなどということは出来ません。<br>
+これは、画像そのものを分割しているだけでGraphicオブジェクトはただ一つなためです。<br>
+そうではなく、画像を分割したものを各々Graphicオブジェクトとして独立させたいときもあります。<br>
+例えばこのような画像を読み込ませたいときです。<br>
+<br>
+<img src = "html_dat\menu.png"><br>
+<br>
+これは<b>「menu.png」</b>という一枚の画像です。<br>
+透明度や座標を各々の項目で持たせたいので、それぞれ単独のGraphicとして保持したいです。<br>
+画像ファイルそのものを分けちゃえばいいと言われればそうなのですが、<br>
+画像を分割して各々がGraphicを持つという機能を標準で持たせています。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["メニュー"] = Graphic::CreateDiv("menu.png", Vector2(280, 74), Vector2(1, 3));
+</b></td></tr></tbody></table><br>
+CreateDivでインスタンスを分割した配列を作成します。それをpicDivに入れています。<br>
+picDivも標準で使用可能な変数であり、vector<Graphic*>を持てます。<br>
+さっきのメニュー画像は一つ分が(280, 74)なので、第二引数には(280, 74)を入れます。<br>
+第三引数は分割する個数です。縦に3個並んでいるので(1, 3)ですね。<br>
+<br>
+分割インスタンスで作成された画像はDeletePicDiv()で削除してください。<br>
+また、ハンドルで指定する場合は分割インスタンスの場合、<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picHandle["ハンドル"] = Graphic::CreateDivHandle("menu.png", Vector2(280, 74), Vector2(1, 3));<br>
+</b></td></tr></tbody></table><br>
+と書くことになります。CreateDivHandleでハンドルを作成しますが、ハンドルはpicHandleでOKです。<br>
+実際にこれを用いて画像を作成するときは、<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["画像"] = Graphic::CreateDiv(picHandle["ハンドル"]);<br>
+</b></td></tr></tbody></table><br>
+これでOKです。ハンドルはインスタンスが単体だろうと分割だろうと同じです。<br>
+ですので、ハンドル削除はDeletePicHandle()でOKです。<br>
+<br>
+さっきのメニュー画像を使ったサンプルです。<br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	string text;	// 表示するテキスト<br>
+&nbsp	int cursor;	// カーソル番号<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+using namespace common;<br>
+<br>
+MainScene::MainScene(){<br>
+&nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 24, 2);<br>
+&nbsp	picDiv["メニュー"] = Graphic::CreateDiv("menu.png", Vector2(280, 74), Vector2(1, 3), GetWindowCenter(), true);<br>
+&nbsp	for (int i = 0; i < 3; i++){<br>
+&nbsp	&nbsp	picDiv["メニュー"][i]->pos.y += 100.0 * (i - 1);	// 1番中心に縦100ずつ離す<br>
+&nbsp	}<br>
+&nbsp	text = "メニュー選択";<br>
+&nbsp	cursor = 0;	// カーソル番号（0, 1, 2）<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	if (KeyInput::GetKey(Up, PushedNow)){<br>
+&nbsp	&nbsp	cursor--;<br>
+&nbsp	&nbsp	if (cursor < 0){<br>
+&nbsp	&nbsp	&nbsp	cursor = 2;<br>
+&nbsp	&nbsp	}<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Down, PushedNow)){<br>
+&nbsp	&nbsp	cursor++;<br>
+&nbsp	&nbsp	if (cursor >= 3){<br>
+&nbsp	&nbsp	&nbsp	cursor = 0;<br>
+&nbsp	&nbsp	}<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(OK, PushedNow)){<br>
+&nbsp	&nbsp	switch (cursor){<br>
+&nbsp	&nbsp	case 0:<br>
+&nbsp	&nbsp	&nbsp	text = "はじめからを選択しました。";<br>
+&nbsp	&nbsp	&nbsp	break;<br>
+&nbsp	&nbsp	case 1:<br>
+&nbsp	&nbsp	&nbsp	text = "つづきからを選択しました。";<br>
+&nbsp	&nbsp	&nbsp	break;<br>
+&nbsp	&nbsp	case 2:<br>
+&nbsp	&nbsp	&nbsp	EndGame();<br>
+&nbsp	&nbsp	&nbsp	break;<br>
+&nbsp	&nbsp	}<br>
+&nbsp	}<br>
+&nbsp	for (int i = 0; i < 3; i++){<br>
+&nbsp	&nbsp	if (i == cursor){<br>
+&nbsp	&nbsp	&nbsp	picDiv["メニュー"][i]->fade = 256;<br>
+&nbsp	&nbsp	&nbsp	picDiv["メニュー"][i]->SetZoom(100);<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	else{<br>
+&nbsp	&nbsp	&nbsp	picDiv["メニュー"][i]->fade = 128;<br>
+&nbsp	&nbsp	&nbsp	picDiv["メニュー"][i]->SetZoom(80);<br>
+&nbsp	&nbsp	}<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	for (int i = 0; i < 3; i++){<br>
+&nbsp	&nbsp	picDiv["メニュー"][i]->Draw();<br>
+&nbsp	}<br>
+&nbsp	font["フォント"]->Print(text);<br>
+}<br>
+</b></td></tr></tbody></table><br>
+カーソルは3以上だと0に、0未満だと2にするようにしていますが、実は<br>
+1足して3以上なら0にする、というのは「cursor = (cursor + 1) % 3;」、<br>
+1引いて0未満なら2にする、というのは「cursor = (cursor + 2) % 3;」、でそれぞれOKです。<br>
+引くほうがなぜ2足して3で割った余りを計算するようにしているかというと、<br>
+cursorが0だと1引いたら負になり、負の数を割った余りを計算することになってしまうためです。<br>
+この計算がうまく行われないので、負にならないようにさらに3を足すということをしています。<br>
+0から2だと分かりづらいかもしれませんが、例えば0から99の場合は、<br>
+1足す方は「cursor = (cursor + 1) % 100;」、1引く方は「cursor = (cursor + 99) % 100;」、となります。<br>
+<br>
+分割したそれぞれのインスタンスは、自分たちの持つ画像領域を更に分割画像として保持することが可能です。<br>
+その場合、このように記述します。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	picDiv["分割分割画像"] = Graphic::CreateDiv("menu.png", Vector2(70, 37), Vector2(1, 3), Vector2(4, 2));<br>
+</b></td></tr></tbody></table><br>
+menu.pngを(1, 3)で分割し、それぞれがGraphicインスタンスを持っている状態で、<br>
+さらにその中を(4, 2)で各々分割して保持することになります。<br>
+各々が分割した画像を描画するときは、画像の分割時と同様Draw関数の引数で描画番号を指定します。<br>
+つまり、各々のGraphicが<a href = "#div">画像の分割読み込み</a>の節の機能を持てるということになります。<br>
+こんなの何に使うんだと思われそうですが、こういうのに使います。<br>
+<br>
+<img src = "html_dat\chara.png"><br>
+<br>
+アニメーション等を含んだ画像を一括で読み込むときなどで良いかもしれません。<br>
 <br><hr>
 
 <div id = "motion"></div>
 <h2>複雑な動きをさせてみよう</h2>
-てきすと<br>
-<br><hr>
+共通フォルダにあるMotion.hでは動きを担うモーションクラス群が宣言されています。<br>
+デフォルトでは二次曲線と減衰振動を扱うことができますが、自作も可能です。<br>
+<br>
+試しに利用してみましょう。画像が(0, 0)からスタートして(320, 480)を頂点に、(640, 0)まで移動します。<br>
 
-<div id = "state"></div>
-<h2>クラスに状態を設定する</h2>
-てきすと<br>
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	Motion::Curve curve;	// 二次曲線<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene() : curve(Vector2d(320, 480)){<br>
+&nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", Vector2d(0, 0), true);<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	if (!curve.IsFinished()){<br>
+&nbsp	&nbsp	curve.Update();<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos = Vector2d(GetSceneTime(), curve.GetValue());<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	pic["ぴんくり"]->Draw();<br>
+}<br>
+</b></td></tr></tbody></table><br>
+
+Motion::Curve型の変数を持たせ、初期値を与えるためにコンストラクタで<br>
+<b>curve(Vector2d(320, 480))</b>としています。頂点は(320, 480)とする、という意味です。<br>
+しかしコンストラクタの上部でこのように定義するのは見づらいですし、途中で欲しくなったとき困るので<br>
+そういうときはポインタにして、必要なときにnewしてください。その際、必ずdeleteもするようにしてください。<br>
+curveに初期値を与えたら、Update内でcurve.Update();をします。<br>
+これで値が更新され、curve.GetValue()からそのときの値を取り出すことができます。<br>
+終了したかどうかは、curve.IsFinished()がtrueかどうかで分かります。<br>
+二次曲線の場合はPassedVertex()で頂点を通過したかどうかも判別できます。<br>
+<br>
+同様にして減衰振動も扱うことができます。減衰振動はMotion::Wave型です。<br>
+パラメータは(setValue, a, b, c, d)の5つです。<br>
+<b>ae^(-bt)sin(ct+d)</b>の減衰振動をしながらsetValueに収束するということになります。<br>
+つまり、aは振幅、bは減衰スピード、cは波立ちの速さ、dは波立ちの初期位置となります。<br>
+b＝0とすれば減衰しなくなりますので、普通の振動として扱うことができます。<br>
+c＝0とすると波立ちしなくなりますが、あんまり意味はないと思います。<br>
+減衰振動はサンプルゲームで使っていますので、参考にしてみてください。<br>
+<br>
+では、モーションを自作してみましょう。<br>
+ある点にある時間を掛けて行く、という動きを作ってみることとします。<br>
+Motion.hのMotionの名前空間の中、Waveクラスの直後にこれを追加してみてください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+// 指定した座標へ移動<br>
+class Move : public MotionBase<Vector2d>{<br>
+&nbsp	Vector2d startPos;	// 最初の座標<br>
+&nbsp	Vector2d endPos;	// 最後に到達する座標<br>
+&nbsp	int finishTime;	// 終了する時間<br>
+public:<br>
+&nbsp	Move(Vector2d startPos, Vector2d endPos, int finishTime);<br>
+&nbsp	void Update() override;<br>
+};<br>
+</b></td></tr></tbody></table><br>
+Moveクラスを作ります。MotionBaseを継承し、保持する値の型を決めます。<br>
+ここでは座標を返したいので、Vector2d型とします。<br>
+初期位置startPos、終了位置endPosを決め、到達するのにfinishTime掛かるとします。<br>
+コンストラクタではそれぞれの値を入れられるように、Updateは基底クラスのをオーバーライドします。<br>
+<br>
+Motion.cppにて実装をします。以下を追加してみてください。どこでもいいです。<br>
+<br><table border = "2"><tbody><tr><td><b>
+Motion::Move::Move(Vector2d startPos, Vector2d endPos, int finishTime){<br>
+&nbsp	this->startPos = startPos;<br>
+&nbsp	this->endPos = endPos;<br>
+&nbsp	this->finishTime = finishTime;<br>
+&nbsp	if (finishTime == 0){<br>
+&nbsp	&nbsp	Finished();<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	value = startPos;<br>
+&nbsp	}<br>
+}<br>
+<br>
+void Motion::Move::Update(){<br>
+&nbsp	Motion::MotionBase<Vector2d>::Update();<br>
+&nbsp	if (IsFinished()){<br>
+&nbsp	&nbsp	value = endPos;<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	value += (endPos - startPos) / finishTime;<br>
+&nbsp	&nbsp	if (time >= finishTime){<br>
+&nbsp	&nbsp	&nbsp	Finished();<br>
+&nbsp	&nbsp	}<br>
+&nbsp	}<br>
+}<br>
+</b></td></tr></tbody></table><br>
+コンストラクタで引数を受け取り、自分のメンバーに代入した後、<br>
+もしfinishTimeが0ならすでに終わっているので、Finished()をします。<br>
+Finished()をすると終了したということになります。<br>
+通常はfinishTimeは0ではないでしょうから、そうなるときvalueにstartPosを初期値として入れます。<br>
+Update内ではもし終わっていたらvalueにendPosを代入するようにし、<br>
+そうでなければendPosからstartPosまでの差を時間（finishTime）で割った分だけvalueに加算します。<br>
+もし時間がfinishTime以上になったらFinished()として、終了します。<br>
+これでモーションが完成しました。<br>
+<br>
+実際にこのモーションを利用してみましょう。<br>
+先ほどのMainScene.hでのcurveの宣言の行を<b>Motion::Move move;</b>に変更し、<br>
+MainScene.cppの方は次のように変更してみましょう。<br>
+
+<br><table border = "2"><tbody><tr><td><b>
+MainScene::MainScene() : move(Vector2d(100, 350), Vector2d(500, 150), 120){<br>
+&nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", Vector2d(100, 350), true);<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	move.Update();<br>
+&nbsp	pic["ぴんくり"]->pos = move.GetValue();<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	pic["ぴんくり"]->Draw();<br>
+}<br>
+</b></td></tr></tbody></table><br>
+画像が(100, 350)からスタートして、2秒（120フレーム）掛けて(500, 150)へ移動する様子が見られるはずです。<br>
 <br><hr>
 
 <div id = "screen"></div>
@@ -1051,13 +1317,14 @@ public:<br>
 
 <br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
 #include "MainScene.h"<br>
+using namespace common;<br>
 <br>
 MainScene::MainScene(){<br>
-&nbsp	SetFontSize(32);<br>
+&nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 32);<br>
 <br>
 &nbsp	enterNum = 0;<br>
 &nbsp	enterTime = 0;<br>
-&nbsp	pic["ぴんくり"] = new Graphic("pinkri.png", common::GetWindowCenter(), true);<br>
+&nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", common::GetWindowCenter(), true);<br>
 &nbsp	CommonData::Load("セーブデータ.txt");	// ロード<br>
 }<br>
 <br>
@@ -1079,7 +1346,7 @@ void MainScene::Update(){<br>
 &nbsp	}<br>
 <br>
 &nbsp	if (enterTime > 0){<br>
-&nbsp	&nbsp	pic["ぴんくり"]->pos.y = 100.0 / (15 * 15) * (enterTime - 15) * (enterTime - 15) + common::GetWindowCenter().y - 100.0;<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.y = 100.0 / (15 * 15) * (enterTime - 15) * (enterTime - 15) + GetWindowCenter().y - 100.0;<br>
 &nbsp	&nbsp	enterTime--;<br>
 &nbsp	}<br>
 }<br>
@@ -1089,8 +1356,8 @@ void MainScene::Draw(){<br>
 <br>
 &nbsp	pic["ぴんくり"]->Draw();<br>
 <br>
-&nbsp	DrawFormatString(10, 10, GetColor(255, 255, 255), "今回Enterを押した回数　　：%d", enterNum);<br>
-&nbsp	DrawFormatString(10, 40, GetColor(255, 255, 255), "今までにEnterを押した総数：%d", CommonData::saveData.enterNum);<br>
+&nbsp	font["フォント"]->Print("今回Enterを押した回数　　：" + convert&lt;int, string&gt;(enterNum));<br>
+&nbsp	font["フォント"]->Print("今までにEnterを押した総数：" + convert&lt;int, string&gt;(CommonData::saveData.enterNum), Vector2d(0, 30));<br>
 }<br>
 </b></td></tr></tbody></table><br>
 Enterを押すと画像がジャンプするようにしました。<br>
@@ -1102,6 +1369,152 @@ Enterを押すと画像がジャンプするようにしました。<br>
 <br>
 セーブデータの作り方は様々ですので、ゲームの様態に合わせて作成してみてください。<br>
 ハッシュなどを用いてセーブデータの改竄を防ぐなどといったテクニックもあります。<br>
+
+<br><hr>
+
+<div id = "state"></div>
+<h2>クラスに状態を設定する</h2>
+シーンの規模が大きくなってくると、シーンの状態を扱いたくなってきます。<br>
+例えばメニュー画面を作っているとき、メニューのトップにいるのか、装備画面にいるのか、セーブ画面にいるのか、など<br>
+一つの画面であっても状態を複数扱えて切り替えられるようにできたら便利です。<br>
+実はシーンはBehaviorクラスを継承しており、これは状態を持たせるための機能があるほか、pic、soundなどを標準で使えるようになっています。<br>
+ですから、シーンではないクラスでもBehaviorを継承すれば同等の機能が利用できるようになるのです。<br>
+基本的に、ゲーム中のオブジェクトはおおかたこれを継承すれば作りやすいようになっています。<br>
+<br>
+Stateは列挙型として定義します。ChangeState()によって定義したStateに変更できます。<br>
+デフォルトではこれは一番上の状態になるように設定されています。<br>
+現在どのStateにあるかはGetState()によって取得できるので、これによって条件分岐などすると良いでしょう。<br>
+Stateを変更すると、その状態になってからの時間stateTimeが初期化されます。<br>
+これはGetStateTime()で参照できるもので、1フレームにつき1上がります。<br>
+一方、そのシーンになってからの経過時間はGetSceneTime()で取得できます。<br>
+<br>
+なんだか色々ありますが、状態設定を施した以下のサンプルをご覧ください。<br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.h</th></tr><tr><td><b>
+#pragma once<br>
+#include "BaseScene.h"<br>
+<br>
+// ゲーム画面クラス<br>
+class MainScene : public BaseScene{<br>
+&nbsp	enum State{<br>
+&nbsp	&nbsp	start,	// 初期演出<br>
+&nbsp	&nbsp	select,	// 選択肢<br>
+&nbsp	&nbsp	print,	// 文字の表示<br>
+&nbsp	&nbsp	end,	// 終了演出<br>
+&nbsp	};<br>
+&nbsp	int cursor;	// カーソル<br>
+&nbsp	Motion::Curve motion;	// モーション<br>
+public:<br>
+&nbsp	MainScene();	// コンストラクタ<br>
+&nbsp	~MainScene();	// デストラクタ<br>
+&nbsp	void Update() override;	// 更新<br>
+&nbsp	void Draw() override;	// 描画<br>
+};<br>
+</b></td></tr></tbody></table><br>
+
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+using namespace common;<br>
+<br>
+MainScene::MainScene() : motion(Vector2d(240, InfoData::WindowSize().x)){<br>
+&nbsp	font["テキスト"] = Font::Create("メイリオ", Vector2d(10 + InfoData::WindowSize().x, 10), 24);<br>
+&nbsp	font["状態表示"] = Font::Create("メイリオ", Vector2d(InfoData::WindowSize().x - 150, InfoData::WindowSize().y - 24), 16);<br>
+&nbsp	cursor = 0;<br>
+&nbsp	ChangeState(State::start);<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	switch (GetState()){<br>
+&nbsp	case State::start:<br>
+&nbsp	&nbsp	motion.Update();<br>
+&nbsp	&nbsp	if (motion.PassedVertex()){<br>
+&nbsp	&nbsp	&nbsp	font["テキスト"]->pos = Vector2d(10, 10);<br>
+&nbsp	&nbsp	&nbsp	ChangeState(State::select);<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	else{<br>
+&nbsp	&nbsp	&nbsp	font["テキスト"]->pos.x = 10 + InfoData::WindowSize().x - motion.GetValue(); <br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	case State::select:<br>
+&nbsp	&nbsp	if (KeyInput::GetKey(Up, PushedNow)){<br>
+&nbsp	&nbsp	&nbsp	cursor = (cursor + 3) % 4;<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	if (KeyInput::GetKey(Down, PushedNow)){<br>
+&nbsp	&nbsp	&nbsp	cursor = (cursor + 1) % 4;<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	if (KeyInput::GetKey(OK, PushedNow)){<br>
+&nbsp	&nbsp	&nbsp	if (cursor != 3){<br>
+&nbsp	&nbsp	&nbsp	&nbsp	ChangeState(State::print);<br>
+&nbsp	&nbsp	&nbsp	} else{<br>
+&nbsp	&nbsp	&nbsp	&nbsp	motion.Initialize();<br>
+&nbsp	&nbsp	&nbsp	&nbsp	ChangeState(State::end);<br>
+&nbsp	&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	case State::print:<br>
+&nbsp	&nbsp	if (KeyInput::GetKey(OK, PushedNow)){<br>
+&nbsp	&nbsp	&nbsp	ChangeState(State::select);<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	case State::end:<br>
+&nbsp	&nbsp	motion.Update();<br>
+&nbsp	&nbsp	if (motion.PassedVertex()){<br>
+&nbsp	&nbsp	&nbsp	EndGame();<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	else{<br>
+&nbsp	&nbsp	&nbsp	font["テキスト"]->pos.y = 10 + 0.8 * motion.GetValue();<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	font["状態表示"]->Print("scenetime : " + convert<int, string>(GetSceneTime()));<br>
+&nbsp	font["状態表示"]->Print("statetime : " + convert<int, string>(GetStateTime()), Vector2d(0, -24));<br>
+&nbsp	switch (GetState()){<br>
+&nbsp	case State::start:<br>
+&nbsp	&nbsp	font["状態表示"]->Print("state : start", Vector2d(0, -48));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("！初期演出です！");<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	case State::select:<br>
+&nbsp	&nbsp	font["状態表示"]->Print("state : select", Vector2d(0, -48));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("選択肢を何か選んでください");<br>
+&nbsp	&nbsp	font["テキスト"]->Print("⇒", Vector2d(20, 50 + 30 * cursor));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("今日の天気は何でしょうか", Vector2d(50, 50));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("好きな食べ物は何でしょうか", Vector2d(50, 80));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("そもそも、これは何なの", Vector2d(50, 110));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("もーやめます", Vector2d(50, 140));<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	case State::print:<br>
+&nbsp	&nbsp	font["状態表示"]->Print("state : print", Vector2d(0, -48));<br>
+&nbsp	&nbsp	switch (cursor){<br>
+&nbsp	&nbsp	case 0:<br>
+&nbsp	&nbsp	&nbsp	font["テキスト"]->Print("わかんないですよ！");<br>
+&nbsp	&nbsp	&nbsp	break;<br>
+&nbsp	&nbsp	case 1:<br>
+&nbsp	&nbsp	&nbsp	font["テキスト"]->Print("お寿司が好きです＾＾");<br>
+&nbsp	&nbsp	&nbsp	break;<br>
+&nbsp	&nbsp	case 2:<br>
+&nbsp	&nbsp	&nbsp	font["テキスト"]->Print("これは黒い画面とたわむれるためのものです");<br>
+&nbsp	&nbsp	&nbsp	break;<br>
+&nbsp	&nbsp	}<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	case State::end:<br>
+&nbsp	&nbsp	font["状態表示"]->Print("state : end", Vector2d(0, -48));<br>
+&nbsp	&nbsp	font["テキスト"]->Print("しょんにゃああああああ；ｗ；");<br>
+&nbsp	&nbsp	break;<br>
+&nbsp	}<br>
+}<br>
+</b></td></tr></tbody></table><br>
+start、select、print、endの4つの状態を持っており、その時々で状態が変わるようにしています。<br>
+一つの画面で色々なことをできるようにするときは便利かもしれません。<br>
 
 <br><hr>
 
@@ -1131,10 +1544,11 @@ public:<br>
 
 <br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
 #include "MainScene.h"<br>
+using namespace common;<br>
 <br>
 MainScene::MainScene(){<br>
-&nbsp	SetFontSize(32);<br>
-&nbsp	pic["ぴんくり"] = new Graphic("pinkri.png", common::GetWindowCenter(), true);<br>
+&nbsp	font["テキスト"] = Font::Create("メイリオ", Vector2d(10, 10), 32);<br>
+&nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", GetWindowCenter(), true);<br>
 &nbsp	reverseFlg = false;<br>
 &nbsp	SetKeys();<br>
 }<br>
@@ -1169,10 +1583,10 @@ void MainScene::Draw(){<br>
 &nbsp	pic["ぴんくり"]->Draw();<br>
 <br>
 &nbsp	if (!reverseFlg){<br>
-&nbsp	&nbsp	DrawFormatString(10, 10, GetColor(255, 255, 255), "通常");<br>
+&nbsp	&nbsp	font["テキスト"]->Print("通常");<br>
 &nbsp	}<br>
 &nbsp	else{<br>
-&nbsp	&nbsp	DrawFormatString(10, 10, GetColor(255, 255, 255), "反転");<br>
+&nbsp	&nbsp	font["テキスト"]->Print("反転");<br>
 &nbsp	}<br>
 }<br>
 <br>
@@ -1251,7 +1665,7 @@ void MainScene::SetKeys(){<br>
 <br>
 <br>
 このテンプレートは、DXライブラリをオブジェクト指向的に利用するためのものに過ぎず、<br>
-また、２Ｄゲームを作成することしか想定されておりません。<br>
+また、２Ｄゲームを作成することしか想定されておりません。十分な機能をそろえるにもまだまだ足らないです。<br>
 ご本家のDXライブラリには非常に多くの機能がありますので、<br>
 より高度なことを行うためにはそちらをご参照になり、どんどん機能を拡張させていってください。<br>
 
@@ -1263,17 +1677,16 @@ void MainScene::SetKeys(){<br>
 サンプルとしてゲームウォッチのヘルメットのリメイク作りましたので、参考にどうぞ。<br>
 ⇒ <a href = "http://yahoo.jp/box/g8ysdA" target = "_blank">ダウンロードサイトに飛びます</a><br>
 <br>
+テンプレートをver1.03に更新したので、これも新しいテンプレートの書き方に合わせて改変しました。<br>
 単なるサンプルのはずが、色々詰め込んでしまって疲れたので、注釈あんまりありません。<br>
 各クラスを閲覧する場合はヘッダファイルを見ておおよそ概要をつかんでいただき、<br>
 必要なとこだけソースファイル見る、という形が良いと思います。<br>
 内部システムフォルダの中身はテンプレートの初期状態からまったく変えていませんのでご安心ください。<br>
 勢いで作ってしまったためにサンプルになってないんじゃないかというような作りですが、ご了承下さい。<br>
-<br>
-（同日：まさかのメモリリークバグがあったので、修正版をver1.01として公開しました）<br>
 
 <br><hr>
 
-2014年9月28日記 フェルミウム湾<br>
+2014年10月4日記 フェルミウム湾<br>
 <br>
 
 </body>
