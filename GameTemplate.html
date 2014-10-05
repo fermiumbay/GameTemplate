@@ -771,14 +771,14 @@ InfoData.hを開きましてDefaultScene()の中身を「Main」から「Title�
 次に、描画する際には分割されて画像が１６枚になっているので、どれを描画するかを指定する必要があります。<br>
 例えば15番を描画したいときは、<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["ベイ助"]->Draw(15);<br>
+	pic["ベイ助"]->Draw(15);<br>
 </b></td></tr></tbody></table><br>
 となります。Drawの引数に描画する画像の番号を入れます。<br>
 <br>
 動いてるっぽく見せたいので、試しにDraw内に次のように書いてみてください。<br>
 <br><table border = "2"><tbody><tr><td><b>
 	int id = (GetSceneTime() / 15) % 16;<br>
-	picDiv["ベイ助"]->Draw(id);<br>
+	pic["ベイ助"]->Draw(id);<br>
 </b></td></tr></tbody></table><br>
 GetSceneTimeで、シーンが始まってからの時間（フレーム単位）を取得できます。<br>
 それを15で割って16で割った余りを描画する番号idとして決め、描画させてみます。<br>
@@ -848,7 +848,7 @@ void MainScene::Update(){<br>
 void MainScene::Draw(){<br>
 &nbsp	BaseScene::Draw();<br>
 <br>
-&nbsp	picDiv["ベイ助"]->Draw(id);<br>
+&nbsp	pic["ベイ助"]->Draw(id);<br>
 }<br>
 </b></td></tr></tbody></table><br>
 アニメーションなどを作成する場合は、このように一つの画像にまとめて分割した方が便利でしょう。<br>
@@ -961,7 +961,7 @@ void MainScene::Draw(){<br>
 第二引数に一つ分の画像サイズ、第三引数に分割数を入れれば、分割読み込み画像のハンドルを取得できます。<br>
 これを用いてGraphicのインスタンス化をするときは、一つ分の大きさや分割数は必要ありません。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	pic["ベイ助"] = Graphic::Create(handle);
+	pic["ベイ助"] = Graphic::Create(picHandle["ハンドル"]);
 </b></td></tr></tbody></table><br>
 単体読み込みのハンドル指定とまったく同じように扱うことができます。<br>
 
@@ -998,7 +998,7 @@ picDivも標準で使用可能な変数であり、vector<Graphic*>を持てま�
 と書くことになります。CreateDivHandleでハンドルを作成しますが、ハンドルはpicHandleでOKです。<br>
 実際にこれを用いて画像を作成するときは、<br>
 <br><table border = "2"><tbody><tr><td><b>
-	picDiv["画像"] = Graphic::CreateDiv(picHandle["ハンドル"]);<br>
+	picDiv["メニュー"] = Graphic::CreateDiv(picHandle["ハンドル"]);<br>
 </b></td></tr></tbody></table><br>
 これでOKです。ハンドルはインスタンスが単体だろうと分割だろうと同じです。<br>
 ですので、ハンドル削除はDeletePicHandle()でOKです。<br>
@@ -1182,7 +1182,7 @@ c＝0とすると波立ちしなくなりますが、あんまり意味はない
 Motion.hのMotionの名前空間の中、Waveクラスの直後にでもこれを追加してみてください。<br>
 <br><table border = "2"><tbody><tr><td><b>
 // 指定した座標へ移動<br>
-class Move : public BaseMotion<Vector2d>{<br>
+class Move : public BaseMotion&lt;Vector2d&gt;{<br>
 &nbsp	Vector2d startPos;	// 最初の座標<br>
 &nbsp	Vector2d endPos;	// 最後に到達する座標<br>
 &nbsp	int finishTime;	// 終了する時間<br>
@@ -1198,7 +1198,7 @@ Moveクラスを作ります。BaseMotionを継承し、保持する値の型を
 <br>
 Motion.cppにて実装をします。以下を追加してみてください。どこでもいいです。<br>
 <br><table border = "2"><tbody><tr><td><b>
-Motion::Move::Move(Vector2d startPos, Vector2d endPos, int finishTime){<br>
+Move::Move(Vector2d startPos, Vector2d endPos, int finishTime){<br>
 &nbsp	this->startPos = startPos;<br>
 &nbsp	this->endPos = endPos;<br>
 &nbsp	this->finishTime = finishTime;<br>
@@ -1210,8 +1210,8 @@ Motion::Move::Move(Vector2d startPos, Vector2d endPos, int finishTime){<br>
 &nbsp	}<br>
 }<br>
 <br>
-void Motion::Move::Update(){<br>
-&nbsp	Motion::BaseMotion<Vector2d>::Update();<br>
+void Move::Update(){<br>
+&nbsp	BaseMotion&lt;Vector2d&gt;::Update();<br>
 &nbsp	if (IsFinished()){<br>
 &nbsp	&nbsp	value = endPos;<br>
 &nbsp	}<br>
@@ -1237,6 +1237,8 @@ Update内ではもし終わっていたらvalueにendPosを代入するように
 MainScene.cppの方は次のように変更してみましょう。<br>
 
 <br><table border = "2"><tbody><tr><td><b>
+#include "MainScene.h"<br>
+<br>
 MainScene::MainScene() : move(Vector2d(100, 350), Vector2d(500, 150), 120){<br>
 &nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", Vector2d(100, 350), true);<br>
 }<br>
@@ -1263,11 +1265,12 @@ void MainScene::Draw(){<br>
 <div id = "screen"></div>
 <h2>スクリーンモードを変更しよう</h2>
 InfoDataをいじれば初期設定をフルスクリーンにすることができますが、ゲーム中でも<br>
-<b>ChangeScreenMode(true)</b>でウィンドウモードに、<br>
-<b>ChangeScreenMode(false)</b>でフルスクリーンに変更できます。<br>
+<b>ChangeWindowMode(true)</b>でウィンドウモードに、<br>
+<b>ChangeWindowMode(false)</b>でフルスクリーンに変更できます。<br>
 ver1.02ではこのとき、すべてのグラフィックデータが消去されてしまう状態になっていましたが<br>
 そうならないようにDXライブラリの設定をしなおしましたので、特に留意することはありません。<br>
 スクリーンモードを変更したいときに自由に使ってください。<br>
+BGMの再生と同様、Updateの中に直置きするなど、<b>常にループする所には置かないように注意してください。</b><br>
 
 <br><hr>
 
@@ -1308,11 +1311,9 @@ bool CommonData::Load(string path){<br>
 &nbsp	ifstream ifs(path);<br>
 &nbsp	bool ret = !ifs.fail();<br>
 &nbsp	if (ret){<br>
-&nbsp	&nbsp	stringstream ss;<br>
 &nbsp	&nbsp	string buf;<br>
 &nbsp	&nbsp	getline(ifs, buf);<br>
-&nbsp	&nbsp	ss << buf;<br>
-&nbsp	&nbsp	ss >> saveData.enterNum;<br>
+&nbsp	&nbsp	saveData.enterNum = common::convert&lt;string, int&gt;(buf);<br>
 &nbsp	}<br>
 &nbsp	return ret;<br>
 }<br>
@@ -1502,8 +1503,8 @@ void MainScene::Update(){<br>
 void MainScene::Draw(){<br>
 &nbsp	BaseScene::Draw();<br>
 <br>
-&nbsp	font["状態表示"]->Print("scenetime : " + convert<int, string>(GetSceneTime()));<br>
-&nbsp	font["状態表示"]->Print("statetime : " + convert<int, string>(GetStateTime()), Vector2d(0, -24));<br>
+&nbsp	font["状態表示"]->Print("scenetime : " + convert&lt;int, string&gt;(GetSceneTime()));<br>
+&nbsp	font["状態表示"]->Print("statetime : " + convert&lt;int, string&gt;(GetStateTime()), Vector2d(0, -24));<br>
 &nbsp	switch (GetState()){<br>
 &nbsp	case State::start:<br>
 &nbsp	&nbsp	font["状態表示"]->Print("state : start", Vector2d(0, -48));<br>
