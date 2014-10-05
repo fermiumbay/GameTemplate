@@ -8,7 +8,7 @@ namespace Scenes{
 		BaseScene *ret = NULL;
 
 		// 新規シーンを追加する場合は、ここに命令を追加していく
-		if(name == "Main")	ret = new MainScene();
+		if (name == "Main")	ret = new MainScene();
 
 		return ret;
 	}

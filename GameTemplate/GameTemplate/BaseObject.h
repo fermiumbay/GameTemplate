@@ -2,7 +2,7 @@
 #include "CommonData.h"
 
 // ゲームにおける様々な振る舞いを行うオブジェクトの基底
-class Behavior{
+class BaseObject{
 	virtual enum State{none};	// 状態の種類
 	State state;	// 現在の状態
 	int stateTime;	// 現在の状態になってからの経過時間
@@ -23,13 +23,13 @@ protected:
 	// 状態の変更
 	template<class NewState>
 	void ChangeState(NewState state){
-		this->state = static_cast<Behavior::State>(state);
+		this->state = static_cast<BaseObject::State>(state);
 		stateTime = 0;
 	}
 
 public:
-	Behavior();
-	virtual ~Behavior();
+	BaseObject();
+	virtual ~BaseObject();
 	virtual void Update();	// 更新
 	virtual void Draw();	// 描画
 };

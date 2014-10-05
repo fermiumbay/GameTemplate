@@ -1,6 +1,6 @@
-#include "Behavior.h"
+#include "BaseObject.h"
 
-Behavior::Behavior(){
+BaseObject::BaseObject(){
 	pic.clear();
 	picDiv.clear();
 	picHandle.clear();
@@ -10,7 +10,7 @@ Behavior::Behavior(){
 	stateTime = 0;
 }
 
-Behavior::~Behavior(){
+BaseObject::~BaseObject(){
 	for (auto data : pic){
 		Graphic::Delete(data.second);
 	}
@@ -28,42 +28,42 @@ Behavior::~Behavior(){
 	}
 }
 
-void Behavior::Update(){
+void BaseObject::Update(){
 	stateTime++;
 }
 
-void Behavior::Draw(){
+void BaseObject::Draw(){
 }
 
-void Behavior::DeletePic(string name){
+void BaseObject::DeletePic(string name){
 	Graphic::Delete(pic[name]);
 	pic.erase(name);
 }
 
-void Behavior::DeletePicDiv(string name){
+void BaseObject::DeletePicDiv(string name){
 	Graphic::DeleteDiv(picDiv[name]);
 	picDiv.erase(name);
 }
 
-void Behavior::DeletePicHandle(string name){
+void BaseObject::DeletePicHandle(string name){
 	Graphic::Delete(picHandle[name]);
 	picHandle.erase(name);
 }
 
-void Behavior::DeleteSound(string name){
+void BaseObject::DeleteSound(string name){
 	Sound::Delete(sound[name]);
 	sound.erase(name);
 }
 
-void Behavior::DeleteFont(string name){
+void BaseObject::DeleteFont(string name){
 	Font::Delete(font[name]);
 	font.erase(name);
 }
 
-Behavior::State Behavior::GetState(){
+BaseObject::State BaseObject::GetState(){
 	return state;
 }
 
-int Behavior::GetStateTime(){
+int BaseObject::GetStateTime(){
 	return stateTime;
 }

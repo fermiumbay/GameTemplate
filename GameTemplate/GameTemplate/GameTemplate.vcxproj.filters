@@ -51,9 +51,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>ソース ファイル\内部システム</Filter>
     </ClCompile>
-    <ClCompile Include="Behavior.cpp">
-      <Filter>ソース ファイル\内部システム</Filter>
-    </ClCompile>
     <ClCompile Include="Vector2.cpp">
       <Filter>ソース ファイル\内部システム</Filter>
     </ClCompile>
@@ -73,6 +70,9 @@
       <Filter>ソース ファイル\共通</Filter>
     </ClCompile>
     <ClCompile Include="Color.cpp">
+      <Filter>ソース ファイル\内部システム</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseObject.cpp">
       <Filter>ソース ファイル\内部システム</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,9 +101,6 @@
     <ClInclude Include="Game.h">
       <Filter>ヘッダー ファイル\内部システム</Filter>
     </ClInclude>
-    <ClInclude Include="Behavior.h">
-      <Filter>ヘッダー ファイル\内部システム</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>ヘッダー ファイル\内部システム</Filter>
     </ClInclude>
@@ -126,6 +123,12 @@
       <Filter>ヘッダー ファイル\共通</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">
+      <Filter>ヘッダー ファイル\内部システム</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMotion.h">
+      <Filter>ヘッダー ファイル\内部システム</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseObject.h">
       <Filter>ヘッダー ファイル\内部システム</Filter>
     </ClInclude>
   </ItemGroup>

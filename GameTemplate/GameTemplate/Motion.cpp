@@ -1,6 +1,7 @@
 #include "Motion.h"
+using namespace Motion;
 
-Motion::Curve::Curve(Vector2d vertexPos){
+Curve::Curve(Vector2d vertexPos){
 	p = vertexPos.x;
 	q = vertexPos.y;
 	if (p == 0){
@@ -13,19 +14,19 @@ Motion::Curve::Curve(Vector2d vertexPos){
 	}
 }
 
-void Motion::Curve::Update(){
-	Motion::MotionBase<double>::Update();
+void Curve::Update(){
+	BaseMotion<double>::Update();
 	value = a * (time - p) * (time - p) + q;
 	if (time >= finishTime){
 		Finished();
 	}
 }
 
-bool Motion::Curve::PassedVertex(){
+bool Curve::PassedVertex(){
 	return time >= p;
 }
 
-Motion::Wave::Wave(double setValue, double a, double b, double c, double d){
+Wave::Wave(double setValue, double a, double b, double c, double d){
 	this->setValue = setValue;
 	this->a = a;
 	this->b = b;
@@ -49,8 +50,8 @@ Motion::Wave::Wave(double setValue, double a, double b, double c, double d){
 	}
 }
 
-void Motion::Wave::Update(){
-	Motion::MotionBase<double>::Update();
+void Wave::Update(){
+	BaseMotion<double>::Update();
 	if (!neverfinishFlg && time > finishTime){
 		value = setValue;
 		Finished();
