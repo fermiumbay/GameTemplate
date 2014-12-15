@@ -8,6 +8,7 @@ BaseObject::BaseObject(){
 	font.clear();
 	state = State::none;
 	stateTime = 0;
+	futureVector.clear();
 }
 
 BaseObject::~BaseObject(){
@@ -26,6 +27,7 @@ BaseObject::~BaseObject(){
 	for (auto data : font){
 		Font::Delete(data.second);
 	}
+	ClearThread();
 }
 
 void BaseObject::Update(){
@@ -66,4 +68,39 @@ BaseObject::State BaseObject::GetState(){
 
 int BaseObject::GetStateTime(){
 	return stateTime;
+}
+
+void BaseObject::AddThread(function<void()> thread){
+	futureVector.push_back(new future<void>(async(thread)));
+}
+
+int BaseObject::GetThreadTotalNum(){
+	return futureVector.size();
+}
+
+int BaseObject::GetFinishedThreadNum(){
+	int ret = 0;
+	for (auto data : futureVector){
+		if (data->_Is_ready()){
+			ret++;
+		}
+	}
+	return ret;
+}
+
+void BaseObject::ClearThread(){
+	for (auto data : futureVector){
+		delete data;
+	}
+	futureVector.clear();
+}
+
+bool BaseObject::AllThreadFinished(){
+	return GetFinishedThreadNum() == GetThreadTotalNum();
+}
+
+void BaseObject::WaitForThread(){
+	for (auto data : futureVector){
+		data->wait();
+	}
 }

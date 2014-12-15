@@ -12,6 +12,7 @@
 #include <functional>
 #include <time.h>
 #include <math.h>
+#include <future>
 #include "InfoData.h"
 #include "Vector2.h"
 #include "Color.h"
@@ -50,25 +51,25 @@ namespace common{
 	template <class type>
 	static void new2(type*** var, int size_x, int size_y){
 		*var = new type*[size_x];
-		for(int i=0; i<size_x; i++){
+		for (int i = 0; i<size_x; i++){
 			(*var)[i] = new type[size_y];
 		}
 	}
-	
+
 	// 2次元配列の領域解放
 	template <class type>
 	static void delete2(type*** var, int size_x, int size_y = 0){
-		for(int i=0; i<size_x; i++){
-			delete[] (*var)[i];
+		for (int i = 0; i<size_x; i++){
+			delete[](*var)[i];
 		}
-		delete[] *var;
+		delete[] * var;
 	}
 
 	// 連想配列で格納したオブジェクトの全消去
 	template <class key, class value>
 	static void deleteMap(map<key, value> *item){
 		map<key, value>::iterator it = item->begin();
-		while(it != item->end())
+		while (it != item->end())
 			delete (*item)[(it++)->first];
 		item->clear();
 	}
@@ -77,7 +78,7 @@ namespace common{
 	template <class type>
 	static void deleteList(list<type> *item){
 		list<type>::iterator it = item->begin();
-		while(it != item->end()){
+		while (it != item->end()){
 			delete *it;
 			it++;
 		}
@@ -91,9 +92,10 @@ namespace common{
 		double fps;
 
 		systemTime = clock();
-		if(systemTime - prevSystemTime == 0){
+		if (systemTime - prevSystemTime == 0){
 			fps = 0.0;
-		}else{
+		}
+		else{
 			fps = static_cast<double>(CLOCKS_PER_SEC) / static_cast<double>(systemTime - prevSystemTime);
 		}
 		prevSystemTime = systemTime;

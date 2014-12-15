@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 		game.Play();	// ゲーム処理の実行
 	}while(!game.Exit());	// ゲームの終了
 
-	CommonData::Finalization();	// 共通データの終了処理
+	CommonData::Finalize();	// 共通データの終了処理
     DxLib_End();    // DXライブラリ終了処理
     return 0;
 }

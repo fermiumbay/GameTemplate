@@ -9,7 +9,7 @@ bool CommonData::Initialize(){
 	return true;
 }
 
-bool CommonData::Finalization(){
+bool CommonData::Finalize(){
 	return true;
 }
 
