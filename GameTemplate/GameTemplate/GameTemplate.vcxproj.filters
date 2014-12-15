@@ -75,6 +75,9 @@
     <ClCompile Include="BaseObject.cpp">
       <Filter>ソース ファイル\内部システム</Filter>
     </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>ソース ファイル\内部システム</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
