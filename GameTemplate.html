@@ -5,11 +5,12 @@
 <body>
 <h1>GameTemplate説明書</h1>
 DXライブラリを用いたゲーム作成のためのテンプレートです。<br>
-ダウンロードはこちらからできます ⇒ <a href = "GameTemplate.zip">ver1.03 ダウンロード</a>
+ダウンロードはこちらからできます ⇒ <a href = "GameTemplate.zip">ver1.04 ダウンロード</a>
 
 <hr>
 <h3>もくじ</h3>
 <ul>
+<li><a href = "#ver03">ver1.03との変更点</a></li>
 <li><a href = "#ver02">ver1.02との変更点</a></li>
 <li><a href = "#first">使い方</a></li>
 <li><a href = "#abstract">概要</a></li>
@@ -27,16 +28,44 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <li><a href = "#save">セーブ・ロード機能を作ろう</a></li>
 <li><a href = "#state">クラスに状態を設定する</a></li>
 <li><a href = "#keyconfig">キー割り当ての変更</a></li>
+<li><a href = "#multi">並列処理について</a></li>
 <li><a href = "#icon">アイコンを設定しよう</a></li>
 <li><a href = "#complete">ゲームの完成</a></li>
 <li><a href = "#sample">サンプルゲーム</a></li>
 </ul>
 <hr>
 
+<div id = "ver03"></div>
+<h2>ver1.03との変更点</h2>
+このテンプレートを初めて扱う場合は、この節は<a href = "#first">飛ばして</a>ください。<br>
+ver1.02からver1.03に掛けて主に以下の点が変更されています。<br>
+<ul>
+<li>Randomクラスの仕様変更</li>
+<li>マルチスレッドの標準装備</li>
+<li>関数名変更Finalization→Finalize</li>
+</ul>
+<br><h3>【Randomクラスの仕様変更】</h3>
+乱数を担うRandomクラスでメルセンヌツイスタを用いるように変更しました。<br>
+以前までの使い方とまったく同じようにして使えるはずですが、<br>
+乱数の初期値による挙動に以前までのバージョンと互換性を持っていないと思われます。<br>
+乱数の範囲指定や、実数の乱数なども使えるようになりました。<br>
+
+<br><h3>【マルチスレッドの標準装備】</h3>
+マルチスレッドを標準で使えるように設定しました。<br>
+BaseObjectを継承すると、その機能を利用することができます。<br>
+これにより、ロード中の画面で素材を読み込みながら画面を動かすなどができます。<br>
+詳しくは<a href = "#multi">並列処理について</a>をご覧ください。<br>
+
+<br><h3>【関数名変更Finalization→Finalize】</h3>
+細かい変更ですが、CommonDataにおける終了処理Finalizationの名前を<br>
+Finalizeに変更しました。Initializeとの対応のためです。<br>
+
+<br><hr>
+
 <div id = "ver02"></div>
 <h2>ver1.02との変更点</h2>
-このテンプレートを初めて扱う場合は、この節は飛ばしてください。<br>
-ver1.02から主に以下の点が変更されています。<br>
+このテンプレートを初めて扱う場合は、この節は<a href = "#first">飛ばして</a>ください。<br>
+ver1.01からver1.02に掛けて主に以下の点が変更されています。<br>
 身内向けをいいことに、かなり仕様変更しました。ごめんなさい。<br>
 <ul>
 <li>フォルダの名称変更</li>
@@ -336,11 +365,14 @@ Vector2は整数のベクトル、Vector2dは実数のベクトルです。<br>
 <br><h3>【色】（内部システム > Color.h／.cpp）</h3>
 色のクラスです。赤、緑、青の各輝度を設定できます。<br>
 
-<br><h3>【乱数クラス】（内部システム > Random.h）</h3>
+<br><h3>【乱数クラス】（内部システム > Random.h／.cpp）</h3>
 乱数のクラスです。それだけです。<br>
 DefaultRand関数で乱数の初期化が行えますが、これはゲーム開始時に自動で呼ばれます。<br>
+引数なしだと現在のタイマーをもとにランダムに初期化しますが、<br>
+引数を与えると任意のシードにて乱数の初期化が行えます。リプレイファイルの作成などに用います。<br>
 Rand関数にて乱数を発生させることができます。<br>
-SetDefaultRandで任意のシードにて乱数の初期化が行えます。リプレイファイルの作成などに用います。<br>
+DRand関数は実数の乱数を範囲指定して発生させられます。<br>
+乱数の機構にはメルセンヌツイスタを用いており、メルセンヌツイスタそのものを取り出すにはGetMt関数を用います。<br>
 
 <br><hr>
 
@@ -1657,6 +1689,95 @@ void MainScene::SetKeys(){<br>
 
 <br><hr>
 
+<div id = "multi"></div>
+<h2>並列処理について</h2>
+ロード中の画面で、素材を読み込みながら「NowLoading」の文字を動かすなどしてみたいときがあります。<br>
+そういうときは、メインで文字を動かしながら素材読み込み処理を並列で実行し、<br>
+素材の読み込みが完了したら画面遷移する、ということをすれば良いですね。<br>
+ver1.04から並列処理に標準で対応できるようになりました。<br>
+<br>
+BaseObjectを継承したクラス（シーンも継承しています）は<br>
+標準で並列処理のためのスレッド配列を保持しており、<br>
+並列処理を使いたくなったらスレッドを登録すれば即座に処理が始まります。<br>
+スレッドの追加をするにはAddThread関数を用います。<br>
+引数に処理したい関数やラムダ式を入れることで、その処理を並列に行うようになります。<br>
+GetThreadTotalNum関数により登録されているスレッドの総数を、<br>
+GetFinishedThreadNum関数によりそのうち完了したスレッドの数を与えます。<br>
+すべてのスレッドが終わっている状態は上の二つの関数値が一致するときですが、<br>
+これはAllThreadFinished関数の戻り値がtrueであることと同値になります。<br>
+この関数はその名の通り、すべてのスレッドが終了していたらtrueを返す関数です。<br>
+スレッドが0個のときは常にtrueが返ります。<br>
+ですから、登録したスレッドが終了したかどうかの確認はAllThreadFinishedにて行い、<br>
+これがtrueになるまでの間ロード中の表示をし続ければ良いのです。<br>
+登録したスレッドを全消去するにはClearThread関数を用います。<br>
+また、スレッドすべてが完全に終了するまで全体処理を停止させる命令としてWaitForThread関数もありますが<br>
+念のため用意した程度で、使わなくてよいと思います。<br>
+<br>
+<br><table border = "2"><tbody><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene(){<br>
+&nbsp	font["テキスト"] = Font::Create("メイリオ", Vector2d(100, 100), 48, 4, true);<br>
+&nbsp	AddThread([&]{	// 素材読み込みをするときは「&」にしないと読み込みが反映されない<br>
+&nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
+&nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
+&nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
+&nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
+&nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
+&nbsp	});<br>
+&nbsp	loadFlg = false;<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	if (AllThreadFinished()){<br>
+&nbsp	&nbsp	loadFlg = true;<br>
+&nbsp	&nbsp	ClearThread();<br>
+&nbsp	}<br>
+<br>
+&nbsp	if (loadFlg){<br>
+&nbsp	&nbsp	font["テキスト"]->pos = Vector2d(100, 100);<br>
+&nbsp	&nbsp	font["テキスト"]->SetColor(Color::White());<br>
+&nbsp	&nbsp	int i = static_cast&lt;int&gt;(128.0 + 127.0 * cos(0.5 * GetSceneTime()));<br>
+&nbsp	&nbsp	font["テキスト"]->SetEdgeColor(Color(i, i, 0));<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	font["テキスト"]->pos.x = static_cast&lt;int&gt;(100.0 + 50.0 * sin(0.1 * GetSceneTime()));<br>
+&nbsp	&nbsp	int i = static_cast&lt;int&gt;(192.0 + 63.0 * sin(0.3 * GetSceneTime()));<br>
+&nbsp	&nbsp	font["テキスト"]->SetColor(Color(i, i, i));<br>
+&nbsp	&nbsp	i = static_cast&lt;int&gt;(128.0 + 127.0 * cos(0.2 * GetSceneTime()));<br>
+&nbsp	&nbsp	font["テキスト"]->SetEdgeColor(Color(i, i, i));<br>
+&nbsp	}<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	if (loadFlg){<br>
+&nbsp	&nbsp	font["テキスト"]->Print("ロード完了！！");<br>
+&nbsp	}<br>
+&nbsp	else{<br>
+&nbsp	&nbsp	font["テキスト"]->Print("ロード中です...");<br>
+&nbsp	}<br>
+}<br>
+</b></td></tr></tbody></table><br>
+<br>
+↑ロード中のサンプルです。ヘッダにbool型のloadFlgを追加してください。<br>
+AddThread内にて本当は素材を読み込む処理を入れることになります。<br>
+その処理が完了するまでの間はAllThreadFinishedがfalseなのでloadFlgがfalseのまま、<br>
+完了すればtrueとなって「ロード完了！！」と表示されるように切り替わることになります。<br>
+<br>
+スレッドはあんまりたくさん追加しない方が良いと思います。<br>
+ロード中でもしゲージや「％」など、進行度も表示させたい場合は<br>
+スレッドを複数用意して小分けするのでなく、進行度を表す変数みたいなのをあらかじめ用意しておいて<br>
+一つの大きなスレッド内で素材を読み込むたびにその進行度を増やしていくような手法にした方が良さそうです。<br>
+
+<br><hr>
+
 <div id = "icon"></div>
 <h2>アイコンを設定しよう</h2>
 ゲームのアイコンを設定してみましょう。<br>
@@ -1704,8 +1825,9 @@ void MainScene::SetKeys(){<br>
 サンプルとしてゲームウォッチのヘルメットのリメイク作りましたので、参考にどうぞ。<br>
 ⇒ <a href = "http://yahoo.jp/box/g8ysdA" target = "_blank">ダウンロードサイトに飛びます</a><br>
 <br>
-テンプレートをver1.03に更新したので、これも新しいテンプレートの書き方に合わせて改変しました。<br>
-目に見える違いはほぼありませんが、ぴんくりの生産の仕方を変えたために<br>
+テンプレートをver1.04に更新したので、これも新しいテンプレートの書き方に合わせて改変しました。<br>
+ロード中の間に並列処理が行えるようになったので、「NowLoading」の表示が光るようになってます＾＾；<br>
+その他、目に見える違いはほぼありませんが、ぴんくりの生産の仕方を変えたために<br>
 画面にいるぴんくりの数をカウントして表示する機能のためにしなければならないことがいくつか出てしまうので<br>
 ゲーム開始後にぴんくりが出現した総数を代わりに表示するようにしています。<br>
 今までどおり画面中のぴんくりの数を表示するようにするには、<br>
