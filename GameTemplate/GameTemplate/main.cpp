@@ -9,10 +9,11 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	if (SetOutApplicationLogValidFlag(false) != 0){ return 0; }	// ログ出力を禁止する
 	if (SetGraphMode(InfoData::WindowSize().x, InfoData::WindowSize().y, InfoData::WindowColorBitNum()) != 0){ return 0; }	// 解像度の設定
 	if (SetMainWindowText(InfoData::GameTitle().c_str())){ return 0; }	// タイトルバーの初期テキストを決定
-	if (ChangeWindowMode(InfoData::WindowMode()) != 0){ return 0; }	//ウィンドウモードに設定
+	if (ChangeWindowMode(InfoData::WindowMode()) != 0){ return 0; }	// ウィンドウモードに設定
 	if (DxLib_Init() != 0){ return 0; }	//DXライブラリ初期化処理
 	if (SetDrawScreen(DX_SCREEN_BACK) != 0){ return 0; }	//描画先を裏画面に設定
 	if (SetChangeScreenModeGraphicsSystemResetFlag(false)){ return 0; }	// スクリーンモード変更による画像関係の設定初期化を禁止
+	if (SetUseASyncLoadFlag(true) != 0){ return 0; }	// 非同期読み込みON
 
 	Random::DefaultRand();	// 乱数の初期化
 	CommonData::Initialize();	// データの初期化

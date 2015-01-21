@@ -6,7 +6,7 @@ class BaseObject{
 	virtual enum State{ none };	// 状態の種類
 	State state;	// 現在の状態
 	int stateTime;	// 現在の状態になってからの経過時間
-	vector<future<void>*> futureVector;	// 並列読み込み用フューチャー配列
+	vector<thread*> threadVector;	// 並列読み込み用スレッド配列
 protected:
 	map<string, Graphic*> pic;	// 画像
 	map<string, vector<Graphic*>> picDiv;	// 分割画像

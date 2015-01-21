@@ -4,6 +4,10 @@ GraphicHandle Graphic::CreateHandle(string path){
 	GraphicHandle ret;
 	ret.handle = new int[1];
 	ret.handle[0] = LoadGraph(path.c_str());
+	while (CheckHandleASyncLoad(ret.handle[0]) == TRUE){
+		ProcessMessage();
+		Sleep(1);
+	}
 	ret.divNum = Vector2(1, 1);
 	ret.patternNum = Vector2(1, 1);
 	return ret;
@@ -23,6 +27,17 @@ GraphicHandle Graphic::CreateDivHandle(string path, Vector2 oneSize, Vector2 div
 	int y = divNum.y * patternNum.y;
 	ret.handle = new int[x * y];
 	LoadDivGraph(path.c_str(), x * y, x, y, oneSize.x, oneSize.y, ret.handle);
+	int loadNum = 0;
+	while (loadNum < x * y){
+		loadNum = 0;
+		for (int i = 0; i < x * y; i++){
+			if (CheckHandleASyncLoad(ret.handle[i]) != TRUE){
+				loadNum++;
+			}
+		}
+		ProcessMessage();
+		Sleep(1);
+	}
 	ret.divNum = divNum;
 	ret.patternNum = patternNum;
 	return ret;
@@ -131,13 +146,15 @@ void Graphic::Draw(int id, Vector2d addPos){
 	GetDrawBright(&r, &g, &b);
 	SetDrawBright((color.GetR() * r) / 255, (color.GetG() * g) / 255, (color.GetB() * b) / 255);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade);
-	if(zoom == Vector2d(100.0, 100.0) && angle == 0.0 && turnFlg == false){
-		if(centerPosFlg){
+	if (zoom == Vector2d(100.0, 100.0) && angle == 0.0 && turnFlg == false){
+		if (centerPosFlg){
 			DrawGraph(static_cast<int>(pos.x + addPos.x - width / 2), static_cast<int>(pos.y + addPos.y - height / 2), gh.handle[id], trans);
-		}else{
+		}
+		else{
 			DrawGraph(static_cast<int>(pos.x + addPos.x), static_cast<int>(pos.y + addPos.y), gh.handle[id], trans);
 		}
-	}else{
+	}
+	else{
 		int x, y;
 		x = static_cast<int>(pos.x + addPos.x);
 		y = static_cast<int>(pos.y + addPos.y);

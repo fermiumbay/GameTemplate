@@ -8,7 +8,7 @@ BaseObject::BaseObject(){
 	font.clear();
 	state = State::none;
 	stateTime = 0;
-	futureVector.clear();
+	threadVector.clear();
 }
 
 BaseObject::~BaseObject(){
@@ -70,18 +70,20 @@ int BaseObject::GetStateTime(){
 	return stateTime;
 }
 
-void BaseObject::AddThread(function<void()> thread){
-	futureVector.push_back(new future<void>(async(thread)));
+void BaseObject::AddThread(function<void()> func){
+	threadVector.push_back(new thread(func));
 }
 
 int BaseObject::GetThreadTotalNum(){
-	return futureVector.size();
+	return threadVector.size();
 }
 
 int BaseObject::GetFinishedThreadNum(){
 	int ret = 0;
-	for (auto data : futureVector){
-		if (data->_Is_ready()){
+	for (auto data : threadVector){
+		DWORD param;
+		GetExitCodeThread(data->native_handle(), &param);
+		if (param != STILL_ACTIVE){
 			ret++;
 		}
 	}
@@ -89,18 +91,13 @@ int BaseObject::GetFinishedThreadNum(){
 }
 
 void BaseObject::ClearThread(){
-	for (auto data : futureVector){
+	for (auto data : threadVector){
+		data->join();
 		delete data;
 	}
-	futureVector.clear();
+	threadVector.clear();
 }
 
 bool BaseObject::AllThreadFinished(){
 	return GetFinishedThreadNum() == GetThreadTotalNum();
-}
-
-void BaseObject::WaitForThread(){
-	for (auto data : futureVector){
-		data->wait();
-	}
 }

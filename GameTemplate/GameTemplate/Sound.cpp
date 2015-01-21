@@ -3,6 +3,10 @@
 Sound* Sound::Create(string path, bool loopFlg, int loopPos, bool seFlg){
 	Sound* ret = new Sound();
 	ret->handle = LoadSoundMem(path.c_str());
+	while (CheckHandleASyncLoad(ret->handle) == TRUE){
+		ProcessMessage();
+		Sleep(1);
+	}
 	ret->loopFlg = loopFlg;
 	ret->SetLoopPos(loopPos);
 	ret->seFlg = seFlg;
@@ -17,27 +21,27 @@ void Sound::Delete(Sound* sound){
 
 void Sound::SetLoopFlg(bool loopFlg){
 	this->loopFlg = loopFlg;
-	if (this->loopFlg){
+	if(this->loopFlg){
 		SetLoopPosSoundMem(this->loopPos, this->handle);
 	}
 }
 
 void Sound::SetLoopPos(int loopPos){
 	this->loopPos = loopPos;
-	if (this->loopFlg){
+	if(this->loopFlg){
 		SetLoopPosSoundMem(this->loopPos, this->handle);
 	}
 }
 
 void Sound::Play(int playPos){
-	if (playPos != -1){
+	if(playPos != -1){
 		// Ä¶ˆÊ’u‚ğw’è‚µ‚ÄÄ¶
 		SetSoundCurrentTime(playPos, handle);
 	}
 	else if (seFlg){
 		playPos = 0;
 	}
-	if (loopFlg){
+	if(loopFlg){
 		PlaySoundMem(handle, DX_PLAYTYPE_LOOP, 0);
 	}
 	else{

@@ -12,7 +12,7 @@
 #include <functional>
 #include <time.h>
 #include <math.h>
-#include <future>
+#include <thread>
 #include "InfoData.h"
 #include "Vector2.h"
 #include "Color.h"

@@ -39,6 +39,10 @@ Font* Font::Create(string fontName, Vector2d pos, int size, int thick, bool edge
 		break;
 	}
 	ret->handle = CreateFontToHandle(fontName.c_str(), size, thick, fontType);
+	while (CheckHandleASyncLoad(ret->handle) == TRUE){
+		ProcessMessage();
+		Sleep(1);
+	}
 	ret->pos = pos;
 	ret->SetColor(Color::White());
 	ret->SetEdgeColor(Color::Black());
