@@ -1,9 +1,8 @@
 #pragma once
 #include "DxLib.h"
 #include "Vector2.h"
-#include <string>
 #include "Color.h"
-using namespace std;
+#include "includes.h"
 
 // フォントタイプ
 enum FontType{

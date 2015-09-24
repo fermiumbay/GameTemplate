@@ -1,6 +1,6 @@
 #pragma once
 #include "DxLib.h"
-#include <random>
+#include "includes.h"
 
 // —”ƒNƒ‰ƒX
 class Random{

@@ -1,7 +1,7 @@
 #include "MainScene.h"
 
-MainScene::MainScene(){
-	font["テキスト"] = Font::Create("メイリオ", Vector2d(10, 10), 24);
+MainScene::MainScene() : BaseScene() {
+	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 24);
 }
 
 MainScene::~MainScene(){
@@ -18,5 +18,5 @@ void MainScene::Update(){
 void MainScene::Draw(){
 	BaseScene::Draw();
 
-	font["テキスト"]->Print("キャンセルキーで終了します");
+	font["フォント"]->Print("キャンセルキーで終了します");
 }

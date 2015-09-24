@@ -40,11 +40,11 @@ Wave::Wave(double setValue, double a, double b, double c, double d){
 		neverfinishFlg = true;
 	}
 	else if (c == 0){
-		finishTime = static_cast<int>(log(abs(a * sin(d))) / b);
+		finishTime = static_cast<int>(log(fabs(a * sin(d))) / b);
 		neverfinishFlg = false;
 	}
 	else{
-		int n = static_cast<int>(1.0 / M_PI * (c / b * log(abs(a)) + d) + 1.0);
+		int n = static_cast<int>(1.0 / M_PI * (c / b * log(fabs(a)) + d) + 1.0);
 		finishTime = static_cast<int>((-d + M_PI * n) / c);
 		neverfinishFlg = false;
 	}

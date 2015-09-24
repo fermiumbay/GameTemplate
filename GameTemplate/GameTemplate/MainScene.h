@@ -4,8 +4,17 @@
 // ゲーム画面クラス
 class MainScene : public BaseScene{
 public:
-	MainScene();	// コンストラクタ
-	~MainScene();	// デストラクタ
-	void Update() override;	// 更新
-	void Draw() override;	// 描画
+
+	// コンストラクタ
+	MainScene();
+
+	// デストラクタ
+	~MainScene();
+
+	// 更新
+	void Update() override;
+
+	// 描画
+	void Draw() override;
+
 };

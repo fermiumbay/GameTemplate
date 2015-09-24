@@ -3,14 +3,28 @@
 
 // モーションを設定する
 namespace Motion{
+
 	// 二次曲線
-	class Curve : public BaseMotion<double>{
-		int finishTime;	// 終了する時間
-		double a, p, q;	// 定数(a(x-p)^2+q)
+	class Curve : public BaseMotion<double> {
 	public:
+
+		// 二次曲線
 		Curve(Vector2d vertexPos);
+
+		// 更新
 		void Update() override;
-		bool PassedVertex();	// 頂点通った
+
+		// 頂点通った
+		bool PassedVertex();
+
+	private:
+
+		// 終了する時間
+		int finishTime;
+
+		// 定数(a(x-p)^2+q)
+		double a, p, q;
+
 	};
 
 	// 減衰振動
@@ -23,4 +37,5 @@ namespace Motion{
 		Wave(double setValue, double a, double b, double c, double d);
 		void Update() override;
 	};
+
 }

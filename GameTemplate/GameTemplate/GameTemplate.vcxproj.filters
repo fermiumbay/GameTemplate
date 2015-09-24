@@ -78,6 +78,12 @@
     <ClCompile Include="Random.cpp">
       <Filter>ソース ファイル\内部システム</Filter>
     </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -133,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="BaseObject.h">
       <Filter>ヘッダー ファイル\内部システム</Filter>
+    </ClInclude>
+    <ClInclude Include="includes.h">
+      <Filter>ヘッダー ファイル\内部システム</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

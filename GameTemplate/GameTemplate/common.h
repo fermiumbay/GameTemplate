@@ -1,38 +1,34 @@
 #pragma once
-#define _USE_MATH_DEFINES
-#include <string>
-#include <cstring>
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <map>
-#include <list>
-#include <functional>
-#include <time.h>
-#include <math.h>
-#include <thread>
+#include "includes.h"
+
 #include "InfoData.h"
 #include "Vector2.h"
 #include "Color.h"
+#include "Shape.h"
+
 #include "Graphic.h"
 #include "Sound.h"
 #include "Font.h"
+#include "Screen.h"
+
 #include "KeyInput.h"
 #include "Random.h"
 #include "Motion.h"
-using namespace std;
 
+// 共通名前空間
 namespace common{
+
 	// ウィンドウの中心座標を取得
 	inline static Vector2d GetWindowCenter(){
 		return InfoData::WindowSize().ToDouble() / 2;
 	}
+
+	// 度をラジアンに
 	inline static const double DegToRad(double degree){
 		return degree * M_PI / 180.0;
 	}
 
+	// ラジアンを度に
 	inline static const double RadToDeg(double radian){
 		return radian * 180.0 / M_PI;
 	}
@@ -102,11 +98,31 @@ namespace common{
 		return fps;
 	}
 
-	// startPosからgoalPosへ向かうための角度を求める
-	static double Adir(Vector2 startPos, Vector2 goalPos){
+	// startPosからgoalPosへ向かうための角度を求める（ラジアン）
+	static double Adir(Vector2 startPos, Vector2 goalPos) {
 		return atan2(
 			static_cast<double>(startPos.y - goalPos.y),
 			static_cast<double>(goalPos.x - startPos.x)
 			);
+	}
+
+	// startPosからgoalPosへ向かうための角度を求める（度）
+	static double AdirDeg(Vector2 startPos, Vector2 goalPos) {
+		return RadToDeg(Adir(startPos, goalPos));
+	}
+
+	// 右揃え数字文字列（数値と、指定桁数、0詰めするかのフラグを指定）
+	static string RightNumber(int number, int limit, bool zeroFlg = false) {
+		return RightNumber(static_cast<long long int>(number), limit, zeroFlg);
+	}
+
+	// 右揃え数字文字列（数値と、指定桁数、0詰めするかのフラグを指定）
+	static string RightNumber(long long int number, int limit, bool zeroFlg = false) {
+		string ret = "";
+		string numstr = to_string(number);
+		for (int i = 0; i < limit - (int)numstr.size(); i++) {
+			ret += (zeroFlg ? "0" : " ");
+		}
+		return ret + numstr;
 	}
 }

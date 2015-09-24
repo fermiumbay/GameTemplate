@@ -1,7 +1,6 @@
 #pragma once
 #include "DxLib.h"
-#include <string>
-using namespace std;
+#include "includes.h"
 
 // サウンド素材クラス
 class Sound{

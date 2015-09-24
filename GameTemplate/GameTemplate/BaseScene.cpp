@@ -1,6 +1,6 @@
 #include "BaseScene.h"
 
-BaseScene::BaseScene(){
+BaseScene::BaseScene() : BaseObject(){
 	sceneTime = 0;
 	endGameFlg = false;
 	changeSceneFlg = false;

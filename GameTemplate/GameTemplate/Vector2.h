@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class Vector2;
 class Vector2d;
 
@@ -123,7 +125,11 @@ public:
 		return v;
 	}
 
-	Vector2d ToDouble();	// 実数ベクトル（Vector2d）に変換
+	// 実数ベクトル（Vector2d）に変換
+	Vector2d ToDouble();
+
+	// 座標値の文字列を取得
+	std::string GetString();
 };
 
 // 2次元ベクトル（実数）
@@ -225,5 +231,9 @@ public:
 		return v;
 	}
 
-	Vector2 ToInt();	// 整数ベクトル（Vector2）に変換
+	// 整数ベクトル（Vector2）に変換
+	Vector2 ToInt();
+
+	// 座標値の文字列を取得
+	std::string GetString();
 };

@@ -2,6 +2,7 @@
 
 void SceneManager::NewScene(){
 	scene = Scenes::GetSceneObject(currentScene);
+	ClearDrawScreen();
 }
 
 void SceneManager::CloseScene(){
