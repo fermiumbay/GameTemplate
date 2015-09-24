@@ -14,21 +14,40 @@ enum FontType{
 
 // フォントクラス
 class Font{
-	int handle;	// ハンドル
-	Color color;	// 文字色
-	Color edgeColor;	// エッジ色
-
-	Font(){}
-	Font(const Font&){}
-	~Font(){}
-	Font& operator=(const Font&);
 public:
-	Vector2d pos;	// フォント座標
 
-	void SetColor(Color c);	// 文字色設定
-	void SetEdgeColor(Color c);	// エッジ色設定
-	void Print(string text, Vector2d addPos = Vector2d(), Color color = Color::None(), Color edgeColor = Color::None());	// テキスト表示
+	// フォント座標
+	Vector2d pos;
 
-	static Font* Create(string fontName, Vector2d pos = Vector2d(), int size = 16, int thick = 1, bool edgeFlg = false, FontType fontType = FontType::antialiasing);	// フォント作成
-	static void Delete(Font* font);	// フォント削除
+	// 文字色設定
+	void SetColor(Color c);
+
+	// エッジ色設定
+	void SetEdgeColor(Color c);
+
+	// テキスト表示
+	void Print(string text, Vector2d addPos = Vector2d(), Color color = Color::None(), Color edgeColor = Color::None());
+
+	// フォント作成
+	static Font* Create(string fontName, Vector2d pos = Vector2d(), int size = 16, int thick = 1, bool edgeFlg = false, FontType fontType = FontType::antialiasing);
+
+	// フォント削除
+	static void Delete(Font* font);
+
+private:
+
+	// ハンドル
+	int handle;
+
+	// 文字色
+	Color color;
+
+	// エッジ色
+	Color edgeColor;
+
+	Font() {}
+	Font(const Font&) {}
+	~Font() {}
+	Font& operator=(const Font&) {}
+
 };

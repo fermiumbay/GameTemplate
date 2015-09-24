@@ -9,7 +9,10 @@ namespace Motion{
 	public:
 
 		// 二次曲線
-		Curve(Vector2d vertexPos);
+		Curve() : BaseMotion<double>() {}
+
+		// 初期化
+		void Initialize(Vector2d vertexPos);
 
 		// 更新
 		void Update() override;
@@ -28,14 +31,32 @@ namespace Motion{
 	};
 
 	// 減衰振動
-	class Wave : public BaseMotion<double>{
-		int finishTime;	// 終了する時間
-		bool neverfinishFlg;	// 終了しないフラグ
-		double setValue;	// 収束する値
-		double a, b, c, d;	// 定数（ae^(-bt)sin(ct+d)）
+	class Wave : public BaseMotion<double> {
 	public:
-		Wave(double setValue, double a, double b, double c, double d);
+
+		// 減衰振動
+		Wave() : BaseMotion<double>() {}
+
+		// 初期化
+		void Initialize(double setValue, double a, double b, double c, double d);
+
+		// 更新
 		void Update() override;
+
+	private:
+
+		// 終了する時間
+		int finishTime;
+
+		// 終了しないフラグ
+		bool neverfinishFlg;
+
+		// 収束する値
+		double setValue;
+
+		// 定数（ae^(-bt)sin(ct+d)）
+		double a, b, c, d;
+
 	};
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseObject.h"
 
-// 基底クラス
+// シーン基底クラス
 class BaseScene : public BaseObject{
 public:
 

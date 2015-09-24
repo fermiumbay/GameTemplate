@@ -1,6 +1,5 @@
 #include "CommonData.h"
 
-// static変数の実体化（グローバル変数となる）
 SaveData CommonData::saveData;
 UnSaveData CommonData::unSaveData;
 

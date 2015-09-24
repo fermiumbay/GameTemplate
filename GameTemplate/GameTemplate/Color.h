@@ -21,13 +21,56 @@ public:
 	// RGB値の文字列を取得
 	std::string GetString();
 
+	// 赤の輝度をセット
 	void SetR(int r);
+
+	// 緑の輝度をセット
 	void SetG(int g);
+
+	// 青の輝度をセット
 	void SetB(int b);
+
+	// 赤の輝度を取得
 	int GetR();
+
+	// 緑の輝度を取得
 	int GetG();
+
+	// 青の輝度を取得
 	int GetB();
-	bool HasNotColor();	// 色を持ってない
+
+	// 色を持ってない
+	bool HasNotColor();
+
+	// 赤
+	static const Color Red() { return Color(MaxValue, 0, 0); }
+
+	// 緑
+	static const Color Green() { return Color(0, MaxValue, 0); }
+
+	// 青
+	static const Color Blue() { return Color(0, 0, MaxValue); }
+
+	// 黄色
+	static const Color Yellow() { return Color(MaxValue, MaxValue, 0); }
+
+	// 明るい紫
+	static const Color Purple() { return Color(MaxValue, 0, MaxValue); }
+
+	// 水色
+	static const Color Cyan() { return Color(0, MaxValue, MaxValue); }
+
+	// 白
+	static const Color White() { return Color(MaxValue, MaxValue, MaxValue); }
+
+	// 灰色
+	static const Color Gray() { return Color((MaxValue + 1) / 2, (MaxValue + 1) / 2, (MaxValue + 1) / 2); }
+
+	// 黒
+	static const Color Black() { return Color(0, 0, 0); }
+
+	// 色なし（引数省略など）
+	static const Color None();
 
 	Color& operator+=(const Color& v) {
 		r += v.r;
@@ -171,17 +214,6 @@ public:
 		return v;
 	}
 
-	static const Color Red() { return Color(MaxValue, 0, 0); }
-	static const Color Green() { return Color(0, MaxValue, 0); }
-	static const Color Blue() { return Color(0, 0, MaxValue); }
-	static const Color Yellow() { return Color(MaxValue, MaxValue, 0); }
-	static const Color Purple() { return Color(MaxValue, 0, MaxValue); }
-	static const Color Cyan() { return Color(0, MaxValue, MaxValue); }
-	static const Color White() { return Color(MaxValue, MaxValue, MaxValue); }
-	static const Color Gray() { return Color((MaxValue + 1) / 2, (MaxValue + 1) / 2, (MaxValue + 1) / 2); }
-	static const Color Black() { return Color(0, 0, 0); }
-	static const Color None();	// 色なし（引数省略など）
-
 private:
 
 	// 各輝度
@@ -213,13 +245,29 @@ public:
 	// HSV値の文字列を取得
 	std::string GetString();
 
+	// H値をセット
 	void SetH(int h);
+
+	// S値をセット
 	void SetS(int s);
+
+	// V値をセット
 	void SetV(int v);
+	
+	// H値を取得
 	int GetH();
+
+	// S値を取得
 	int GetS();
+
+	// V値を取得
 	int GetV();
-	bool HasNotColor();	// 色を持ってない
+
+	// 色を持ってない
+	bool HasNotColor();
+
+	// 色なし（引数省略など）
+	static const ColorHSV None();
 
 	friend bool operator==(const ColorHSV& v1, const ColorHSV& v2) {
 		return v1.h == v2.h && v1.s == v2.s && v1.v == v2.v;
@@ -228,8 +276,6 @@ public:
 	friend bool operator!=(const ColorHSV& v1, const ColorHSV& v2) {
 		return !(v1 == v2);
 	}
-
-	static const ColorHSV None();	// 色なし（引数省略など）
 
 private:
 

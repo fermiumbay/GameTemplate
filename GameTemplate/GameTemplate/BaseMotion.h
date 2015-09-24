@@ -17,7 +17,7 @@ namespace Motion{
 		virtual ~BaseMotion(){}
 
 		// ‰Šú‰»
-		void Initialize(){
+		virtual void Initialize(){
 			time = 0;
 			finished = false;
 		}
@@ -29,10 +29,6 @@ namespace Motion{
 
 		// ’l‚Ìæ“¾
 		ValueType GetValue(){
-			return value;
-		}
-
-		static ValueType GetValue() {
 			return value;
 		}
 

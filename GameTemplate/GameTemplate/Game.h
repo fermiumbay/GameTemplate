@@ -2,11 +2,23 @@
 #include "SceneManager.h"
 
 // ゲームクラス
-class Game{
-	SceneManager sm;	// シーンマネージャー
+class Game {
 public:
-	Game();	// コンストラクタ
-	~Game();	// デストラクタ
-	void Play();	// ゲームをプレイ
-	bool Exit();	// ゲームをやめる
+
+	// コンストラクタ
+	Game();
+
+	// デストラクタ
+	~Game();
+
+	// ゲームをプレイ
+	void Play();
+
+	// ゲームをやめる
+	bool Exit();
+private:
+
+	// シーンマネージャー
+	SceneManager sm;
+
 };

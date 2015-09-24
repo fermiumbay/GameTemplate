@@ -8,8 +8,18 @@ class Vector2d;
 // 2次元ベクトル
 class Vector2{
 public:
+
+	// 座標値
 	int x, y;
+
+	// 2次元ベクトル
 	Vector2(int xi = 0, int yi = 0) : x(xi), y(yi) {}
+
+	// 実数ベクトル（Vector2d）に変換
+	Vector2d ToDouble();
+
+	// 座標値の文字列を取得
+	std::string GetString();
 
 	Vector2 operator+() const {
 		return *this; 
@@ -125,18 +135,23 @@ public:
 		return v;
 	}
 
-	// 実数ベクトル（Vector2d）に変換
-	Vector2d ToDouble();
-
-	// 座標値の文字列を取得
-	std::string GetString();
 };
 
 // 2次元ベクトル（実数）
 class Vector2d{
 public:
+
+	// 座標値
 	double x, y;
+
+	// 2次元ベクトル（実数）
 	Vector2d(double xi = 0, double yi = 0) : x(xi), y(yi) {}
+
+	// 整数ベクトル（Vector2）に変換
+	Vector2 ToInt();
+
+	// 座標値の文字列を取得
+	std::string GetString();
 
 	Vector2d operator+() const { return *this; }
 	Vector2d operator-() const { return Vector2d(-x, -y); }
@@ -231,9 +246,4 @@ public:
 		return v;
 	}
 
-	// 整数ベクトル（Vector2）に変換
-	Vector2 ToInt();
-
-	// 座標値の文字列を取得
-	std::string GetString();
 };

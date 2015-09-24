@@ -13,10 +13,22 @@ struct UnSaveData{
 // 共通データ
 class CommonData{
 public:
-	static SaveData saveData;	// セーブに含めるデータ
-	static UnSaveData unSaveData;	// セーブに含めないデータ
-	static bool Initialize();	// データの初期化（成功したらtrue）
-	static bool Finalize();	// データの終了処理（成功したらtrue）
-	static bool Save(string path);	// データのセーブ（成功したらtrue）
-	static bool Load(string path);	// データのロード（成功したらtrue）
+
+	// セーブに含めるデータ
+	static SaveData saveData;
+
+	// セーブに含めないデータ
+	static UnSaveData unSaveData;
+
+	// データの初期化（成功したらtrue）
+	static bool Initialize();
+
+	// データの終了処理（成功したらtrue）
+	static bool Finalize();
+
+	// データのセーブ（成功したらtrue）
+	static bool Save(string path);
+
+	// データのロード（成功したらtrue）
+	static bool Load(string path);
 };

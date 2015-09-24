@@ -125,4 +125,42 @@ namespace common{
 		}
 		return ret + numstr;
 	}
+
+	// 直線移動
+	template<class Type>
+	Type StraightMoving(int t, int tmax, Type startvalue, Type endvalue) {
+		Type ret;
+
+		if (t >= tmax) {
+			ret = endvalue;
+		}
+		else if (t < 0) {
+			ret = startvalue;
+		}
+		else {
+			ret = startvalue + (endvalue - startvalue) * t / tmax;
+		}
+
+		return ret;
+	}
+
+	// サイン移動（滑らかにふわっと動く）
+	template<class Type>
+	Type SinMoving(int t, int tmax, Type startvalue, Type endvalue) {
+		Type ret;
+
+		// 速さ＝m sin^2 (πt／(総時間))をtで積分して距離にした関数（まんなか速くて始端と終端で遅いかんじでふわっと動く）
+		if (t >= tmax) {
+			ret = endvalue;
+		}
+		else if (t < 0) {
+			ret = startvalue;
+		}
+		else {
+			Type m = 2.0 * (endvalue - startvalue) / tmax;
+			ret = startvalue + (t - tmax / (2.0 * M_PI) * sin(2.0 * M_PI * t / tmax)) * m / 2.0;
+		}
+
+		return ret;
+	}
 }

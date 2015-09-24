@@ -5,6 +5,7 @@
 // スクリーンクラス
 class Screen{
 public:
+
 	// サイズを指定してスクリーン生成
 	static Screen* Create(Vector2 size);
 

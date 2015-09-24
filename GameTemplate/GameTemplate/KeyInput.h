@@ -26,23 +26,41 @@ enum KeyType{
 
 // キー入力
 class KeyInput{
+public:
 
+	// キー入力の初期化（成功したらtrue）
+	static bool Initialize();
+
+	// キー状態取得
+	static bool GetKey(KeyType type, KeyState state);
+
+	// キーの判定条件を設定
+	static void SetKeyCond(KeyType type, function<bool()> cond);
+
+	// キーの判定条件を別のキーにコピー
+	static void CopyKeyCond(KeyType copiedType, KeyType copyingType);
+
+private:
 	// キー入力に用いるキー
-	class Key{
+	class Key {
 	public:
-		bool prevPushFlg;	// 前回押したフラグ
-		function<bool()> cond;	// 判定条件
-		Key(){}
+
+		// 前回押したフラグ
+		bool prevPushFlg;
+
+		// 判定条件
+		function<bool()> cond;
+
+		Key() {}
 		Key(function<bool()> cond);
 	};
 
-	KeyInput(){}
-	~KeyInput(){}
-	static bool CheckKeyState(bool cond, KeyState state, bool prevPushFlg);	// キー押下状況を調べ、条件に一致するかどうか判定する
-	static map<KeyType, Key> key;	// キー
-public:
-	static bool Initialize();	// キー入力の初期化（成功したらtrue）
-	static bool GetKey(KeyType type, KeyState state);	// キー状態取得
-	static void SetKeyCond(KeyType type, function<bool()> cond);	// キーの判定条件を設定
-	static void CopyKeyCond(KeyType copiedType, KeyType copyingType);	// キーの判定条件を別のキーにコピー
+	KeyInput() {}
+	~KeyInput() {}
+
+	// キー押下状況を調べ、条件に一致するかどうか判定する
+	static bool CheckKeyState(bool cond, KeyState state, bool prevPushFlg);
+
+	// キー
+	static map<KeyType, Key> key;
 };
