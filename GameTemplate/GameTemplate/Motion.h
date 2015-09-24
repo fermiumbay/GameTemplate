@@ -2,7 +2,7 @@
 #include "BaseMotion.h"
 
 // モーションを設定する
-namespace Motion{
+namespace Motion {
 
 	// 二次曲線
 	class Curve : public BaseMotion<double> {
@@ -13,6 +13,7 @@ namespace Motion{
 
 		// 初期化
 		void Initialize(Vector2d vertexPos);
+		void Initialize() { BaseMotion<double>::Initialize(); }
 
 		// 更新
 		void Update() override;
@@ -39,6 +40,7 @@ namespace Motion{
 
 		// 初期化
 		void Initialize(double setValue, double a, double b, double c, double d);
+		void Initialize() { BaseMotion<double>::Initialize(); }
 
 		// 更新
 		void Update() override;
