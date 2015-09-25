@@ -4,12 +4,13 @@
 
 <body>
 <h1>GameTemplate説明書</h1>
-DXライブラリを用いたゲーム作成のためのテンプレートです。<br>
-ダウンロードはこちらからできます ⇒ <a href = "GameTemplate.zip">ver1.05 ダウンロード</a>
+DXライブラリを用いた2Dゲーム作成のためのテンプレートです。<br>
+ダウンロードはこちらからできます ⇒ <a href = "GameTemplate.zip">ver1.06 ダウンロード</a>
 
 <hr>
 <h3>もくじ</h3>
 <ul>
+<li><a href = "#ver05">ver1.05との変更点</a></li>
 <li><a href = "#ver04">ver1.04との変更点</a></li>
 <li><a href = "#ver03">ver1.03との変更点</a></li>
 <li><a href = "#ver02">ver1.02との変更点</a></li>
@@ -24,6 +25,8 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <li><a href = "#div">画像の分割読み込み</a></li>
 <li><a href = "#handle">画像のハンドル指定読み込み</a></li>
 <li><a href = "#divGraphic">画像インスタンスを分割する</a></li>
+<li><a href = "#shape">図形を表示してみる</a></li>
+<li><a href = "#screen">子画面を追加してみよう</a></li>
 <li><a href = "#motion">複雑な動きをさせてみよう</a></li>
 <li><a href = "#screen">スクリーンモードを変更しよう</a></li>
 <li><a href = "#save">セーブ・ロード機能を作ろう</a></li>
@@ -35,6 +38,86 @@ DXライブラリを用いたゲーム作成のためのテンプレートです
 <li><a href = "#sample">サンプルゲーム</a></li>
 </ul>
 <hr>
+
+<div id = "ver05"></div>
+<h2>ver1.05との変更点</h2>
+このテンプレートを初めて扱う場合は、この節は<a href = "#first">飛ばして</a>ください。<br>
+ver1.05からver1.06に掛けて主に以下の点が変更されています。<br>
+<ul>
+<li>Visual Studio 2015 に対応</li>
+<li>includesヘッダーの追加</li>
+<li>Screenクラスの追加</li>
+<li>Shapeクラスの追加</li>
+<li>Motionの初期化の仕様変更</li>
+<li>Graphicの機能追加</li>
+<li>Colorの機能追加</li>
+<li>commonに移動関数を追加</li>
+<li>全体的にコメント追加</li>
+</ul>
+<br><h3>【Visual Studio 2015 に対応】</h3>
+テンプレートを、<b>Visual Studio 2015 Community Edition</b>に対応させました。<br>
+ver1.06以降のバージョンは基本的に2015で使用してください。<br>
+2013で使用する場合は、プロパティ > 構成プロパティ > 全般 > プラットフォームツールセットを<br>
+v120に変更すれば使用できると思います。未確認です。<br>
+対応に伴いまして、利用するDXライブラリも更新が必要となる場合がございます。<br>
+<b>DXライブラリ VisualC++用(Ver3.15a)</b>で動作を確認しており、それ以前のバージョンですと動かない可能性があります。<br>
+そのため、前バージョンをお使いの場合はDXライブラリを更新してください。<br>
+
+<br><h3>【includesヘッダーの追加】</h3>
+#include&lt;string&gt;や、#include&lt;map&gt;など、標準でインクルードされるヘッダーはまとめて<br>
+新たに作成したincludesヘッダーでインクルードするように仕様変更しました。<br>
+
+<br><h3>【Screenクラスの追加】</h3>
+複数の画面を扱えるように、Screenクラスを追加しました。<br>
+これは、ゲーム画面とは別の画面として扱うことのできる画像のようなもので、<br>
+Graphicに適用することで実際にゲーム画面に描画することが可能です。<br>
+これにより、複数の画面を同時に描画するなどが可能となります。<br>
+詳しくは<a href = "#screen">子画面を追加してみよう</a>をご覧ください。<br>
+
+<br><h3>【Shapeクラスの追加】</h3>
+図形を描画するためのShapeクラスを追加しました。<br>
+図形の座標などを登録しておいて描画できるものです。<br>
+詳しくは<a href = "#shape">図形を表示してみる</a>をご覧ください。<br>
+
+<br><h3>【Motionの初期化の仕様変更】</h3>
+従来はMotionのパラメータの初期化はコンストラクタで行っていましたが、<br>
+そのためにはMotionを使うシーンのコンストラクタで初期値として設定する必要があったり、<br>
+途中で使用する場合にはポインタとして保持してnewしなければならなかったりしていたので、<br>
+コンストラクタではなくInitialize関数でパラメータの初期化を行うように変更しました。<br>
+Initializeに何も引数を渡さなければ時刻の初期化のみ、<br>
+パラメータを引数に渡せばパラメータの初期化を行うものとして、使いやすくなったと思います。<br>
+
+<br><h3>【Graphicの機能追加】</h3>
+Graphicに新たにブレンドモード、バイリニア描画を追加しました。<br>
+ブレンドモードを加算ブレンドにすると光ったような演出をすることが可能です。<br>
+また、バイリニア描画は画像の拡大時に滑らかに描画するためのもので、<br>
+標準ではバイリニア描画を行うように仕様変更しました。<br>
+従来の描画法はネアレストネイバー描画といい、Graphicの引数を変更することで描画できるようになっています。<br>
+
+<br><h3>【Colorの機能追加】</h3>
+HSVカラーを扱うColorHSVを新たに追加しました。<br>
+RGBカラーを扱うColorとの相互変換をToRGB、ToHSVでそれぞれ行うことが可能です。<br>
+
+<br><h3>【commonに移動関数を追加】</h3>
+commonに直線移動関数StraightMovingと、サイン移動関数SinMovingをそれぞれ追加しました。<br>
+指定した時間で始点から終点まで移動させるための関数です。<br>
+テンプレート関数となっており、始点と終点の値の型を設定できます。<br>
+次のようにすると、画像の不透明度が0から256まで120フレームかけて変化する、すなわち<br>
+（リフレッシュレートが60Hzのとき）2秒かけてフェードインしてくるという演出が実現できます。<br>
+徐々に変化させるという特性上、int型の値であってもいったんdoubleで変化させ、intにキャストするのが良いです。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["画像"]->fade = (int)common::StraightMoving<double>(GetSceneTime(), 120, 0, 256);<br>
+</b></td></tr></tbody></table><br>
+SinMovingは使い方は同じですが、始端と終端でゆっくり動き、ちょうど真ん中で一番速く動くような、<br>
+ふわっとした動き方をするものです。StraightMovingは一定速度で変化します。<br>
+いずれもdoubleの他にたとえばVector2dにして座標値の移動をさせるなどにも使えます。<br>
+
+<br><h3>【全体的にコメント追加】</h3>
+関数の宣言にコメントを記載していましたが、宣言の直前にコメントがないと<br>
+関数の入力時のヒントでコメントが表示されませんでしたので、<br>
+全体的にコメントを宣言前に移動し、足らないものは追加しました。<br>
+
+<br><hr>
 
 <div id = "ver04"></div>
 <h2>ver1.04との変更点</h2>
@@ -49,7 +132,7 @@ DXライブラリではそもそも基本的にマルチスレッドに対応し
 <div id = "ver03"></div>
 <h2>ver1.03との変更点</h2>
 このテンプレートを初めて扱う場合は、この節は<a href = "#first">飛ばして</a>ください。<br>
-ver1.02からver1.03に掛けて主に以下の点が変更されています。<br>
+ver1.03からver1.04に掛けて主に以下の点が変更されています。<br>
 <ul>
 <li>Randomクラスの仕様変更</li>
 <li>マルチスレッドの標準装備</li>
@@ -76,7 +159,7 @@ Finalizeに変更しました。Initializeとの対応のためです。<br>
 <div id = "ver02"></div>
 <h2>ver1.02との変更点</h2>
 このテンプレートを初めて扱う場合は、この節は<a href = "#first">飛ばして</a>ください。<br>
-ver1.01からver1.02に掛けて主に以下の点が変更されています。<br>
+ver1.02からver1.03に掛けて主に以下の点が変更されています。<br>
 身内向けをいいことに、かなり仕様変更しました。ごめんなさい。<br>
 <ul>
 <li>フォルダの名称変更</li>
@@ -235,26 +318,32 @@ ver1.03からはそれをmain関数内で標準で行うようにしましたの
 
 <div id = "first"></div>
 <h2>使い方</h2>
-このテンプレートはVisual Studio 2013で動作することを想定しています。<br>
-それ以前のバージョンですと動作しないと思われるので、2013以降をインストールしてください。<br>
+このテンプレートは<b>Visual Studio 2015 Community Edition</b>で動作することを想定しています。<br>
+それ以前のバージョンですと動作しないと思われるので、2015以降をインストールしてください。<br>
+ただし、テンプレートの前バージョンは2013に対応していたため、2013ならば動作可能と思われます。<br>
+2013をお使いの場合は、プロパティ > 構成プロパティ > 全般 > プラットフォームツールセットをv120に変更してください。<br>
 <br>
 まず、<a href = "http://homepage2.nifty.com/natupaji/DxLib/" target = "_blank">DXライブラリ</a>を入手してください。<br>
-保存場所は任意でいいですが、テンプレートでは<br>
-<u>Cドライブ直下に「DxLib」というフォルダ名で保存されたもの</u>を読み込むようにしています。<br>
-ディレクトリパスは<b>「C:\DxLib」</b>ということになります。<br>
+<b>DXライブラリ VisualC++用(Ver3.15a)</b>で動作を確認しており、それ以前のバージョンですと動かない可能性があります。<br>
+そのため、前バージョンをお使いの場合はDXライブラリを更新してください。<br>
+解凍しましたら、「プロジェクトに追加すべきファイル_VC用」のフォルダ名をDxLibに変更してください。<br>
+テンプレートでは<u>Cドライブ直下に「DxLib」というフォルダ名で保存されたもの</u>を読み込むようにしており、<br>
+ディレクトリパスは<b>「C:\DxLib」</b>ということになっています。<br>
+そのため、フォルダ名を変更したフォルダをCドライブ直下にコピーしてください。<br>
 他のディレクトリにしたい場合は、テンプレートでプロジェクトを作成した後、<br>
 DXライブラリの初期設定の方法に従ってパスを指定しなおしてください。<br>
 それを新たにテンプレートとしてエクスポートすれば便利だと思います。<br>
 ウィザードを手作りできればよかったのですが、何だかめんどくさいのでこのままでご了承ください。<br>
 <br>
-次に、このページの上部にある<b>GameTemplate.zip</b>をダウンロードしてください。解凍はいらないです。<br>
-Visual Studio 2013をインストールしましたら、<br>
-どこかに<b>「Visual Studio 2013」</b>というフォルダが生まれると思います（ドキュメントとか）。<br>
+次に、このページの上部にある<b>GameTemplate.zip</b>をダウンロードし、解凍しないでzipのままにしてください。<br>
+Visual Studio 2015 Community Editionをインストールしましたら、<br>
+どこかに<b>「Visual Studio 2015」</b>というフォルダが生まれると思います（ドキュメントとか）。<br>
 その中にある<b>「Templates\ProjectTemplates」</b>の中にGameTemplate.zipをzipのまま放り込んでください。<br>
 これで無事、テンプレートが使えるようになると思います。<br>
 <br>
-Visual Studio 2013を起動しましたら、「新しいプロジェクト」を選択し、<br>
+Visual Studio 2015を起動しましたら、「新しいプロジェクト」を選択し、<br>
 「テンプレート > Visual C++」を選択すると「GameTemplate」が出てきていると思います。<br>
+（C++がインストールされていませんでしたら、その段階でインストールをしてください）<br>
 それを選択して「名前」の欄に好きなプロジェクト名を入れましたら、OKしてください。<br>
 これにて、ゲームの骨格が完成いたします。<br>
 F5を押しますとビルドして実行されますので、ゲーム画面が表示されるかご確認ください。<br>
@@ -351,6 +440,11 @@ Graphicなどで描画されるものの色調は、ここで指定した色調�
 よく使うものたちはすべてインクルードしていますので、これだけ呼び出せば便利そうです。<br>
 どこでも使用可能な便利関数などを作るときはここに新たに追加するのも手だと思います。<br>
 
+<br><h3>【標準インクルードヘッダ】（内部システム > includes.h）</h3>
+主に標準ライブラリをまとめてインクルードしています。<br>
+GraphicやSoundクラスなどといった素材はcommonをインクルードできないので、<br>
+こちらをインクルードすると便利に呼び出すことが可能です。<br>
+
 <br><h3>【画像クラス】（内部システム > Graphic.h／.cpp）</h3>
 画像を取り扱うクラスです。<br>
 いじるものではありませんが、よく使うことになるでしょう。<br>
@@ -365,6 +459,10 @@ Graphicなどで描画されるものの色調は、ここで指定した色調�
 フォントを取り扱うクラスです。<br>
 フォントを作成してそれで文字を表示する一連の機能を使えるようにします。<br>
 
+<br><h3>【スクリーンクラス】（内部システム > Screen.h／.cpp）</h3>
+スクリーンを取り扱うクラスです。<br>
+ゲーム画面以外のスクリーンを生成し、それぞれに描画を行うことができます。<br>
+
 <br><h3>【モーション基底クラス】（内部システム > BaseMotion.h）</h3>
 モーションクラスの基底です。<br>
 取り出せる値がなんでもいいように、テンプレートにしています。<br>
@@ -375,6 +473,13 @@ Vector2は整数のベクトル、Vector2dは実数のベクトルです。<br>
 
 <br><h3>【色】（内部システム > Color.h／.cpp）</h3>
 色のクラスです。赤、緑、青の各輝度を設定できます。<br>
+ColorHSVはHSVカラーで色を保持するもので、RGBカラーとは相互変換を行えます。<br>
+ただし、各値は整数で保持しているため、変換時に誤差が生じ、相互変換すると少しずれます。<br>
+
+<br><h3>【形】（内部システム > Shape.h／.cpp）</h3>
+形のクラスです。<br>
+Shapeを基底クラスとして、CircleやSquareなどといった具体的な形のクラスを提供します。<br>
+新しい形を追加するには、ここに追加するのもよいでしょう。<br>
 
 <br><h3>【乱数クラス】（内部システム > Random.h／.cpp）</h3>
 乱数のクラスです。それだけです。<br>
@@ -409,7 +514,7 @@ MainScene.hはメイン画面のヘッダファイル、MainScene.cppはメイ�
 クラスで使用されている変数や関数の宣言は全部ヘッダファイルにしておき、<br>
 ソースファイルを見なくてもヘッダファイルだけでそのクラスの仕様が分かるように作成するのが分かりやすくて良いと思います。<br>
 MainScene.cppを覗くと実装部分が見られます。<br>
-コンストラクタにて「テキスト」というフォントを作成し、<br>
+コンストラクタにて「フォント」というフォントを作成し、<br>
 そのフォントでDraw関数にて「キャンセルキーで終了します」という文字列を描画しています。<br>
 シーンには最低限、シーンの初期設定を行うコンストラクタ、シーン終了時の処理を行うデストラクタ、<br>
 毎度呼び出されるUpdate、Drawの4つの関数があります。Updateは状態更新、Drawは描画です。<br>
@@ -505,9 +610,9 @@ DeletePicしないで同名の画像にCreateをすると、終了時に初め�
 <div id = "text"></div>
 <h2>文字を設定してみよう</h2>
 今度は、文字を設定してみましょう。<br>
-コンストラクタにもとからあるこの一行は「テキスト」という名前のフォントを作成していることを意味しています。<br>
+コンストラクタにもとからあるこの一行は「フォント」という名前のフォントを作成していることを意味しています。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	font["テキスト"] = Font::Create("メイリオ", Vector2d(10, 10), 24);<br>
+	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 24);<br>
 </b></td></tr></tbody></table><br>
 fontはpic同様、標準で使える連想配列です。<br>
 第一引数は使用するフォントの種類名、第二引数は表示位置、第三引数は文字の大きさです。<br>
@@ -517,9 +622,9 @@ fontはpic同様、標準で使える連想配列です。<br>
 <br>
 文字にはエッジをつけることも可能です。フォントを作成する部分を以下のように変更してみてください。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	font["テキスト"] = Font::Create("メイリオ", Vector2d(10, 10), 32, 2, true);<br>
-	font["テキスト"]->SetColor(Color::Yellow());<br>
-	font["テキスト"]->SetEdgeColor(Color::Red());<br>
+	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 32, 2, true);<br>
+	font["フォント"]->SetColor(Color::Yellow());<br>
+	font["フォント"]->SetEdgeColor(Color::Red());<br>
 </b></td></tr></tbody></table><br>
 文字の大きさを32、太さを2にして、第五引数にtrueを入れました。<br>
 第五引数をtrueにすると、エッジが有効になります。<br>
@@ -532,7 +637,7 @@ SetColorで文字の色を変え、SetEdgeColorでエッジの色を変えられ
 <br>
 Draw関数では、作成したフォントを表示しています。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	font["テキスト"]->Print("キャンセルキーで終了します");<br>
+	font["フォント"]->Print("キャンセルキーで終了します");<br>
 </b></td></tr></tbody></table><br>
 fontはポインタで持ってるので、ドットではなくアロー演算子で参照することに注意してください。<br>
 Print関数の引数に表示したい文字を入れると表示できます。<br>
@@ -542,7 +647,7 @@ Print関数の引数に表示したい文字を入れると表示できます。
 Update関数内のどこかにこの行を追加してみてください。<br>
 実際どこでもいいですが、出来るだけBaseScene::Update();より前には何も入れないでください。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	font["テキスト"]->pos.y++;<br>
+	font["フォント"]->pos.y++;<br>
 </b></td></tr></tbody></table><br>
 posはフォントの表示座標です。そのy座標が1ずつ上がっていくということになります。<br>
 画面はy座標が上がると数学の座標平面と違って下に下がっていくので、<br>
@@ -567,24 +672,26 @@ public:<br>
 publicの前にstring text;を一行追加しました。これでメイン画面はstring型のtextを保持できるようになります。<br>
 MainScene.cppに戻り、Updateに次の二行を追加しましょう。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	int value = font["テキスト"]->pos.ToInt().y;<br>
-	text = "今のy座標は" + common::convert&lt;int, string&gt;(value) + "です。";<br>
+	int value = font["フォント"]->pos.ToInt().y;<br>
+	text = "今のy座標は" + to_string(value) + "です。";<br>
 </b></td></tr></tbody></table><br>
-font["テキスト"]->pos.ToInt()とすると、posをVector2d型（実数）からVector2型（整数）に変換できます。<br>
+font["フォント"]->pos.ToInt()とすると、posをVector2d型（実数）からVector2型（整数）に変換できます。<br>
 保持しているのは実数ですが、整数を表示したいので整数にしました。そのy座標をvalueに入れます。<br>
 このvalueは計算用に使うだけなのでMainSceneのメンバーにしないでUpdateだけで宣言していいです。<br>
 変数増えるとややこしくなりますからね＾＾；<br>
 次に、textに表示するテキストを入れます。<br>
-common::convert&lt;int, string&gt;(value)とすると、valueを整数から文字列に変換できます。<br>
-convertは、int型をstring型に変換する文字列変換関数です。逆に&lt;string, int&gt;とすれば文字列を数値に変換できます。<br>
+to_string(value)とすると、valueを整数から文字列に変換できます。<br>
+従来はconvertのテンプレート関数を使って変換している例を載せていましたが、<br>
+標準でstoi関数によりstring型をint型に、to_string関数によりint型をstring型に変換できましたので、<br>
+関数名も短いですし、それらを用いて変換するのが良いでしょう。<br>
 そして、Draw関数でこのtextを表示するように設定します。<br>
 <br><table border = "2"><tbody><tr><td><b>
-	font["テキスト"]->Print(text);<br>
+	font["フォント"]->Print(text);<br>
 </b></td></tr></tbody></table><br>
 これで実行すれば、文字が下に下がりながら、更新されるy座標の値を文字列として表示する様子が見られるでしょう。<br>
 ちなみに、これぐらいであれば全部一行でまとめて、<br>
 <br><table border = "2"><tbody><tr><td><b>
-	font["テキスト"]->Print("今のy座標は" + common::convert&lt;int, string&gt;(font["テキスト"]->pos.ToInt().y) + "です。");<br>
+	font["フォント"]->Print("今のy座標は" + to_string(font["フォント"]->pos.ToInt().y) + "です。");<br>
 </b></td></tr></tbody></table><br>
 としても良いと思いますが、あんまりにも長くなる場合は見づらくなるので<br>
 一旦変数におくとか、見やすくしちゃっていいと思います。<br>
@@ -848,7 +955,7 @@ public:<br>
 <br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
 #include "MainScene.h"<br>
 <br>
-MainScene::MainScene(){<br>
+MainScene::MainScene() : BaseScene(){<br>
 &nbsp	pic["ベイ助"] = Graphic::Create("baysuke.png", Vector2(32, 48), Vector2(4, 4), common::GetWindowCenter(), true);<br>
 &nbsp	step = 0;<br>
 &nbsp	id = 0;<br>
@@ -930,7 +1037,7 @@ Graphic::CreateHandleにより、画像のハンドルを取得できます。<b
 <br>
 ただし、何らかの用途でpicで保持しないGraphic型変数などを使用する場合は、<br>
 当然ながらそれらは勝手には消えませんから、十分注意してください。<br>
-勝手に消えるのは、標準で使えるpic、sound、picDiv、picHandle、fontのみです。<br>
+勝手に消えるのは、標準で使えるpic、sound、picDiv、picHandle、font、screenのみです。<br>
 <br>
 弾画像を大量に発生させてみましょう。<br>
 以下は1000個の弾を中心から一斉に分散させるサンプルです。<br>
@@ -956,7 +1063,7 @@ public:<br>
 #include "MainScene.h"<br>
 using namespace common;<br>
 <br>
-MainScene::MainScene(){<br>
+MainScene::MainScene() : BaseScene(){<br>
 &nbsp	picHandle["弾ハンドル"] = Graphic::CreateHandle("bullet.png");	// 弾画像のハンドル取得<br>
 &nbsp	for (int i = 0; i < 1000; i++){<br>
 &nbsp	&nbsp	bullet[i] = Graphic::Create(picHandle["弾ハンドル"], GetWindowCenter(), true);	// ハンドルを割り当て<br>
@@ -1068,7 +1175,7 @@ public:<br>
 #include "MainScene.h"<br>
 using namespace common;<br>
 <br>
-MainScene::MainScene(){<br>
+MainScene::MainScene() : BaseScene(){<br>
 &nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 24, 2);<br>
 &nbsp	picDiv["メニュー"] = Graphic::CreateDiv("menu.png", Vector2(280, 74), Vector2(1, 3), GetWindowCenter(), true);<br>
 &nbsp	for (int i = 0; i < 3; i++){<br>
@@ -1155,6 +1262,180 @@ menu.pngを(1, 3)で分割し、それぞれがGraphicインスタンスを持�
 アニメーション等を含んだ画像を一括で読み込むときなどで良いかもしれません。<br>
 <br><hr>
 
+<div id = "shape"></div>
+<h2>図形を表示してみる</h2>
+画像の表示はできるようになりましたが、用意はめんどくさいから図形だけでも表示したいとか、<br>
+真っ黒い画面を土台にしたいから黒い四角形が欲しいとか、そういうこともあると思います。<br>
+ver1.06から図形を扱うShapeクラスが追加されました。<br>
+標準で使用可能な図形クラスは以下の通りです。どれもShapeの派生クラスです。<br>
+<br><table border = "2"><tbody>
+	<tr>
+		<th>図形の種類</th>
+		<th>クラス名</th>
+		<th>パラメータ</th>
+	</tr>
+	<tr>
+		<td>点</td>
+		<td>Point</td>
+		<td>Vector2d p</td>
+	</tr>
+	<tr>
+		<td>線分</td>
+		<td>Line</td>
+		<td>Vector2d first, Vector2d last</td>
+	</tr>
+	<tr>
+		<td>四角形</td>
+		<td>Square</td>
+		<td>Vector2d first, Vector2d last, bool fillFlg</td>
+	</tr>
+	<tr>
+		<td>三角形</td>
+		<td>Triangle</td>
+		<td>Vector2d p1, Vector2d p2, Vector2d p3, bool fillFlg</td>
+	</tr>
+	<tr>
+		<td>円</td>
+		<td>Circle</td>
+		<td>Vector2d first, Vector2d last, bool fillFlg</td>
+	</tr>
+</tbody></table><br>
+fillFlgは、図形の中身を塗りつぶすかどうかのフラグで、標準ではtrueになっています。<br>
+falseにすると、図形の輪郭部分のみが描画されます。<br>
+また、色はコンストラクタで設定するほか、メンバー変数のcolorを変更すれば変えることができます。<br>
+<br>
+たとえば、MainScene::Drawに次の一行を追加すると、(80, 120)から(400, 320)の範囲に緑色の四角形を描画します。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	Square(Vector2d(80, 120), Vector2d(400, 320), Color::Green()).Draw();<br>
+</b></td></tr></tbody></table><br>
+図形クラスはVector2dやColorなどと同じ扱いをするもので、Draw関数によって描画をします。<br>
+そのため、使いきりであれば上のようにコンストラクタの直後に.Draw()としてやれば一行で済みます。<br>
+解像度が(640, 480)の場合、画面全体を塗りつぶすには(0, 0)から(639, 479)の範囲にして四角形で塗りつぶします。<br>
+DXライブラリの標準関数では終端は塗りつぶし範囲に含めない(640, 480)とするのですが、<br>
+私が含める方式が慣れているので勝手に変更されてしまっています。<br>
+DXライブラリの標準方式にする場合は、内部システムの中にあるShape.cppの描画部分の+1を消していってください。<br>
+<br>
+円（楕円）の生成は、描画範囲となる始点座標と終点座標を保持させて描画しますが、<br>
+初期化の際には中心座標と半径座標を設定することでも生成ができます。<br>
+純粋な円を描画する場合は静的関数のGetCircleを使用してください。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	// 画面いっぱいに赤い楕円<br>
+	Circle(Vector2d(0, 0), Vector2d(639, 479), Color::Red()).Draw();<br>
+	<br>
+	// 画面中心に縦長の緑の楕円<br>
+	Circle(Vector2d(320, 240), 120, 200, Color::Green()).Draw();<br>
+	<br>
+	// 画面中心に黄色い真円<br>
+	Circle::GetCircle(Vector2d(320, 240), 100, Color::Yellow()).Draw();<br>
+</b></td></tr></tbody></table><br>
+
+<br><hr>
+
+<div id = "screen"></div>
+<h2>子画面を追加してみよう</h2>
+ゲーム画面が目に見える1個だけだと、何かと不便な状況になることが多々あります。<br>
+典型的な例として、例えば2Pバトルのように全く違う2画面が同時に描画される必要のある場面があります。<br>
+一つの画面でがんばって作るよりも、それぞれの画面を別々に作成して、メインの画面でそれら2つの画面を同時に表示させてやる、<br>
+とした方がずっと便利だし、きれいに作れそうですよね。<br>
+そういうのを実現するのがver1.06から追加されたScreenクラスです。<br>
+<br>
+標準で用意されているscreenを用いると、そこにスクリーンを入れることができます。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	screen["スクリーン"] = Screen::Create(Vector2(320, 240));<br>
+</b></td></tr></tbody></table><br>
+上の例のように書きますと、「スクリーン」という名前のscreenに、(320, 240)の大きさのスクリーンを生成して入れられます。<br>
+このままでは実際の画面には反映されませんので、画面に反映させるためにこのスクリーンのハンドルを<br>
+Graphicに与えてやり、実際に描画する際にはGraphicのDrawを用いて描画することにします。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	pic["画面"] = Graphic::Create(screen["スクリーン"]->GetHandle());<br>
+</b></td></tr></tbody></table><br>
+GetHandle関数によってGraphicHandleのパラメータを取得できますので、後はGraphicHandleと同じようにして扱えます。<br>
+スクリーンに何か描画する際には、ScreenのDraw関数を用います。描画内容はラムダ式で設定します。<br>
+<br><table border = "2"><tbody><tr><td><b>
+	screen["スクリーン"]->Draw([&] {<br>
+	&nbsp	pic["画像1"]->Draw();<br>
+	&nbsp	pic["画像2"]->Draw();<br>
+	&nbsp	pic["画像3"]->Draw();<br>
+	});<br>
+</b></td></tr></tbody></table><br>
+Drawの引数として、描画内容のラムダ式を与えます。<br>
+こうしておけば、実際に描画するGraphicの方は何もいじることなく描画内容を変更することが可能となります。<br>
+また、screenのClear関数を用いると、スクリーン画面をクリアします。<br>
+<br>
+下の例は、一つのスクリーンで二つの画像を表示するものです。<br>
+画像素材はこのページの上の方のどこかにある「pinkri.png」と「title.jpg」を使用しています。<br>
+背景をバックにぴんくりが矢印キーで動作するものですが、<br>
+大きい画面をバックに手前に小さい画面が回転しながら描画されるというものになっています。<br>
+<br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
+#include "MainScene.h"<br>
+<br>
+MainScene::MainScene() : BaseScene() {<br>
+&nbsp	// 画像素材の読み込み<br>
+&nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", common::GetWindowCenter(), true);<br>
+&nbsp	pic["背景"] = Graphic::Create("title.jpg");<br>
+<br>
+&nbsp	// スクリーンの生成（ここに全部映す）<br>
+&nbsp	screen["スクリーン"] = Screen::Create(InfoData::WindowSize());<br>
+<br>
+&nbsp	// スクリーンを実際に描画する2つのGraphic<br>
+&nbsp	pic["大きい画面"] = Graphic::Create(screen["スクリーン"]->GetHandle(), common::GetWindowCenter(), true);<br>
+&nbsp	pic["小さい画面"] = Graphic::Create(screen["スクリーン"]->GetHandle(), common::GetWindowCenter(), true);<br>
+<br>
+&nbsp	// 各画像のパラメータ設定<br>
+&nbsp	pic["背景"]->trans = false;<br>
+&nbsp	pic["小さい画面"]->SetZoom(75);<br>
+&nbsp	pic["小さい画面"]->fade = 192;<br>
+}<br>
+<br>
+MainScene::~MainScene(){<br>
+}<br>
+<br>
+void MainScene::Update(){<br>
+&nbsp	BaseScene::Update();<br>
+<br>
+&nbsp	// ぴんくりの動作<br>
+&nbsp	if (KeyInput::GetKey(Left, HasBePushed)) {<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.x -= 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Right, HasBePushed)) {<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.x += 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Up, HasBePushed)) {<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.y -= 3;<br>
+&nbsp	}<br>
+&nbsp	if (KeyInput::GetKey(Down, HasBePushed)) {<br>
+&nbsp	&nbsp	pic["ぴんくり"]->pos.y += 3;<br>
+&nbsp	}<br>
+<br>
+&nbsp	// スクリーンにぴんくりを描画<br>
+&nbsp	screen["スクリーン"]->Clear();<br>
+&nbsp	screen["スクリーン"]->Draw([&] {<br>
+&nbsp	&nbsp	pic["背景"]->Draw();<br>
+&nbsp	&nbsp	pic["ぴんくり"]->Draw();<br>
+&nbsp	});<br>
+<br>
+&nbsp	// 小さいスクリーンを回転させる<br>
+&nbsp	pic["小さい画面"]->zoom.x = 75.0 * cos(0.05 * GetSceneTime());<br>
+}<br>
+<br>
+void MainScene::Draw(){<br>
+&nbsp	BaseScene::Draw();<br>
+<br>
+&nbsp	// それぞれの画面を描画<br>
+&nbsp	pic["大きい画面"]->Draw();<br>
+&nbsp	pic["小さい画面"]->Draw();<br>
+}<br>
+</b></td></tr></tbody></table><br>
+スクリーンから生成される画像はGraphic型なので、Graphicで利用可能な機能はすべて使えます。<br>
+ここでは不透明度とズームの値を変更しています。<br>
+描画部分は大きい画面と小さい画面をそれぞれ描画するのみですが、<br>
+スクリーンの内容の変更はUpdateの中で行われています。<br>
+<br>
+もちろん、スクリーンの中に別のスクリーンを入れ子にして配置させることも可能です。<br>
+ゲーム画面そのものをスクリーンに収めて利用すると、何かと便利かもしれません。<br>
+
+<br><hr>
+
 <div id = "motion"></div>
 <h2>複雑な動きをさせてみよう</h2>
 共通フォルダにあるMotion.hでは動きを担うモーションクラス群が宣言されています。<br>
@@ -1180,8 +1461,9 @@ public:<br>
 <br><table border = "2"><tbody><tr><th>MainScene.cpp</th></tr><tr><td><b>
 #include "MainScene.h"<br>
 <br>
-MainScene::MainScene() : curve(Vector2d(320, 480)){<br>
+MainScene::MainScene() : BaseScene(){<br>
 &nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", Vector2d(0, 0), true);<br>
+&nbsp	curve.Initialize(Vector2d(320, 480));<br>
 }<br>
 <br>
 MainScene::~MainScene(){<br>
@@ -1203,10 +1485,9 @@ void MainScene::Draw(){<br>
 }<br>
 </b></td></tr></tbody></table><br>
 
-Motion::Curve型の変数を持たせ、初期値を与えるためにコンストラクタで<br>
-<b>curve(Vector2d(320, 480))</b>としています。頂点は(320, 480)とする、という意味です。<br>
-しかしコンストラクタの上部でこのように定義するのは見づらいですし、途中で欲しくなったとき困るので<br>
-そういうときはポインタにして、必要なときにnewしてください。その際、必ずdeleteもするようにしてください。<br>
+Motion::Curve型の変数を持たせ、初期値を与えるためにInitialize関数を呼び出しています。<br>
+この場合は、頂点は(320, 480)とする、という意味になります。<br>
+パラメータはこのようにInitialize関数を行うことで、好きなときに初期化できます。<br>
 curveに初期値を与えたら、Update内でcurve.Update();をします。<br>
 これで値が更新され、curve.GetValue()からそのときの値を取り出すことができます。<br>
 終了したかどうかは、curve.IsFinished()がtrueかどうかで分かります。<br>
@@ -1222,6 +1503,7 @@ c＝0とすると波立ちしなくなりますが、あんまり意味はない
 <br>
 では、モーションを自作してみましょう。<br>
 ある点にある時間を掛けて行く、という動きを作ってみることとします。<br>
+動き自体はcommonにあるStraightMove関数を利用すれば実現できるのですが、Motionで自作してみます。<br>
 Motion.hのMotionの名前空間の中、Waveクラスの直後にでもこれを追加してみてください。<br>
 <br><table border = "2"><tbody><tr><td><b>
 // 指定した座標へ移動<br>
@@ -1230,18 +1512,24 @@ class Move : public BaseMotion&lt;Vector2d&gt;{<br>
 &nbsp	Vector2d endPos;	// 最後に到達する座標<br>
 &nbsp	int finishTime;	// 終了する時間<br>
 public:<br>
-&nbsp	Move(Vector2d startPos, Vector2d endPos, int finishTime);<br>
+&nbsp	Move() : BaseMotion<Vector2d>() {}<br>
+&nbsp	void Initialize(Vector2d startPos, Vector2d endPos, int finishTime);<br>
+&nbsp	void Initialize() { return BaseMotion&lt;Vector2d&gt;::Initialize(); }<br>
 &nbsp	void Update() override;<br>
 };<br>
 </b></td></tr></tbody></table><br>
 Moveクラスを作ります。BaseMotionを継承し、保持する値の型を決めます。<br>
 ここでは座標を返したいので、Vector2d型とします。<br>
 初期位置startPos、終了位置endPosを決め、到達するのにfinishTime掛かるとします。<br>
-コンストラクタではそれぞれの値を入れられるように、Updateは基底クラスのをオーバーライドします。<br>
+Initializeではそれぞれの値を入れられるように、Updateは基底クラスのをオーバーライドします。<br>
+この際、パラメータは初期化せず、時刻のみ初期化するための空引数のInitializeも作成しましょう。<br>
+単純にBaseMotionのInitializeを呼び出すだけでOKです。<br>
 <br>
 Motion.cppにて実装をします。以下を追加してみてください。どこでもいいです。<br>
 <br><table border = "2"><tbody><tr><td><b>
-Move::Move(Vector2d startPos, Vector2d endPos, int finishTime){<br>
+void Move::Initialize(Vector2d startPos, Vector2d endPos, int finishTime){<br>
+&nbsp	BaseMotion&lt;Vector2d&gt;::Initialize();<br>
+<br>
 &nbsp	this->startPos = startPos;<br>
 &nbsp	this->endPos = endPos;<br>
 &nbsp	this->finishTime = finishTime;<br>
@@ -1255,6 +1543,7 @@ Move::Move(Vector2d startPos, Vector2d endPos, int finishTime){<br>
 <br>
 void Move::Update(){<br>
 &nbsp	BaseMotion&lt;Vector2d&gt;::Update();<br>
+<br>
 &nbsp	if (IsFinished()){<br>
 &nbsp	&nbsp	value = endPos;<br>
 &nbsp	}<br>
@@ -1282,8 +1571,9 @@ MainScene.cppの方は次のように変更してみましょう。<br>
 <br><table border = "2"><tbody><tr><td><b>
 #include "MainScene.h"<br>
 <br>
-MainScene::MainScene() : move(Vector2d(100, 350), Vector2d(500, 150), 120){<br>
+MainScene::MainScene() : BaseScene(){<br>
 &nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", Vector2d(100, 350), true);<br>
+&nbsp	move.Initialize(Vector2d(100, 350), Vector2d(500, 150), 120);<br>
 }<br>
 <br>
 MainScene::~MainScene(){<br>
@@ -1356,7 +1646,7 @@ bool CommonData::Load(string path){<br>
 &nbsp	if (ret){<br>
 &nbsp	&nbsp	string buf;<br>
 &nbsp	&nbsp	getline(ifs, buf);<br>
-&nbsp	&nbsp	saveData.enterNum = common::convert&lt;string, int&gt;(buf);<br>
+&nbsp	&nbsp	saveData.enterNum = stoi(buf);<br>
 &nbsp	}<br>
 &nbsp	return ret;<br>
 }<br>
@@ -1387,7 +1677,7 @@ public:<br>
 #include "MainScene.h"<br>
 using namespace common;<br>
 <br>
-MainScene::MainScene(){<br>
+MainScene::MainScene() : BaseScene(){<br>
 &nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 32);<br>
 <br>
 &nbsp	enterNum = 0;<br>
@@ -1424,8 +1714,8 @@ void MainScene::Draw(){<br>
 <br>
 &nbsp	pic["ぴんくり"]->Draw();<br>
 <br>
-&nbsp	font["フォント"]->Print("今回Enterを押した回数　　：" + convert&lt;int, string&gt;(enterNum));<br>
-&nbsp	font["フォント"]->Print("今までにEnterを押した総数：" + convert&lt;int, string&gt;(CommonData::saveData.enterNum), Vector2d(0, 30));<br>
+&nbsp	font["フォント"]->Print("今回Enterを押した回数　　：" + to_string(enterNum));<br>
+&nbsp	font["フォント"]->Print("今までにEnterを押した総数：" + to_string(CommonData::saveData.enterNum), Vector2d(0, 30));<br>
 }<br>
 </b></td></tr></tbody></table><br>
 Enterを押すと画像がジャンプするようにしました。<br>
@@ -1486,9 +1776,10 @@ public:<br>
 #include "MainScene.h"<br>
 using namespace common;<br>
 <br>
-MainScene::MainScene() : motion(Vector2d(240, InfoData::WindowSize().x)){<br>
-&nbsp	font["テキスト"] = Font::Create("メイリオ", Vector2d(10 + InfoData::WindowSize().x, 10), 24);<br>
+MainScene::MainScene() : BaseScene(){<br>
+&nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(10 + InfoData::WindowSize().x, 10), 24);<br>
 &nbsp	font["状態表示"] = Font::Create("メイリオ", Vector2d(InfoData::WindowSize().x - 150, InfoData::WindowSize().y - 24), 16);<br>
+&nbsp	motion.Initialize(Vector2d(240, InfoData::WindowSize().x));<br>
 &nbsp	cursor = 0;<br>
 &nbsp	ChangeState(State::start);<br>
 }<br>
@@ -1503,11 +1794,11 @@ void MainScene::Update(){<br>
 &nbsp	case State::start:<br>
 &nbsp	&nbsp	motion.Update();<br>
 &nbsp	&nbsp	if (motion.PassedVertex()){<br>
-&nbsp	&nbsp	&nbsp	font["テキスト"]->pos = Vector2d(10, 10);<br>
+&nbsp	&nbsp	&nbsp	font["フォント"]->pos = Vector2d(10, 10);<br>
 &nbsp	&nbsp	&nbsp	ChangeState(State::select);<br>
 &nbsp	&nbsp	}<br>
 &nbsp	&nbsp	else{<br>
-&nbsp	&nbsp	&nbsp	font["テキスト"]->pos.x = 10 + InfoData::WindowSize().x - motion.GetValue(); <br>
+&nbsp	&nbsp	&nbsp	font["フォント"]->pos.x = 10 + InfoData::WindowSize().x - motion.GetValue(); <br>
 &nbsp	&nbsp	}<br>
 &nbsp	&nbsp	break;<br>
 &nbsp	case State::select:<br>
@@ -1537,7 +1828,7 @@ void MainScene::Update(){<br>
 &nbsp	&nbsp	&nbsp	EndGame();<br>
 &nbsp	&nbsp	}<br>
 &nbsp	&nbsp	else{<br>
-&nbsp	&nbsp	&nbsp	font["テキスト"]->pos.y = 10 + 0.8 * motion.GetValue();<br>
+&nbsp	&nbsp	&nbsp	font["フォント"]->pos.y = 10 + 0.8 * motion.GetValue();<br>
 &nbsp	&nbsp	}<br>
 &nbsp	&nbsp	break;<br>
 &nbsp	}<br>
@@ -1546,39 +1837,39 @@ void MainScene::Update(){<br>
 void MainScene::Draw(){<br>
 &nbsp	BaseScene::Draw();<br>
 <br>
-&nbsp	font["状態表示"]->Print("scenetime : " + convert&lt;int, string&gt;(GetSceneTime()));<br>
-&nbsp	font["状態表示"]->Print("statetime : " + convert&lt;int, string&gt;(GetStateTime()), Vector2d(0, -24));<br>
+&nbsp	font["状態表示"]->Print("scenetime : " + to_string(GetSceneTime()));<br>
+&nbsp	font["状態表示"]->Print("statetime : " + to_string(GetStateTime()), Vector2d(0, -24));<br>
 &nbsp	switch (GetState()){<br>
 &nbsp	case State::start:<br>
 &nbsp	&nbsp	font["状態表示"]->Print("state : start", Vector2d(0, -48));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("！初期演出です！");<br>
+&nbsp	&nbsp	font["フォント"]->Print("！初期演出です！");<br>
 &nbsp	&nbsp	break;<br>
 &nbsp	case State::select:<br>
 &nbsp	&nbsp	font["状態表示"]->Print("state : select", Vector2d(0, -48));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("選択肢を何か選んでください");<br>
-&nbsp	&nbsp	font["テキスト"]->Print("⇒", Vector2d(20, 50 + 30 * cursor));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("今日の天気は何でしょうか", Vector2d(50, 50));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("好きな食べ物は何でしょうか", Vector2d(50, 80));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("そもそも、これは何なの", Vector2d(50, 110));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("もーやめます", Vector2d(50, 140));<br>
+&nbsp	&nbsp	font["フォント"]->Print("選択肢を何か選んでください");<br>
+&nbsp	&nbsp	font["フォント"]->Print("⇒", Vector2d(20, 50 + 30 * cursor));<br>
+&nbsp	&nbsp	font["フォント"]->Print("今日の天気は何でしょうか", Vector2d(50, 50));<br>
+&nbsp	&nbsp	font["フォント"]->Print("好きな食べ物は何でしょうか", Vector2d(50, 80));<br>
+&nbsp	&nbsp	font["フォント"]->Print("そもそも、これは何なの", Vector2d(50, 110));<br>
+&nbsp	&nbsp	font["フォント"]->Print("もーやめます", Vector2d(50, 140));<br>
 &nbsp	&nbsp	break;<br>
 &nbsp	case State::print:<br>
 &nbsp	&nbsp	font["状態表示"]->Print("state : print", Vector2d(0, -48));<br>
 &nbsp	&nbsp	switch (cursor){<br>
 &nbsp	&nbsp	case 0:<br>
-&nbsp	&nbsp	&nbsp	font["テキスト"]->Print("わかんないですよ！");<br>
+&nbsp	&nbsp	&nbsp	font["フォント"]->Print("わかんないですよ！");<br>
 &nbsp	&nbsp	&nbsp	break;<br>
 &nbsp	&nbsp	case 1:<br>
-&nbsp	&nbsp	&nbsp	font["テキスト"]->Print("お寿司が好きです＾＾");<br>
+&nbsp	&nbsp	&nbsp	font["フォント"]->Print("お寿司が好きです＾＾");<br>
 &nbsp	&nbsp	&nbsp	break;<br>
 &nbsp	&nbsp	case 2:<br>
-&nbsp	&nbsp	&nbsp	font["テキスト"]->Print("これは黒い画面とたわむれるためのものです");<br>
+&nbsp	&nbsp	&nbsp	font["フォント"]->Print("これは黒い画面とたわむれるためのものです");<br>
 &nbsp	&nbsp	&nbsp	break;<br>
 &nbsp	&nbsp	}<br>
 &nbsp	&nbsp	break;<br>
 &nbsp	case State::end:<br>
 &nbsp	&nbsp	font["状態表示"]->Print("state : end", Vector2d(0, -48));<br>
-&nbsp	&nbsp	font["テキスト"]->Print("しょんにゃああああああ；ｗ；");<br>
+&nbsp	&nbsp	font["フォント"]->Print("しょんにゃああああああ；ｗ；");<br>
 &nbsp	&nbsp	break;<br>
 &nbsp	}<br>
 }<br>
@@ -1616,8 +1907,8 @@ public:<br>
 #include "MainScene.h"<br>
 using namespace common;<br>
 <br>
-MainScene::MainScene(){<br>
-&nbsp	font["テキスト"] = Font::Create("メイリオ", Vector2d(10, 10), 32);<br>
+MainScene::MainScene() : BaseScene(){<br>
+&nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(10, 10), 32);<br>
 &nbsp	pic["ぴんくり"] = Graphic::Create("pinkri.png", GetWindowCenter(), true);<br>
 &nbsp	reverseFlg = false;<br>
 &nbsp	SetKeys();<br>
@@ -1653,10 +1944,10 @@ void MainScene::Draw(){<br>
 &nbsp	pic["ぴんくり"]->Draw();<br>
 <br>
 &nbsp	if (!reverseFlg){<br>
-&nbsp	&nbsp	font["テキスト"]->Print("通常");<br>
+&nbsp	&nbsp	font["フォント"]->Print("通常");<br>
 &nbsp	}<br>
 &nbsp	else{<br>
-&nbsp	&nbsp	font["テキスト"]->Print("反転");<br>
+&nbsp	&nbsp	font["フォント"]->Print("反転");<br>
 &nbsp	}<br>
 }<br>
 <br>
@@ -1727,8 +2018,8 @@ WaitForThread関数というのを用意していましたが、これは廃止�
 <br><table border = "2"><tbody><tr><td><b>
 #include "MainScene.h"<br>
 <br>
-MainScene::MainScene(){<br>
-&nbsp	font["テキスト"] = Font::Create("メイリオ", Vector2d(100, 100), 48, 4, true);<br>
+MainScene::MainScene() : BaseScene(){<br>
+&nbsp	font["フォント"] = Font::Create("メイリオ", Vector2d(100, 100), 48, 4, true);<br>
 &nbsp	AddThread([&]{	// 素材読み込みをするときは「&」にしないと読み込みが反映されない<br>
 &nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
 &nbsp	&nbsp	Sleep(500);	// ロード中の処理<br>
@@ -1751,17 +2042,17 @@ void MainScene::Update(){<br>
 &nbsp	}<br>
 <br>
 &nbsp	if (loadFlg){<br>
-&nbsp	&nbsp	font["テキスト"]->pos = Vector2d(100, 100);<br>
-&nbsp	&nbsp	font["テキスト"]->SetColor(Color::White());<br>
+&nbsp	&nbsp	font["フォント"]->pos = Vector2d(100, 100);<br>
+&nbsp	&nbsp	font["フォント"]->SetColor(Color::White());<br>
 &nbsp	&nbsp	int i = static_cast&lt;int&gt;(128.0 + 127.0 * cos(0.5 * GetSceneTime()));<br>
-&nbsp	&nbsp	font["テキスト"]->SetEdgeColor(Color(i, i, 0));<br>
+&nbsp	&nbsp	font["フォント"]->SetEdgeColor(Color(i, i, 0));<br>
 &nbsp	}<br>
 &nbsp	else{<br>
-&nbsp	&nbsp	font["テキスト"]->pos.x = static_cast&lt;int&gt;(100.0 + 50.0 * sin(0.1 * GetSceneTime()));<br>
+&nbsp	&nbsp	font["フォント"]->pos.x = static_cast&lt;int&gt;(100.0 + 50.0 * sin(0.1 * GetSceneTime()));<br>
 &nbsp	&nbsp	int i = static_cast&lt;int&gt;(192.0 + 63.0 * sin(0.3 * GetSceneTime()));<br>
-&nbsp	&nbsp	font["テキスト"]->SetColor(Color(i, i, i));<br>
+&nbsp	&nbsp	font["フォント"]->SetColor(Color(i, i, i));<br>
 &nbsp	&nbsp	i = static_cast&lt;int&gt;(128.0 + 127.0 * cos(0.2 * GetSceneTime()));<br>
-&nbsp	&nbsp	font["テキスト"]->SetEdgeColor(Color(i, i, i));<br>
+&nbsp	&nbsp	font["フォント"]->SetEdgeColor(Color(i, i, i));<br>
 &nbsp	}<br>
 }<br>
 <br>
@@ -1769,10 +2060,10 @@ void MainScene::Draw(){<br>
 &nbsp	BaseScene::Draw();<br>
 <br>
 &nbsp	if (loadFlg){<br>
-&nbsp	&nbsp	font["テキスト"]->Print("ロード完了！！");<br>
+&nbsp	&nbsp	font["フォント"]->Print("ロード完了！！");<br>
 &nbsp	}<br>
 &nbsp	else{<br>
-&nbsp	&nbsp	font["テキスト"]->Print("ロード中です...");<br>
+&nbsp	&nbsp	font["フォント"]->Print("ロード中です...");<br>
 &nbsp	}<br>
 }<br>
 </b></td></tr></tbody></table><br>
@@ -1815,7 +2106,7 @@ ver1.05の改善により、スレッドはたくさん追加しても多分問�
 
 <div id = "complete"></div>
 <h2>ゲームの完成</h2>
-晴れてゲームが完成しましたら、リリースビルドをして完成品にしましょう。<br>
+ついにゲームが完成しましたら、リリースビルドをして完成品にしましょう。<br>
 ソリューション構成の「Debug」を「Release」に変更してビルドを行えば、リリースビルド完了です。<br>
 素材の相対パスはできあがった実行ファイル（.exe）のあるディレクトリになるので、<br>
 そこを相対パスとして素材を入れてください。<br>
@@ -1838,7 +2129,8 @@ ver1.05の改善により、スレッドはたくさん追加しても多分問�
 サンプルとしてゲームウォッチのヘルメットのリメイク作りましたので、参考にどうぞ。<br>
 ⇒ <a href = "http://yahoo.jp/box/g8ysdA" target = "_blank">ダウンロードサイトに飛びます</a><br>
 <br>
-テンプレートをver1.05に更新したので、これも新しいテンプレートの書き方に合わせて改変しました。<br>
+テンプレートをver1.06に更新したので、これも新しいテンプレートの書き方に合わせて改変しました。<br>
+文字のディザがめんどくさくて直せてませんけど、拡大縮小がバイリニア描画になって滑らかになりました。<br>
 ロード中の間に並列処理が行えるようになったので、「NowLoading」の表示が光るようになってます＾＾；<br>
 また、スレッドを量産できるようになったことを利用してゲージも追加してみました。<br>
 その他、目に見える違いはほぼありませんが、ぴんくりの生産の仕方を変えたために<br>
@@ -1855,7 +2147,43 @@ MainSceneにぴんくりの数を持たせるようにすればよいでしょ�
 
 <br><hr>
 
-2015年1月21日記 フェルミウム湾<br>
+<h3>更新履歴</h3>
+<table border = "2"><tbody>
+	<tr>
+		<th>バージョン</th>
+		<th>更新日時</th>
+	</tr>
+	<tr>
+		<td>ver1.06</td>
+		<td>2015年9月25日</td>
+	</tr>
+	<tr>
+		<td>ver1.05</td>
+		<td>2015年1月21日</td>
+	</tr>
+	<tr>
+		<td>ver1.04</td>
+		<td>2014年12月15日</td>
+	</tr>
+	<tr>
+		<td>ver1.03</td>
+		<td>2014年10月6日</td>
+	</tr>
+	<tr>
+		<td>ver1.02</td>
+		<td>2014年9月28日</td>
+	</tr>
+	<tr>
+		<td>ver1.01</td>
+		<td>2014年9月28日</td>
+	</tr>
+	<tr>
+		<td>ver1.00</td>
+		<td>2014年9月25日</td>
+	</tr>
+</tbody></table>
+<br>
+2015年9月25日記 フェルミウム湾<br>
 <br>
 
 </body>
