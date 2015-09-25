@@ -112,11 +112,6 @@ namespace common{
 	}
 
 	// 右揃え数字文字列（数値と、指定桁数、0詰めするかのフラグを指定）
-	static string RightNumber(int number, int limit, bool zeroFlg = false) {
-		return RightNumber(static_cast<long long int>(number), limit, zeroFlg);
-	}
-
-	// 右揃え数字文字列（数値と、指定桁数、0詰めするかのフラグを指定）
 	static string RightNumber(long long int number, int limit, bool zeroFlg = false) {
 		string ret = "";
 		string numstr = to_string(number);
@@ -124,6 +119,11 @@ namespace common{
 			ret += (zeroFlg ? "0" : " ");
 		}
 		return ret + numstr;
+	}
+
+	// 右揃え数字文字列（数値と、指定桁数、0詰めするかのフラグを指定）
+	static string RightNumber(int number, int limit, bool zeroFlg = false) {
+		return RightNumber(static_cast<long long int>(number), limit, zeroFlg);
 	}
 
 	// 直線移動
